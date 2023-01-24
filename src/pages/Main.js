@@ -18,6 +18,7 @@ function Main() {
         switch (res.status){
             case 200:
                 alert("Usuário criado com sucesso, por favor leia o QR code!!")
+                fetch(`${process.env.APP_URL}`)
                 break;
         }
     });
