@@ -6,6 +6,10 @@ function Main() {
   const [html, setHTML] = useState("");
 
   const initIns = (e) => {
+    if (!username) {
+      return
+    }
+    
     fetch( // faz uma requisição para a API "cadastrando" o usuário 
       `${process.env.REACT_APP_URL}/instance/init?token=${process.env.REACT_APP_SECRET_TOKEN}&key=${username}`,
       {
