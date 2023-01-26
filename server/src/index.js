@@ -7,7 +7,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require("./app/controllers/userInstance")(app);
+require("./app/controllers/index")(app);
 
 app.listen(3001);
 console.log("Escutando na porta 3001");

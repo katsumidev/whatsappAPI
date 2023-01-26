@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserPanel from "./pages/UserPanel";
 
 function App() {
+  localStorage.setItem("userToken", "teste")
+
   return (
     <BrowserRouter>
       <ModalProvider>

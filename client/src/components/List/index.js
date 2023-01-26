@@ -15,18 +15,21 @@ function List() {
   } = useModalContext();
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/instance/list`, {
-      method: "get",
+    fetch(`${process.env.REACT_APP_URL}/instance/listIns`, { // Lista todos os usuários conectados na API
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body: JSON.stringify({
+        userToken: "teste",
+      })
     }).then(async (res) => {
       let data = await res.json();
 
       switch (res.status) {
         case 200:
-          setIns(data.data);
+          setIns(data);
           break;
       }
     });
@@ -39,9 +42,9 @@ function List() {
       {allIns.map((instance, index) => {
         return (
           <ListItem
-            key={index}
+            key={index} // Gera uma lista para todos os usuários que resultaram da busca, renderizando o componente ListItem para cada um.
             name={instance}
-            redirect={() => navigate(`/panel/${instance}`)}
+            redirect={() => navigate(`/panel/${instance}`)} 
           ></ListItem>
         );
       })}

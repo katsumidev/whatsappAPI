@@ -6,7 +6,7 @@ import {
   Number,
   DeleteButton,
   ViewButton,
-  Options
+  Options,
 } from "./styles";
 
 function ListItem(props) {
@@ -14,12 +14,17 @@ function ListItem(props) {
   const [valid, setValid] = useState(true);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/instance/info?key=${props.name}`, {
-      method: "get",
+    fetch(`${process.env.REACT_APP_URL}/instance/getInfo`, {
+      // Busca pelo usuário recebido por props, pegando suas informações
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body: JSON.stringify({
+        key: props.name,
+        userToken: "teste",
+      }),
     }).then(async (res) => {
       let data = await res.json();
 
@@ -27,7 +32,7 @@ function ListItem(props) {
         case 200:
           setInsInfo({
             username: data.instance_data.user.name,
-            userId: data.instance_data.user.id.split(":")[0],
+            userId: data.instance_data.user.id.split(":")[0], // pega o numero de telefone do usuário
           });
           break;
       }
@@ -35,34 +40,21 @@ function ListItem(props) {
   }, []);
 
   const DeleteNumber = () => {
-    fetch(`${process.env.REACT_APP_URL}/instance/delete?key=${props.name}`, {
-      method: "DELETE",
+    fetch(`${process.env.REACT_APP_URL}/instance/deleteIns`, {
+      // Busca pelo usuário recebido por props, pegando suas informações
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
       },
-    }).then(async (res) => {
-      let data = await res.json();
-
-      fetch(`${process.env.REACT_APP_URL}/instance/logout?key=${props.name}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Methods": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
-        },
-      });
+      body: JSON.stringify({
+        key: props.name,
+        userToken: "teste",
+      }),
+    })
 
       setValid(false);
-    });
   };
-
-  function phoneMask(phone) {
-    return `+${phone[1], phone[2]}`
-  }
 
   return (
     <>
