@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GrFormClose, AiFillEye } from "../../styles/Icons";
 
 export const Container = styled.div`
-  background-color: #f3efe0;
+  background-color: #f5f5f5;
   padding: 20px;
   margin: 10px;
   width: 100%;
@@ -12,7 +12,7 @@ export const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  transition: all .2s;
+  transition: all 0.2s;
 
   :hover {
     padding: 24px;
@@ -21,7 +21,7 @@ export const Container = styled.div`
 `;
 
 export const Username = styled.p`
-    font-weight: 600;
+  font-weight: 600;
 `;
 
 export const Numbername = styled.p``;
@@ -31,7 +31,7 @@ export const Number = styled.p``;
 export const DeleteButton = styled(GrFormClose)`
   cursor: pointer;
   border-radius: 100%;
-  transition: all .2s;
+  transition: all 0.2s;
 
   :hover {
     background-color: #22a39f;
@@ -41,7 +41,7 @@ export const DeleteButton = styled(GrFormClose)`
 
 export const ViewButton = styled(AiFillEye)`
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.2s;
 
   :hover {
     fill: #22a39f;

@@ -7,9 +7,16 @@ import {
   SecondColumn,
   ContactNameInput,
   ContactList,
-  ContactRow
+  ContactRow,
+  ContactColumn,
+  ProfilePicture,
+  DeleteContactBtn,
+  ContactInfo,
+  ContactOptions,
+  Main,
 } from "./styles";
 import InputMask from "react-input-mask";
+import CheckboxGroup from "react-checkbox-group";
 import { useParams } from "react-router";
 
 function UserPanel() {
@@ -17,11 +24,17 @@ function UserPanel() {
   const [contacts, setContacts] = useState([]);
   const [contactNumber, setContactNumber] = useState(0);
   const [contactName, setContactName] = useState("");
+  const [numbers, setNumbers] = useState([]);
   const [userName, setUsername] = useState("");
   const [msg, setMsg] = useState("");
+  const [valid, setValid] = useState(true);
 
   const { userIns } = useParams();
 
+  useEffect(() => {
+    console.log(numbers)
+  }, [numbers])
+  
   useEffect(() => {
     fetch(
       // busca as informações do usuário pegando sua id nos próprios parametros da aplicação
@@ -76,6 +89,7 @@ function UserPanel() {
           phone_number: contactNumber,
           contact_name: contactName,
           user_token: localStorage.getItem("userToken"),
+          user_id: userIns,
         }),
       }).then(async (res) => {
         switch (res.status) {
@@ -92,77 +106,110 @@ function UserPanel() {
     }
   };
 
+  function deleteContact(number) {
+    fetch(`${process.env.REACT_APP_URL}/contacts/deleteContact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        phone_number: number,
+        user_token: localStorage.getItem("userToken"),
+      }),
+    });
+  }
+
   const sendMsg = (e) => {
-    fetch(
-      // faz uma requisição para a API "cadastrando" o usuário
-      `${process.env.REACT_APP_URL}/message/text?key=${userIns}`,
-      {
+    if (numbers.length > 1) {
+      fetch(`${process.env.REACT_APP_URL}/message/sendMultipleMessages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
-          id: phoneNumber,
-          message: msg,
-        }),
-      }
-    ).then(async (res) => {
-      let data = await res.json();
-      alert("mensagem enviada com sucesso!!", data);
-    });
-
-    e.preventDefault();
+          user_id: userIns,
+          number_list: numbers,
+          msg: msg
+        })
+      })
+    } else {
+      fetch(`${process.env.REACT_APP_URL}/message/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userIns,
+          msg: msg,
+          phone_number: numbers[0]
+        })
+      })
+    }
   };
 
   return (
     <Container>
-      <FirstColumn>
-        <ContactList>
-          {contacts.map((contact, index) => {
-            return (
-              <ContactRow>
-                <b>{contact.contact}</b>
-                <p>{contact.number}</p>
-              </ContactRow>
-            );
-          })}
-        </ContactList>
-      </FirstColumn>
-      <SecondColumn>
-        <form onSubmit={addNewContact}>
-          <h3>Adicionar novo contato</h3>
-          <ContactNameInput
-            type="text"
-            placeholder="Nome do contato"
-            onChange={(e) => setContactName(e.target.value)}
-          />
-          <InputMask
-            mask="+99 (99) 9999-9999"
-            placeholder="+__ ( ) ____-____"
-            onChange={(e) =>
-              setContactNumber(e.target.value.replace(/[\W_]/g, ""))
-            }
-          />
-          <SendMsgBtn type="submit" value="Enviar" />
-        </form>
-        <form onSubmit={sendMsg}>
-          <h3>Olá {userName} 👋</h3>
-          <InputMask
-            mask="+99 (99) 9999-9999"
-            placeholder="+__ ( ) ____-____"
-            onChange={(e) =>
-              setPhoneNumber(e.target.value.replace(/[\W_]/g, ""))
-            }
-          />
-          <MessageInput
-            type="text"
-            placeholder="Sua mensagem.."
-            onChange={(e) => setMsg(e.target.value)}
-          />
-          <SendMsgBtn type="submit" value="Enviar" />
-        </form>
-      </SecondColumn>
+      <Main>
+        <FirstColumn>
+          <ContactList>
+            <CheckboxGroup name="numbers" value={numbers} onChange={setNumbers}>
+              {(Checkbox) => (
+                <>
+                  {contacts.map((contact, index) => {
+                    return (
+                      <ContactRow key={index}>
+                        <ContactInfo>
+                          <ProfilePicture src={contact.pfp}></ProfilePicture>
+                          <ContactColumn>
+                            <b>{contact.contact}</b>
+                            <p>{contact.number}</p>
+                          </ContactColumn>
+                        </ContactInfo>
+                        <ContactOptions>
+                          <Checkbox value={contact.number} />
+                          <DeleteContactBtn
+                            onClick={() => deleteContact(contact.number)}
+                          />
+                        </ContactOptions>
+                      </ContactRow>
+                    );
+                  })}
+                </>
+              )}
+            </CheckboxGroup>
+          </ContactList>
+        </FirstColumn>
+        <SecondColumn>
+          <form onSubmit={addNewContact}>
+            <h3>Adicionar novo contato</h3>
+            <ContactNameInput
+              type="text"
+              placeholder="Nome do contato"
+              onChange={(e) => setContactName(e.target.value)}
+            />
+            <InputMask
+              mask="+99 (99) 9999-9999"
+              placeholder="+__ ( ) ____-____"
+              onChange={(e) =>
+                setContactNumber(e.target.value.replace(/[\W_]/g, ""))
+              }
+            />
+            <SendMsgBtn type="submit" value="Enviar" />
+          </form>
+          <form onSubmit={(e) => sendMsg(e)}>
+            <h3>Olá {userName} 👋</h3>
+            <MessageInput
+              type="text"
+              placeholder="Sua mensagem.."
+              onChange={(e) => setMsg(e.target.value)}
+            />
+            <SendMsgBtn type="submit" value="Enviar" />
+          </form>
+        </SecondColumn>
+      </Main>
     </Container>
   );
 }

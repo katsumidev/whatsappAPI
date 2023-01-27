@@ -1,16 +1,17 @@
 import styled from "styled-components";
+import {FaTrash} from "../../styles/Icons"
 
 export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   padding: 26px;
   align-items: center;
 
   form {
-    background-color: #f3efe0;
+    background-color: #F5F5F5;
     width: 500px;
     display: flex;
     border-radius: 6px;
@@ -24,6 +25,7 @@ export const Container = styled.div`
       border: none;
       transition: all 0.2s;
       outline: none;
+      box-shadow: 0 0 2px 0;
 
       :focus {
         border: 3px solid #22a39f;
@@ -31,6 +33,14 @@ export const Container = styled.div`
     }
   }
 `;
+
+export const Main = styled.div`
+  display: flex;
+  gap: 30px;
+  background-color: #DCDCDC;
+  border-radius: 4px;
+  padding: 20px;
+`
 
 export const MessageInput = styled.textarea`
   max-width: 450px;
@@ -80,7 +90,60 @@ export const ContactList = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
 `;
 
-export const ContactRow = styled.li``;
+export const ContactRow = styled.li`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  background-color: 	#F5F5F5;
+  padding: 12px;
+  border-radius: 6px;
+
+  p {
+    font-size: 14px;
+    color: 	#808080;
+  }
+
+  b {
+    text-transform: capitalize;
+  }
+`;
+
+export const ContactInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+`
+
+export const ContactColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const ProfilePicture = styled.img`
+  width: 42px;
+  height: 42px;
+  border-radius: 100%;
+`
+
+export const DeleteContactBtn = styled(FaTrash)`
+width: 26px;
+height: 26px;
+padding: 6px;
+transition: all .2s;
+cursor: pointer;
+
+:hover {
+  color: #22a39f;
+}
+`
+
+export const ContactOptions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 3px;
+`
