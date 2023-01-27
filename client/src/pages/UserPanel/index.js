@@ -32,9 +32,9 @@ function UserPanel() {
   const { userIns } = useParams();
 
   useEffect(() => {
-    console.log(numbers)
-  }, [numbers])
-  
+    console.log(numbers);
+  }, [numbers]);
+
   useEffect(() => {
     fetch(
       // busca as informações do usuário pegando sua id nos próprios parametros da aplicação
@@ -92,6 +92,8 @@ function UserPanel() {
           user_id: userIns,
         }),
       }).then(async (res) => {
+        await window.location.reload(false);
+
         switch (res.status) {
           case 200:
             break;
@@ -118,6 +120,8 @@ function UserPanel() {
         user_token: localStorage.getItem("userToken"),
       }),
     });
+
+    window.location.reload(false);
   }
 
   const sendMsg = (e) => {
@@ -131,9 +135,9 @@ function UserPanel() {
         body: JSON.stringify({
           user_id: userIns,
           number_list: numbers,
-          msg: msg
-        })
-      })
+          msg: msg,
+        }),
+      });
     } else {
       fetch(`${process.env.REACT_APP_URL}/message/sendMessage`, {
         method: "POST",
@@ -144,11 +148,24 @@ function UserPanel() {
         body: JSON.stringify({
           user_id: userIns,
           msg: msg,
-          phone_number: numbers[0]
-        })
-      })
+          phone_number: numbers[0],
+        }),
+      });
     }
   };
+
+  function convertToPhone(p) {
+    p =
+      "+" +
+      p.substr(0, 2) +
+      " (" +
+      p.substr(2, 2) +
+      ") " +
+      p.substr(4, 4) +
+      "-" +
+      p.substr(8, 4);
+    return p;
+  }
 
   return (
     <Container>
@@ -165,7 +182,7 @@ function UserPanel() {
                           <ProfilePicture src={contact.pfp}></ProfilePicture>
                           <ContactColumn>
                             <b>{contact.contact}</b>
-                            <p>{contact.number}</p>
+                            <p>{convertToPhone(contact.number)}</p>
                           </ContactColumn>
                         </ContactInfo>
                         <ContactOptions>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, ModalBox, FinishButton, Background } from "./styles";
+import { io } from "socket.io-client";
 import { useModalContext } from "../../modal.context";
 
 function Modal() {
@@ -11,6 +12,7 @@ function Modal() {
 
   const [username, setUsername] = useState();
   const [qrGenerated, setQrStatus] = useState(false);
+  const [key, setKey] = useState("");
   const [html, setHTML] = useState("");
 
   const initIns = (e) => {
@@ -43,34 +45,20 @@ function Modal() {
     e.preventDefault();
   };
 
-  function verifyQrScan() {
-    // função usada para verificar se o usuário já escaneou o qrcode e já está cadastrado no sistema.
-    fetch(
-      // faz uma requisição para a API "cadastrando" o usuário
-      `${process.env.REACT_APP_URL}/instance/checkStatus`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          key: username,
-          token: process.env.REACT_APP_SECRET_TOKEN,
-          userToken: localStorage.getItem("userToken"),
-        }),
-      }
-    ).then(async (res) => {
-      switch (res.status) {
-        case 200:
-          closeModal();
-          break;
-        case 404:
-          alert("Por favor escaneie o QRCode");
-          break;
-      }
+  useEffect(() => {
+    const socket = io("http://localhost:3001");
+
+    socket.on("connect", () => console.log(socket.id));
+
+    socket.on("connect_error", () => {
+      setTimeout(() => socket.connect(), 3001);
     });
-  }
+    socket.on("key", (data) => setKey(data));
+    console.log(key)
+    socket.on("disconnect", () => setKey(""));
+  }, []);
+
+  function verifyQrScan() {}
 
   return (
     <Container>

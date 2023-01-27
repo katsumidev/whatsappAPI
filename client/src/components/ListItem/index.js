@@ -56,12 +56,26 @@ function ListItem(props) {
       setValid(false);
   };
 
+  function convertToPhone(p) {
+    p =
+      "+" +
+      p.substr(0, 2) +
+      " (" +
+      p.substr(2, 2) +
+      ") " +
+      p.substr(4, 4) +
+      "-" +
+      p.substr(8, 4);
+    return p;
+  }
+
+
   return (
     <>
       {valid && (
         <Container>
           <Username>{insInfo.username}</Username>
-          <Number>{`+${insInfo.userId}`}</Number>
+          <Number>{convertToPhone(insInfo.userId)}</Number>
           <Options>
             <ViewButton size={20} onClick={props.redirect} />
             <DeleteButton size={20} onClick={DeleteNumber} />

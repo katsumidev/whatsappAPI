@@ -5,6 +5,7 @@ export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
+  margin: 20px 0;
   flex-direction: row;
   justify-content: center;
   padding: 26px;
@@ -51,6 +52,7 @@ export const MessageInput = styled.textarea`
   outline: none;
   min-height: 100px;
   max-height: 250px;
+  box-shadow: 0 0 2px 0;
 
   :focus {
     border: 3px solid #22a39f;
@@ -75,6 +77,10 @@ export const SendMsgBtn = styled.input`
   color: #ffffff;
   font-weight: 600;
   cursor: pointer;
+
+  :hover {
+    padding: 12px;
+  }
 `;
 
 export const SecondColumn = styled.div`
@@ -139,6 +145,8 @@ cursor: pointer;
 
 :hover {
   color: #22a39f;
+  width: 28px;
+  height: 28px;
 }
 `
 
