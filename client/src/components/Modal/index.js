@@ -12,8 +12,9 @@ function Modal() {
 
   const [username, setUsername] = useState();
   const [qrGenerated, setQrStatus] = useState(false);
-  const [key, setKey] = useState("");
+  const [userkey, setKey] = useState();
   const [html, setHTML] = useState("");
+  const socket = io("http://localhost:3001");
 
   const initIns = (e) => {
     fetch(
@@ -32,12 +33,13 @@ function Modal() {
         }),
       }
     ).then(async (res) => {
-      let data = await res.text();
+      let data = await res.json();
       let parser = new DOMParser(); // a requisição retorna um código HTML no formato de uma string
 
-      var doc = parser.parseFromString(data, "text/html"); // converte a string em formato HTML
+      var doc = parser.parseFromString(data.qrdata, "text/html"); // converte a string em formato HTML
       let qrcode = doc.getElementById("qrcode_box").src;
 
+      setKey(data.key);
       setQrStatus(true);
       setHTML(qrcode);
     });
@@ -46,19 +48,18 @@ function Modal() {
   };
 
   useEffect(() => {
-    const socket = io("http://localhost:3001");
-
     socket.on("connect", () => console.log(socket.id));
-
     socket.on("connect_error", () => {
       setTimeout(() => socket.connect(), 3001);
     });
-    socket.on("key", (data) => setKey(data));
-    console.log(key)
-    socket.on("disconnect", () => setKey(""));
-  }, []);
 
-  function verifyQrScan() {}
+    socket.on("key", (data) => {
+      if (data == userkey) {
+        closeModal();
+        window.location.reload(false);
+      }
+    });
+  }, [userkey]);
 
   return (
     <Container>
@@ -77,7 +78,6 @@ function Modal() {
           <>
             <img src={html} />
             {/** renderiza o qr code, a partir do momento em que o qrcode for escaneado, os dados do usuário serão salvos no banco de dados */}
-            <FinishButton onClick={() => verifyQrScan()}>Pronto!</FinishButton>
           </>
         )}
       </ModalBox>

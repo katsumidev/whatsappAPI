@@ -14,7 +14,7 @@ router.post("/initUser", async (req, res) => {
   const hashed_key = encryptKey(key, userToken);
 
   fetch(
-    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=https://f88f-191-55-230-234.sa.ngrok.io/message/webHook`,
+    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://localhost:3001/message/webHook`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -32,7 +32,7 @@ router.post("/initUser", async (req, res) => {
           }).then(async (qrres) => {
             let qr = await qrres.text();
 
-            return res.send(qr);
+            return res.send({key: data.key, qrdata: qr});
           });
         }, [2000]);
       } else {

@@ -23,11 +23,9 @@ function ListItem(props) {
       },
       body: JSON.stringify({
         key: props.name,
-        userToken: "teste",
       }),
     }).then(async (res) => {
       let data = await res.json();
-
       switch (res.status) {
         case 200:
           setInsInfo({

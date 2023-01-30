@@ -4,6 +4,7 @@ import GlobalStyle from "./styles/GlobalStyle";
 import { ModalProvider } from "./modal.context";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserPanel from "./pages/UserPanel";
+import ChatPage from "./pages/ChatPage";
 import Header from "./components/Header";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route exact path="/panel/:userIns" element={<UserPanel />} />
+          <Route exact path="/live-chat/:userIns" element={<ChatPage />} />
         </Routes>
         <GlobalStyle />
       </ModalProvider>

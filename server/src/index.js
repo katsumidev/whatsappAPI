@@ -9,5 +9,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./app/controllers/index")(app);
 
-app.listen(3001);
-console.log("Escutando na porta 3001");
+const server = app.listen(3001, function () {
+  console.log("escutando na porta 3001");
+});
+
+var io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", function (socket) {
+  console.log("user connected");
+});
+
+const socketIoObject = io;
+module.exports.ioObject = socketIoObject;

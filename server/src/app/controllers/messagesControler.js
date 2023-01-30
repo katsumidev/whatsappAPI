@@ -1,26 +1,7 @@
 const express = require("express");
 var crypto = require("crypto");
 const router = express.Router();
-const http = require("http");
-const socketIo = require("socket.io");
-const server = require("../../index")
-
-
-const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:300",
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("client connected to socket");
-
-  io.join("qrcode-vrfy");
-
-  socket.on("disconnect", (reason) => {
-    console.log(reason);
-  });
-});
+const socket = require("../../index")
 
 router.post("/sendMessage", async (req, res) => {
   const { user_id, msg, phone_number } = req.body;
@@ -61,14 +42,12 @@ router.post("/sendMultipleMessages", async (req, res) => {
 });
 
 router.post("/webHook", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
 
   switch (req.body.type) {
     case "connection":
       if (req.body.body.connection == "open") {
-        if (req.body.instanceKey == hashed_key) {
-          io.to("qrcode-vrfy").emit(req.body.instanceKey)
-        }
+        socket.ioObject.emit("key", req.body.instanceKey);
       }
       break;
   }
