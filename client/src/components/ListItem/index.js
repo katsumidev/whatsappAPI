@@ -7,6 +7,7 @@ import {
   DeleteButton,
   ViewButton,
   Options,
+  LiveChatButton,
 } from "./styles";
 
 function ListItem(props) {
@@ -75,6 +76,7 @@ function ListItem(props) {
           <Username>{insInfo.username}</Username>
           <Number>{convertToPhone(insInfo.userId)}</Number>
           <Options>
+            <LiveChatButton size={20} onClick={props.openLiveChat} />
             <ViewButton size={20} onClick={props.redirect} />
             <DeleteButton size={20} onClick={DeleteNumber} />
           </Options>

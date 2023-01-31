@@ -6,7 +6,7 @@ const LiveChat = require("../models/livechat");
 
 router.post("/getChat", async (req, res) => {
   try {
-    const { from, to, message } = req.body;
+    const { from, to } = req.body;
 
     const exist = await LiveChat.findOne({
       members: {
@@ -26,8 +26,10 @@ router.post("/getChat", async (req, res) => {
       members: { $all: [from, to] },
     });
 
-    return res.send(conversation);
-  } catch (err) {}
+    return res.status(200).json(conversation);
+  } catch (err) {
+    return res.send(err);
+  }
 });
 
 router.post("/newMessage", async (req, res) => {
@@ -38,6 +40,19 @@ router.post("/newMessage", async (req, res) => {
     await newMessage.save();
     await LiveChat.findByIdAndUpdate(chatId, { message: text });
     return res.status(200).send("mensagem enviada com sucesso");
+  } catch (err) {
+    return res.send(err);
+  }
+});
+
+router.post("/getMessages", async (req, res) => {
+  const { chatId } = req.body;
+
+  try {
+    const messages = await ChatMessage.find({
+      chatId: chatId,
+    });
+    return res.status(200).json(messages);
   } catch (err) {
     return res.send(err);
   }

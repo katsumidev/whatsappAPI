@@ -1,7 +1,5 @@
 const express = require("express");
-var crypto = require("crypto");
 const router = express.Router();
-const socket = require("../../index")
 
 router.post("/sendMessage", async (req, res) => {
   const { user_id, msg, phone_number } = req.body;
@@ -39,18 +37,6 @@ router.post("/sendMultipleMessages", async (req, res) => {
       return res.send("mensagens enviadas.");
     });
   });
-});
-
-router.post("/webHook", async (req, res) => {
-  console.log(req.body);
-
-  switch (req.body.type) {
-    case "connection":
-      if (req.body.body.connection == "open") {
-        socket.ioObject.emit("key", req.body.instanceKey);
-      }
-      break;
-  }
 });
 
 module.exports = (app) => app.use("/message", router);

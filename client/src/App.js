@@ -17,7 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route exact path="/panel/:userIns" element={<UserPanel />} />
-          <Route exact path="/live-chat/:userIns" element={<ChatPage />} />
+          <Route path="/:userIns/live-chat/:chatId?" element={<ChatPage />} />
         </Routes>
         <GlobalStyle />
       </ModalProvider>

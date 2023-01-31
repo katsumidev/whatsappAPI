@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { GrFormClose, AiFillEye } from "../../styles/Icons";
+import { GrFormClose, AiFillEye, BsFillChatFill } from "../../styles/Icons";
 
 export const Container = styled.div`
   background-color: #f5f5f5;
@@ -47,6 +47,15 @@ export const ViewButton = styled(AiFillEye)`
     fill: #22a39f;
   }
 `;
+
+export const LiveChatButton = styled(BsFillChatFill)`
+  cursor: pointer;
+  transition: all .2s;
+
+  :hover {
+    fill: #22a39f;
+  }
+`
 
 export const Options = styled.div`
   display: flex;

@@ -14,7 +14,7 @@ router.post("/initUser", async (req, res) => {
   const hashed_key = encryptKey(key, userToken);
 
   fetch(
-    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://localhost:3001/message/webHook`,
+    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://localhost:3001/webHook/userHandler`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -22,7 +22,7 @@ router.post("/initUser", async (req, res) => {
   )
     .then(async (response) => {
       let data = await response.json();
-      console.log(data)
+      console.log(data);
 
       if (data.qrcode.url != "") {
         setTimeout(() => {
@@ -32,7 +32,7 @@ router.post("/initUser", async (req, res) => {
           }).then(async (qrres) => {
             let qr = await qrres.text();
 
-            return res.send({key: data.key, qrdata: qr});
+            return res.send({ key: data.key, qrdata: qr });
           });
         }, [2000]);
       } else {

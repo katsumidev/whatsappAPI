@@ -42,6 +42,14 @@ export const ChatMain = styled.div`
   width: 100%;
   height: 100%;
   background-color: #e5ddd5;
+  overflow: auto;
+`;
+
+export const Chat = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex-wrap: nowrap;
 `;
 
 export const ChatInputContainer = styled.div`
@@ -64,17 +72,34 @@ export const ChatInput = styled.input`
 `;
 
 export const ContactTopBar = styled.div`
-    display: flex; 
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    height: 60px;
-    background-color:  #ededed;
-    margin-top: 0;
-    padding: 12px;
-    gap: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  background-color: #ededed;
+  margin-top: 0;
+  padding: 12px;
+  gap: 15px;
+  overflow: hidden;
 
-    p {
-        font-weight: 600;
-    }
-`
+  p {
+    font-weight: 600;
+  }
+`;
+
+export const MessageContainer = styled.div`
+  color: black;
+  border-radius: 6px;
+  margin: 5px;
+  padding: 6px;
+  overflow: hidden;
+  max-width: 200px;
+
+
+  p {
+    word-break: break-all;
+  }
+  background-color: ${(props) => (props.receiver ? "white" : "#def7ca")};
+  align-self: ${(props) => (props.receiver ? "flex-start" : "flex-end")};
+`;

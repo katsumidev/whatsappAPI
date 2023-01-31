@@ -48,6 +48,7 @@ function Modal() {
   };
 
   useEffect(() => {
+    // Função para escutar o websocket enviado do backend, se o socket contendo a key for recebido, significa que o usuário escaneou o QRCODE
     socket.on("connect", () => console.log(socket.id));
     socket.on("connect_error", () => {
       setTimeout(() => socket.connect(), 3001);
@@ -55,7 +56,8 @@ function Modal() {
 
     socket.on("key", (data) => {
       if (data == userkey) {
-        closeModal();
+        // se a key recebida pelo socket for igual a key já registrada pelo usuário na função initIns, => (é possivel do usuário receber multiplos sockets de multiplos usuáruios fazendo login ao mesmo tempo)
+        closeModal(); // fecha o modal do QRCODE e dá reload na página
         window.location.reload(false);
       }
     });
