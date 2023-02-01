@@ -1,5 +1,4 @@
 const express = require("express");
-var crypto = require("crypto");
 const router = express.Router();
 const ChatMessage = require("../models/chatmessage");
 const LiveChat = require("../models/livechat");
@@ -8,21 +7,21 @@ router.post("/getChat", async (req, res) => {
   try {
     const { from, to } = req.body;
 
-    const exist = await LiveChat.findOne({
+    const exist = await LiveChat.findOne({ // procura no banco de dados o chat correspondente
       members: {
         $all: [from, to],
       },
     });
 
-    if (!exist) {
+    if (!exist) { // se esse chat não existir, ele gera um novo documento no banco pra ele
       const newChat = new LiveChat({
         members: [from, to],
       });
 
-      await newChat.save();
+      await newChat.save(); // salva o documento
     }
 
-    let conversation = await LiveChat.findOne({
+    let conversation = await LiveChat.findOne({ // se ele já existir, retorna ele para o requisitor
       members: { $all: [from, to] },
     });
 
@@ -33,13 +32,25 @@ router.post("/getChat", async (req, res) => {
 });
 
 router.post("/newMessage", async (req, res) => {
-  const { text, from, to, chatId } = req.body;
+  const { text, from, to, chatId, currentDate } = req.body; 
   const newMessage = new ChatMessage(req.body);
 
   try {
-    await newMessage.save();
-    await LiveChat.findByIdAndUpdate(chatId, { message: text });
-    return res.status(200).send("mensagem enviada com sucesso");
+    fetch(`http://localhost:3333/message/text?key=${from}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        id: to,
+        message: text,
+      }),
+    }).then(async (response) => {
+      await newMessage.save();
+      await LiveChat.findByIdAndUpdate(chatId, { message: text });
+      return res.status(200).send("mensagem enviada com sucesso");
+    });
   } catch (err) {
     return res.send(err);
   }

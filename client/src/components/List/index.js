@@ -6,23 +6,23 @@ import Modal from "../Modal";
 import { useNavigate } from "react-router";
 
 function List() {
-  const [allIns, setIns] = useState([]);
+  const [allIns, setIns] = useState([]); // instância ou "ID" dos usuários
   const navigate = useNavigate();
 
   const {
     modalState: { visible },
     openModal,
-  } = useModalContext();
+  } = useModalContext(); // context usado para gerenciar o modal de leitura do QRCODE
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/instance/listIns`, { // Lista todos os usuários conectados na API
+    fetch(`${process.env.REACT_APP_URL}/instance/listIns`, { // Lista todos os usuários conectados na API e que possuem o token registrado (esse token vai ser o token de login do usuário, ainda a ser feito)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify({
-        userToken: "teste",
+        userToken: localStorage.getItem("userToken"),
       })
     }).then(async (res) => {
       let data = await res.json();

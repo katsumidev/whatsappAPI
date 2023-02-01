@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Container,
   Username,
-  Numbername,
   Number,
   DeleteButton,
   ViewButton,
@@ -11,8 +10,8 @@ import {
 } from "./styles";
 
 function ListItem(props) {
-  const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
-  const [valid, setValid] = useState(true);
+  const [insInfo, setInsInfo] = useState({ username: "", userId: "" }); // informações da instância do usuário
+  const [valid, setValid] = useState(true); // verifica se o número é válido (usado para atualizar em tempo real o front)
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_URL}/instance/getInfo`, {
@@ -31,7 +30,7 @@ function ListItem(props) {
         case 200:
           setInsInfo({
             username: data.instance_data.user.name,
-            userId: data.instance_data.user.id.split(":")[0], // pega o numero de telefone do usuário
+            userId: data.instance_data.user.id.split(":")[0], // pega o numero de telefone do usuário da string retornada
           });
           break;
       }
@@ -40,7 +39,7 @@ function ListItem(props) {
 
   const DeleteNumber = () => {
     fetch(`${process.env.REACT_APP_URL}/instance/deleteIns`, {
-      // Busca pelo usuário recebido por props, pegando suas informações
+      // Busca pelo usuário recebido por props, deletando sua instância no banco de dados
       method: "POST",
       headers: {
         "Content-Type": "application/json",

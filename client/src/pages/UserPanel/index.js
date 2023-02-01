@@ -27,8 +27,6 @@ function UserPanel() {
   const [numbers, setNumbers] = useState([]);
   const [userName, setUsername] = useState("");
   const [msg, setMsg] = useState("");
-  const [valid, setValid] = useState(true);
-
   const { userIns } = useParams();
 
   useEffect(() => {

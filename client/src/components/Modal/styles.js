@@ -23,7 +23,7 @@ export const Container = styled.div`
       padding: 10px;
       margin: 5px 0;
       border-radius: 6px;
-      border: 3px solid #22a39f;
+      border: 3px solid var(--accent-color);
       transition: all 0.2s;
     }
 
@@ -35,7 +35,7 @@ export const Container = styled.div`
       transition: all 0.2s;
 
       :hover {
-        background-color: #22a39f;
+        background-color: var(--accent-color);
         color: white;
       }
     }
@@ -53,14 +53,14 @@ export const Background = styled.div`
 `;
 
 export const ModalBox = styled.div`
-  background-color: white;
+  background-color: var(--main-background);
   padding: 24px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 5px solid #22a39f;
+  border: 5px solid var(--accent-color);
 `;
 
 export const FinishButton = styled.div`
@@ -69,7 +69,7 @@ export const FinishButton = styled.div`
   border: none;
   cursor: pointer;
   transition: all 0.2s;
-  background-color: #22a39f;
+  background-color: var(--accent-color);
   color: white;
   text-align: center;
   padding: 10px;

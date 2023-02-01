@@ -12,7 +12,7 @@ export const Container = styled.div`
   align-items: center;
 
   form {
-    background-color: #F5F5F5;
+    background-color: var(--main-background);
     width: 500px;
     display: flex;
     border-radius: 6px;
@@ -26,10 +26,10 @@ export const Container = styled.div`
       border: none;
       transition: all 0.2s;
       outline: none;
-      box-shadow: 0 0 2px 0;
+      background-color: var(--secundary-background);
 
       :focus {
-        border: 3px solid #22a39f;
+        border: 3px solid var(--accent-color);
       }
     }
   }
@@ -38,7 +38,7 @@ export const Container = styled.div`
 export const Main = styled.div`
   display: flex;
   gap: 30px;
-  background-color: #DCDCDC;
+  background-color: var(--secundary-background);
   border-radius: 4px;
   padding: 20px;
 `
@@ -52,10 +52,10 @@ export const MessageInput = styled.textarea`
   outline: none;
   min-height: 100px;
   max-height: 250px;
-  box-shadow: 0 0 2px 0;
+  background-color: var(--secundary-background);
 
   :focus {
-    border: 3px solid #22a39f;
+    border: 3px solid var(--accent-color);
   }
 `;
 
@@ -66,20 +66,21 @@ export const ContactNameInput = styled.input`
   outline: none;
 
   :focus {
-    border: 3px solid #22a39f;
+    border: 3px solid var(--accent-color);
   }
 `;
 
 export const SendMsgBtn = styled.input`
   width: 100px;
   align-self: flex-end;
-  background-color: #22a39f;
-  color: #ffffff;
+  background-color: var(--accent-color) !important;
+  color: var(--mainText);
   font-weight: 600;
   cursor: pointer;
 
   :hover {
     padding: 12px;
+    background-color: var(--accent-color-hover) !important;
   }
 `;
 
@@ -105,7 +106,7 @@ export const ContactRow = styled.li`
   justify-content: space-between;
   align-items: center;
   width: 300px;
-  background-color: 	#F5F5F5;
+  background-color: var(--main-background);
   padding: 12px;
   border-radius: 6px;
 
@@ -144,7 +145,7 @@ transition: all .2s;
 cursor: pointer;
 
 :hover {
-  color: #22a39f;
+  color: var(--accent-color-hover);
   width: 28px;
   height: 28px;
 }

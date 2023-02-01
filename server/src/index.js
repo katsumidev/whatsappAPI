@@ -20,7 +20,7 @@ var io = require("socket.io")(server, {
   },
 });
 
-io.once("connection", function (socket) {
+io.on("connection", function (socket) {
   console.log("user connected");
 });
 

@@ -37,11 +37,11 @@ function Modal() {
       let parser = new DOMParser(); // a requisição retorna um código HTML no formato de uma string
 
       var doc = parser.parseFromString(data.qrdata, "text/html"); // converte a string em formato HTML
-      let qrcode = doc.getElementById("qrcode_box").src;
+      let qrcode = doc.getElementById("qrcode_box").src; // busca somente o link do qrcode gerado pela API 
 
-      setKey(data.key);
-      setQrStatus(true);
-      setHTML(qrcode);
+      setKey(data.key); // define a instância do usuário
+      setQrStatus(true); // diz que o qrcode já foi gerado
+      setHTML(qrcode); // link do qrcode
     });
 
     e.preventDefault();
@@ -61,7 +61,7 @@ function Modal() {
         window.location.reload(false);
       }
     });
-  }, [userkey]);
+  }, [userkey]); // esse hook é disparado toda vez que o valor do estado userKey é alterado
 
   return (
     <Container>

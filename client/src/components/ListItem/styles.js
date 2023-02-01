@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { GrFormClose, AiFillEye, BsFillChatFill } from "../../styles/Icons";
 
 export const Container = styled.div`
-  background-color: #f5f5f5;
+  background-color: var(--secundary-background);
   padding: 20px;
   margin: 10px;
   width: 100%;
@@ -16,7 +16,7 @@ export const Container = styled.div`
 
   :hover {
     padding: 24px;
-    border: 2.5px solid #22a39f;
+    border: 2.5px solid var(--accent-color);
   }
 `;
 
@@ -34,7 +34,7 @@ export const DeleteButton = styled(GrFormClose)`
   transition: all 0.2s;
 
   :hover {
-    background-color: #22a39f;
+    background-color: var(--accent-color);
     fill: white;
   }
 `;
@@ -44,7 +44,7 @@ export const ViewButton = styled(AiFillEye)`
   transition: all 0.2s;
 
   :hover {
-    fill: #22a39f;
+    fill: var(--accent-color);
   }
 `;
 
@@ -53,7 +53,7 @@ export const LiveChatButton = styled(BsFillChatFill)`
   transition: all .2s;
 
   :hover {
-    fill: #22a39f;
+    fill: var(--accent-color);
   }
 `
 

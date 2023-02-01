@@ -28,12 +28,12 @@ export const NewUserBtn = styled.div`
   font-size: 14px;
   width: 100px;
   border-radius: 6px;
-  border: 2px solid #22a39f;
+  border: 2px solid var(--accent-color);
   text-align: center;
   transition: all .2s;
 
   :hover {
-    background-color:  #22a39f;
+    background-color: var(--accent-color);
     color: white;
     font-weight: 600;
   }

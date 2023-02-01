@@ -10,42 +10,47 @@ import {
   ContactTopBar,
   MessageContainer,
   Chat,
+  MessageBtn,
 } from "./styles";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import { ContactList } from "../UserPanel/styles";
+import { convertToDate } from "../../utils/convertDate";
 
 function ChatPage() {
-  const socket = io.connect("http://localhost:3001");
-  const [contacts, setContacts] = useState([]);
-  const [message, setMessage] = useState("");
-  const [chatMsgs, setChatMsgs] = useState([]);
-  const chatRef = useRef();
+  const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
+  const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
+  const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
+  const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const chatRef = useRef(); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
     chatId: "",
     contactId: "",
     contactPfp: "",
     contactName: "",
-  });
-  const { userIns, chatId } = useParams();
+  }); // estado que guarda as informações do contato selecionado
+  const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
   const navigate = useNavigate();
 
   useEffect(() => {
+    // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
       setChatMsgs(data);
     };
     getMessageDetails();
-  }, [selectedContact, chatId]);
+  }, [selectedContact, chatId, newMessageFlag]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
 
   useEffect(() => {
+    // hook para sempre manter o scroll do chat no final
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
   });
 
   useEffect(() => {
-    socket.on("message", (data) => {
-      console.log(data.content);
-      fetch(`${process.env.REACT_APP_URL}/live-chat/getChat`, {
+    let socket = io.connect("http://localhost:3001"); // socket de conexão com o back-end
+
+    const saveReceiverMsg = async (data) => {
+      await fetch(`${process.env.REACT_APP_URL}/live-chat/getChat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,11 +65,20 @@ function ChatPage() {
         let chatId = req_data._id;
 
         handleSendMsg(chatId, data.from, data.to, data.content);
+        setNewMessageFlag((prev) => !prev);
       });
-    });
+    };
+
+    // hook que recebe as requisições de socket do servidor (os sockets mandam as mensagem recebidas pelo usuário)
+    socket.on("message", saveReceiverMsg);
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
+    // esse hook é disparado no primeiro load da página e serve para buscar a lista de contatos do usuário
     fetch(`${process.env.REACT_APP_URL}/contacts/consultContacts`, {
       method: "POST",
       headers: {
@@ -86,6 +100,9 @@ function ChatPage() {
   }, []);
 
   const handleSendMsg = async (chatId, from, to, text) => {
+    setMessage("");
+
+    // função para enviar uma nova mensagem
     fetch(`${process.env.REACT_APP_URL}/live-chat/newMessage`, {
       method: "POST",
       headers: {
@@ -100,13 +117,12 @@ function ChatPage() {
         type: "text",
       }),
     }).then(async (res) => {
-      let data = await res.text();
-
-      console.log(data);
+      setNewMessageFlag((prev) => !prev);
     });
   };
 
   const handleGetChat = async (number, pfp, name) => {
+    // essa função serve para buscar as informações do chat selecionado
     fetch(`${process.env.REACT_APP_URL}/live-chat/getChat`, {
       method: "POST",
       headers: {
@@ -131,6 +147,7 @@ function ChatPage() {
   };
 
   async function handleGetMsgs() {
+    // função usada para buscar o histórico de mensagens do usuário com um determinado contato
     const res = await fetch(
       `${process.env.REACT_APP_URL}/live-chat/getMessages`,
       {
@@ -159,6 +176,9 @@ function ChatPage() {
               onClick={() =>
                 handleGetChat(contact.number, contact.pfp, contact.contact)
               }
+              selected={
+                selectedContact.contactId == contact.number ? "selected" : "not"
+              }
             >
               <ContactPfp src={contact.pfp} />
               <ContactName>{contact.contact}</ContactName>
@@ -176,13 +196,15 @@ function ChatPage() {
             return (
               <>
                 {userIns == msg.from ? (
-                  <MessageContainer>
+                  <MessageContainer key={index}>
                     <p>{msg.text}</p>
+                    <sub>{convertToDate(msg.date)}</sub>
                   </MessageContainer>
                 ) : (
-                  <MessageContainer receiver>
+                  <MessageContainer receiver key={index}>
                     {" "}
                     <p>{msg.text}</p>
+                    <sub>{convertToDate(msg.date)}</sub>
                   </MessageContainer>
                 )}
               </>
@@ -193,9 +215,11 @@ function ChatPage() {
           <ChatInput
             type="text"
             placeholder="Mensagem"
+            value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <b
+          <MessageBtn
+            size={30}
             onClick={() =>
               handleSendMsg(
                 selectedContact.chatId,
@@ -204,9 +228,7 @@ function ChatPage() {
                 message
               )
             }
-          >
-            ENVIAR
-          </b>
+          />
         </ChatInputContainer>
       </ChatMain>
     </Container>
