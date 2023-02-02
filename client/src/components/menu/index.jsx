@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Container, ItensMenu, RightContent, ServerContainer, ServerStatus } from './styles';
+import { Container, ItensMenu} from './styles';
 import { Link } from 'react-router-dom'
-import {GrCircleAlert} from 'react-icons/gr';
-import WhatsApp from '../whatsapp';
+
 
 
 
@@ -13,6 +12,7 @@ function Menu() {
         <Container>
             <ItensMenu>
             <p><Link className='link' to="/:userIns/settings">WhatsApp</Link></p>
+            <p><Link className='link' to="/:userIns/settings/customFields">Campos personalizados</Link></p>
             <p><Link className='link'>Etiquetas</Link></p>
             <p><Link className='link'>Respostas rápidas</Link></p>
             <p><Link className='link'>Administradores</Link></p>

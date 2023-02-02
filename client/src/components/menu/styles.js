@@ -4,7 +4,7 @@ export const Container = styled.div`
 max-width: 100% ;
 margin-top: 110px;
     .menu_line {
-        max-width: 70%;
+        max-width: 90%;
         margin: 3px;
     }
 `

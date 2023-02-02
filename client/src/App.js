@@ -7,6 +7,7 @@ import UserPanel from "./pages/UserPanel";
 import ChatPage from "./pages/ChatPage";
 import Header from "./components/Header";
 import WhatsApp from "./components/whatsapp";
+import Fields from "./components/fields";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/panel/:userIns" element={<UserPanel />} />
           <Route path="/:userIns/live-chat/:chatId?" element={<ChatPage />} />
           <Route path="/:userIns/settings" element={<WhatsApp/>}/>
+          <Route path="/:userIns/settings/customFields" element={<Fields/>}/>
         </Routes>
         <GlobalStyle />
       </ModalProvider>
