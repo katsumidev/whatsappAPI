@@ -1,12 +1,6 @@
 const User = require("../models/user");
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const mongo = require("mongoose");
-const authMiddleware = require("../middlewares/auth");
 
-const router = express.Router();
-
-router.post("/addContact", async (req, res) => {
+const newContact = async (req, res) => {
   const { phone_number, contact_name, user_token, user_id } = req.body;
 
   User.find({ userId: user_token }, (err, arr) => {
@@ -58,9 +52,9 @@ router.post("/addContact", async (req, res) => {
       });
     }
   });
-});
+};
 
-router.post("/deleteContact", async (req, res) => {
+const deleteContact = async (req, res) => {
   const { user_token, phone_number } = req.body;
 
   User.find({ userId: user_token }, (err, arr) => {
@@ -79,9 +73,9 @@ router.post("/deleteContact", async (req, res) => {
       );
     });
   });
-});
+};
 
-router.post("/consultContacts", async (req, res) => {
+const consultContacts = async (req, res) => {
   const { user_token } = req.body;
 
   User.find({ userId: user_token }, (err, arr) => {
@@ -99,9 +93,9 @@ router.post("/consultContacts", async (req, res) => {
       return res.send(array);
     });
   });
-});
+};
 
-router.post("/getContactPic", async (req, res) => {
+const getContactPic = async (req, res) => {
   const { user_id, contact_number } = req.body;
 
   fetch(
@@ -117,6 +111,11 @@ router.post("/getContactPic", async (req, res) => {
 
     return res.send(data.data);
   });
-});
+};
 
-module.exports = (app) => app.use("/contacts", router);
+module.exports = {
+  newContact,
+  deleteContact,
+  consultContacts,
+  getContactPic,
+};

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { RiSendPlaneFill } from "../../styles/Icons";
+import { RiSendPlaneFill, AiOutlinePaperClip } from "../../styles/Icons";
 
 export const Container = styled.div`
   width: 100vw;
@@ -59,7 +59,7 @@ export const ChatMain = styled.div`
   flex-direction: column;
 `;
 
-export const Chat = styled.div`
+export const Chat = styled.ul`
   padding: 26px;
   flex: 1;
 `;
@@ -102,7 +102,7 @@ export const ContactTopBar = styled.div`
   }
 `;
 
-export const MessageContainer = styled.div`
+export const MessageContainer = styled.li`
   display: flex;
   flex-direction: column;
   color: black;
@@ -135,3 +135,16 @@ export const MessageBtn = styled(RiSendPlaneFill)`
   color: black;
   cursor: pointer;
 `;
+
+export const ClipIcon = styled(AiOutlinePaperClip)`
+  color: black;
+  cursor: pointer;
+`
+
+export const SendFileInput = styled.input`
+  display: none;
+`
+
+export const Sentinel = styled.li`
+
+`

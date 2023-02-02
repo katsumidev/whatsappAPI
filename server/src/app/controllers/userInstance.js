@@ -1,6 +1,4 @@
-const express = require("express");
 var crypto = require("crypto");
-const router = express.Router();
 
 function encryptKey(key, userToken) {
   return `${userToken}:${crypto
@@ -9,7 +7,7 @@ function encryptKey(key, userToken) {
     .digest("hex")}`;
 }
 
-router.post("/initUser", async (req, res) => {
+const initUser = async (req, res) => {
   const { token, key, userToken } = req.body;
   const hashed_key = encryptKey(key, userToken);
 
@@ -42,9 +40,9 @@ router.post("/initUser", async (req, res) => {
     .catch((err) => {
       return res.send(err);
     });
-});
+};
 
-router.post("/deleteIns", async (req, res) => {
+const deleteIns = async (req, res) => {
   const { key } = req.body;
 
   fetch(`http://localhost:3333/instance/delete?key=${key}`, {
@@ -54,7 +52,7 @@ router.post("/deleteIns", async (req, res) => {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+      "Access-Control-Allow-Methods": "GET, POSconst PTIONS =PUT, DELETE",
     },
   }).then(async (response) => {
     fetch(`http://localhost:3333/instance/logout?key=${key}`, {
@@ -64,13 +62,13 @@ router.post("/deleteIns", async (req, res) => {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+        "Access-Control-Allow-Methods": "GET, POSconst PTIONS =PUT, DELETE",
       },
     });
   });
-});
+};
 
-router.post("/listIns", async (req, res) => {
+const listIns = async (req, res) => {
   const { userToken } = req.body;
 
   fetch(`http://localhost:3333/instance/list`, {
@@ -89,9 +87,9 @@ router.post("/listIns", async (req, res) => {
         break;
     }
   });
-});
+};
 
-router.post("/getInfo", async (req, res) => {
+const getInfo = async (req, res) => {
   const { key } = req.body;
 
   fetch(
@@ -115,9 +113,9 @@ router.post("/getInfo", async (req, res) => {
       return res.status(404).send("Usuário não encontrado");
     }
   });
-});
+};
 
-router.post("/checkStatus", async (req, res) => {
+const checkStatus = async (req, res) => {
   const { key, userToken } = req.body;
 
   const hashed_key = encryptKey(key, userToken);
@@ -143,6 +141,12 @@ router.post("/checkStatus", async (req, res) => {
       return res.status(404).send("Usuário não encontrado");
     }
   });
-});
+};
 
-module.exports = (app) => app.use("/instance", router);
+module.exports = {
+  initUser,
+  deleteIns,
+  listIns,
+  getInfo,
+  checkStatus
+}

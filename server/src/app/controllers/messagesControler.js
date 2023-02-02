@@ -1,7 +1,4 @@
-const express = require("express");
-const router = express.Router();
-
-router.post("/sendMessage", async (req, res) => {
+const sendMessage = async (req, res) => {
   const { user_id, msg, phone_number } = req.body;
 
   fetch(`http://localhost:3333/message/text?key=${user_id}`, {
@@ -17,9 +14,9 @@ router.post("/sendMessage", async (req, res) => {
   }).then(async (response) => {
     return res.send("mensagem enviada");
   });
-});
+};
 
-router.post("/sendMultipleMessages", async (req, res) => {
+const sendMultipleMessages = async (req, res) => {
   const { user_id, msg, number_list } = req.body;
 
   number_list.forEach((number) => {
@@ -37,6 +34,9 @@ router.post("/sendMultipleMessages", async (req, res) => {
       return res.send("mensagens enviadas.");
     });
   });
-});
+};
 
-module.exports = (app) => app.use("/message", router);
+module.exports = {
+  sendMessage,
+  sendMultipleMessages
+}

@@ -1,19 +1,19 @@
-const express = require("express");
-const router = express.Router();
-const ChatMessage = require("../models/chatmessage");
 const LiveChat = require("../models/livechat");
+const ChatMessage = require("../models/chatmessage");
 
-router.post("/getChat", async (req, res) => {
+const getChat = async (req, res) => {
   try {
     const { from, to } = req.body;
 
-    const exist = await LiveChat.findOne({ // procura no banco de dados o chat correspondente
+    const exist = await LiveChat.findOne({
+      // procura no banco de dados o chat correspondente
       members: {
         $all: [from, to],
       },
     });
 
-    if (!exist) { // se esse chat não existir, ele gera um novo documento no banco pra ele
+    if (!exist) {
+      // se esse chat não existir, ele gera um novo documento no banco pra ele
       const newChat = new LiveChat({
         members: [from, to],
       });
@@ -21,7 +21,8 @@ router.post("/getChat", async (req, res) => {
       await newChat.save(); // salva o documento
     }
 
-    let conversation = await LiveChat.findOne({ // se ele já existir, retorna ele para o requisitor
+    let conversation = await LiveChat.findOne({
+      // se ele já existir, retorna ele para o requisitor
       members: { $all: [from, to] },
     });
 
@@ -29,10 +30,10 @@ router.post("/getChat", async (req, res) => {
   } catch (err) {
     return res.send(err);
   }
-});
+};
 
-router.post("/newMessage", async (req, res) => {
-  const { text, from, to, chatId, currentDate } = req.body; 
+const newMessage = async (req, res) => {
+  const { text, from, to, chatId, currentDate } = req.body;
   const newMessage = new ChatMessage(req.body);
 
   try {
@@ -54,9 +55,9 @@ router.post("/newMessage", async (req, res) => {
   } catch (err) {
     return res.send(err);
   }
-});
+};
 
-router.post("/getMessages", async (req, res) => {
+const getMessages = async (req, res) => {
   const { chatId } = req.body;
 
   try {
@@ -67,6 +68,10 @@ router.post("/getMessages", async (req, res) => {
   } catch (err) {
     return res.send(err);
   }
-});
+};
 
-module.exports = (app) => app.use("/live-chat", router);
+module.exports = {
+  getMessages,
+  newMessage,
+  getChat,
+};

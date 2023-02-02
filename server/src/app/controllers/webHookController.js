@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const socket = require("../../index");
+const socket = require("../../../index");
 
-router.post("/userHandler", async (req, res) => {
+const userHandler = async (req, res) => {
   console.log(req.body);
 
   switch (req.body.type) {
@@ -26,6 +26,8 @@ router.post("/userHandler", async (req, res) => {
 
       break;
   }
-});
+};
 
-module.exports = (app) => app.use("/webHook", router);
+module.exports = {
+  userHandler
+}

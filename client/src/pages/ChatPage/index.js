@@ -10,7 +10,10 @@ import {
   ContactTopBar,
   MessageContainer,
   Chat,
+  Sentinel,
   MessageBtn,
+  SendFileInput,
+  ClipIcon,
 } from "./styles";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
@@ -21,7 +24,9 @@ function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
   const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
   const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
+  const [currentPage, setCurrentPage] = useState(-20);
   const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const [file, setFile] = useState();
   const chatRef = useRef(); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
     chatId: "",
@@ -36,21 +41,30 @@ function ChatPage() {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
-      setChatMsgs(data);
+      setChatMsgs(data.slice(1).slice(currentPage));
     };
     getMessageDetails();
-  }, [selectedContact, chatId, newMessageFlag]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
+  }, [selectedContact, chatId, newMessageFlag, currentPage]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
 
   useEffect(() => {
-    // hook para sempre manter o scroll do chat no final
-    chatRef.current.scrollTop = chatRef.current.scrollHeight;
-  });
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setCurrentPage((currentPageInsideState) => currentPageInsideState - 20);
+      }
+    });
+
+    intersectionObserver.observe(document.querySelector(".sentinel"));
+
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     let socket = io.connect("http://localhost:3001"); // socket de conexão com o back-end
 
     const saveReceiverMsg = async (data) => {
-      await fetch(`${process.env.REACT_APP_URL}/live-chat/getChat`, {
+      await fetch(`${process.env.REACT_APP_URL}/livechat/getChat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +117,7 @@ function ChatPage() {
     setMessage("");
 
     // função para enviar uma nova mensagem
-    fetch(`${process.env.REACT_APP_URL}/live-chat/newMessage`, {
+    fetch(`${process.env.REACT_APP_URL}/livechat/newMessage`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,7 +137,7 @@ function ChatPage() {
 
   const handleGetChat = async (number, pfp, name) => {
     // essa função serve para buscar as informações do chat selecionado
-    fetch(`${process.env.REACT_APP_URL}/live-chat/getChat`, {
+    fetch(`${process.env.REACT_APP_URL}/livechat/getChat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,13 +157,15 @@ function ChatPage() {
         contactPfp: pfp,
         contactName: name,
       });
+      setCurrentPage(-10);
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
     });
   };
 
   async function handleGetMsgs() {
     // função usada para buscar o histórico de mensagens do usuário com um determinado contato
     const res = await fetch(
-      `${process.env.REACT_APP_URL}/live-chat/getMessages`,
+      `${process.env.REACT_APP_URL}/livechat/getMessages`,
       {
         method: "POST",
         headers: {
@@ -165,6 +181,33 @@ function ChatPage() {
     const json_res = await res.json();
     return json_res;
   }
+
+  useEffect(() => {
+    const getImage = async () => {
+      if (file) {
+        const data = new FormData()
+        data.append("name", file.name)
+        data.apend("file", file)
+
+        await fetch (`${process.env.REACT_APP_URL}/file/uploadFile`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: {
+            file: data
+          }
+        })
+      }
+    }
+    getImage();
+  }, [file])
+
+  const onFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setMessage(e.target.files[0].name);
+  };
 
   return (
     <Container>
@@ -192,6 +235,7 @@ function ChatPage() {
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
         <Chat ref={chatRef}>
+          <Sentinel className="sentinel"></Sentinel>
           {chatMsgs.map((msg, index) => {
             return (
               <>
@@ -212,6 +256,14 @@ function ChatPage() {
           })}
         </Chat>
         <ChatInputContainer>
+          <label htmlFor="fileinput">
+            <ClipIcon size={30} />
+          </label>
+          <SendFileInput
+            type="file"
+            id="fileinput"
+            onChange={(e) => onFileChange(e)}
+          />
           <ChatInput
             type="text"
             placeholder="Mensagem"
