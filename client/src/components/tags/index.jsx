@@ -8,7 +8,10 @@ function Tags() {
     const [edit, setEdit] = useState(true);
     const [inputValue, setInputValue] = useState('');
 
-
+    /*
+    Se aparecer o bug de atualizar mutiplos campos se liga na dica do chatgpt
+    vai tá no arquivo helpe.txt :)
+    */
     const handleAddInf = () => {
         const newInfo = [
             {
