@@ -13,7 +13,7 @@ function Menu() {
             <ItensMenu>
             <p><Link className='link' to="/:userIns/settings">WhatsApp</Link></p>
             <p><Link className='link' to="/:userIns/settings/customFields">Campos personalizados</Link></p>
-            <p><Link className='link'>Etiquetas</Link></p>
+            <p><Link className='link' to="/:userIns/settings/tags">Etiquetas</Link></p>
             <p><Link className='link'>Respostas rápidas</Link></p>
             <p><Link className='link'>Administradores</Link></p>
             <p><Link className='link'>Boas vindas, Respostas Padrão e Erro</Link></p>

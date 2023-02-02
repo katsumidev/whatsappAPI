@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Menu from "../menu";
-import { AddField, ContentTable, HeaderContainer, SelectField, SelectFieldContainer } from "./styles";
+import { AddField, ContentTable } from "./styles";
 
-function Fields() {
+function Tags() {
 
     const [fields, SetField] = useState([]);
 
@@ -10,12 +10,10 @@ function Fields() {
         const newInfo = [
             {
                 name: 'Maria',
-                type: 'texto',
                 description: 'Tal tal'
             },
             {
                 name: 'João',
-                type: 'texto',
                 description: 'Tal tal'
             },
         ]
@@ -30,34 +28,20 @@ function Fields() {
         SetField(oldField);
     }
 
-    return(
+    return (
         <>
-            <Menu/>
-            <HeaderContainer>
-                <SelectFieldContainer>
-                    <SelectField>
-                        <p>Campos do Usuário</p>
-                    </SelectField>
-                    <SelectField>
-                        <p>Campos do Robô</p>
-                    </SelectField>
-                </SelectFieldContainer>
-                <AddField onClick={handleAddInf}>
-                    +
-                </AddField>
-            </HeaderContainer>
-            <ContentTable>
+        <Menu/>
+        <AddField onClick={handleAddInf}>
+            +
+        </AddField>
+        <ContentTable>
                 <tr>
                     <th><p className="titles">Nome</p></th>
-                    <th><p className="titles">Tipo</p></th>
                     <th><p className="titles">Descrição</p></th>
                 </tr>
                 <tr>
                     <td>
                         <p className="itens">ajuda_cliente</p>
-                    </td>
-                    <td>
-                        <p className="itens">texto</p>
                     </td>
                     <td>
                         <p className="itens">_________________</p>
@@ -79,7 +63,7 @@ function Fields() {
                     })}
             </ContentTable>
         </>
-    )
+    );
 }
 
-export default Fields;
+export default Tags;
