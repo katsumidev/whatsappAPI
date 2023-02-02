@@ -33,6 +33,7 @@ border-radius: 10px;
 width: 50px;
 text-align: center;
 margin-top: 15px;
+cursor: pointer;
 ` 
 export const ContentTable = styled.table`
 border-radius: 5px;
@@ -56,5 +57,9 @@ border: 1px solid #e5e5e5;
 
     .itens {
         margin-right: 95px;
+    }
+
+    button {
+        cursor: pointer;
     }
 `
