@@ -5,6 +5,9 @@ import { AddField, ContentTable } from "./styles";
 function Tags() {
 
     const [fields, SetField] = useState([]);
+    const [edit, setEdit] = useState(true);
+    const [inputValue, setInputValue] = useState('');
+
 
     const handleAddInf = () => {
         const newInfo = [
@@ -12,13 +15,14 @@ function Tags() {
                 name: 'Maria',
                 description: 'Tal tal'
             },
-            {
-                name: 'João',
-                description: 'Tal tal'
-            },
+            
         ]
 
         SetField(newInfo)
+    }
+
+    const editField = (condition) => {
+        setEdit(condition);
     }
 
     const deleteField = (name) => {
@@ -52,11 +56,19 @@ function Tags() {
                         </button>
                     </td>
                 </tr>
-                {fields.map((field, index) => {
+                {
+                fields.map((field, index) => {
                         return <tr key={index}>
-                                <td><p className="itens">{field.name}</p></td>
+                                <td><input 
+                                className="itens" 
+                                type="text" 
+                                value={inputValue || field.name} 
+                                onChange={(e) => setInputValue(e.target.value)} 
+                                disabled={edit ? true : false} 
+                                /></td>
                                 <td><p className="itens">{field.type}</p></td>
                                 <td><p className="itens">{field.description}</p></td>
+                                <td><button onClick={() => editField(false)}>✏️</button></td>
                                 <td><button onClick={() => deleteField(field.name)}>🗑️</button></td>
                                </tr>
                         

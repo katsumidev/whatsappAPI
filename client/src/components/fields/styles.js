@@ -56,6 +56,9 @@ border: 1px solid #e5e5e5;
     }
 
     .itens {
+        box-shadow: 0 0 0 0;
+        border: 0 none;
+        outline: 0;
         margin-right: 95px;
     }
 
