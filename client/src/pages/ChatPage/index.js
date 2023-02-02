@@ -19,6 +19,7 @@ import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import { ContactList } from "../UserPanel/styles";
 import { convertToDate } from "../../utils/convertDate";
+import { uploadFile } from "../../services/api";
 
 function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
@@ -26,6 +27,7 @@ function ChatPage() {
   const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
   const [currentPage, setCurrentPage] = useState(-20);
   const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const [image, setImage] = useState()
   const [file, setFile] = useState();
   const chatRef = useRef(); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
@@ -36,6 +38,7 @@ function ChatPage() {
   }); // estado que guarda as informações do contato selecionado
   const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
   const navigate = useNavigate();
+  const scrollRef = useRef();
 
   useEffect(() => {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
@@ -59,6 +62,10 @@ function ChatPage() {
       intersectionObserver.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ transition: "smooth" })
+}, [currentPage]);
 
   useEffect(() => {
     let socket = io.connect("http://localhost:3001"); // socket de conexão com o back-end
@@ -187,18 +194,10 @@ function ChatPage() {
       if (file) {
         const data = new FormData()
         data.append("name", file.name)
-        data.apend("file", file)
+        data.append("file", file)
 
-        await fetch (`${process.env.REACT_APP_URL}/file/uploadFile`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: {
-            file: data
-          }
-        })
+        let response = await uploadFile(data);
+        setImage(response.data);
       }
     }
     getImage();
@@ -234,7 +233,7 @@ function ChatPage() {
           <ContactPfp src={selectedContact.contactPfp} />
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
-        <Chat ref={chatRef}>
+        <Chat ref={scrollRef}>
           <Sentinel className="sentinel"></Sentinel>
           {chatMsgs.map((msg, index) => {
             return (

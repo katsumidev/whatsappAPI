@@ -35,6 +35,7 @@ route.post("/instance/getInfo", instance.getInfo);
 route.post("/instance/checkStatus", instance.checkStatus);
 
 //files
-// route.post("/file/uploadFile", upload.single("file"), files.uploadFile);
+route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);
+route.get("/file/:filename", files.getImage)
 
 module.exports = (app) => app.use("/", route)
