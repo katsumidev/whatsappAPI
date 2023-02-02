@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserPanel from "./pages/UserPanel";
 import ChatPage from "./pages/ChatPage";
 import Header from "./components/Header";
+import WhatsApp from "./components/whatsapp";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route exact path="/panel/:userIns" element={<UserPanel />} />
           <Route path="/:userIns/live-chat/:chatId?" element={<ChatPage />} />
+          <Route path="/:userIns/settings" element={<WhatsApp/>}/>
         </Routes>
         <GlobalStyle />
       </ModalProvider>
