@@ -7,7 +7,7 @@ function Tags() {
 
     const [fields, SetField] = useState([]);
     const [edit, setEdit] = useState(true);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState({});
     const {userIns} = useParams();
     
 
@@ -50,17 +50,6 @@ function Tags() {
                     <th><p className="titles">Descrição</p></th>
                 </tr>
                 <tr>
-                    <td>
-                        <p className="itens">ajuda_cliente</p>
-                    </td>
-                    <td>
-                        <p className="itens">_________________</p>
-                    </td>
-                    <td>
-                        <button>
-                            🗑️
-                        </button>
-                    </td>
                 </tr>
                 {
                 fields.map((field, index) => {
@@ -68,8 +57,8 @@ function Tags() {
                                 <td><input 
                                 className="itens" 
                                 type="text" 
-                                value={inputValue || field.name} 
-                                onChange={(e) => setInputValue(e.target.value)} 
+                                value={inputValue[field.name] || field.name} 
+                                onChange={(e) => setInputValue({...inputValue, [field.name]: e.target.value})} 
                                 disabled={edit ? true : false} 
                                 /></td>
                                 <td><p className="itens">{field.type}</p></td>
