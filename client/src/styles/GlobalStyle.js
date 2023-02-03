@@ -19,6 +19,7 @@ export default createGlobalStyle`
     :root {
         --main-background: #ffffff;
         --mainText: #000000;
+        --secundaryText: 	#696969	;
         --secundary-background: #F0F2F5;
         --tertiary-background: #F5F6F6;
         --chat-background: #F4F1EB;

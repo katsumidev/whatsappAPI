@@ -17,7 +17,16 @@ import {
 } from "./styles";
 import InputMask from "react-input-mask";
 import CheckboxGroup from "react-checkbox-group";
+import { convertToPhone } from "../../utils/conversions";
 import { useParams } from "react-router";
+import {
+  getInfo,
+  getContacts,
+  addNewContact,
+  deleteUserContact,
+  sendSingleMessage,
+  sendMultipleMessages,
+} from "../../services/api";
 
 function UserPanel() {
   const [phoneNumber, setPhoneNumber] = useState(0);
@@ -25,145 +34,74 @@ function UserPanel() {
   const [contactNumber, setContactNumber] = useState(0);
   const [contactName, setContactName] = useState("");
   const [numbers, setNumbers] = useState([]);
-  const [userName, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [msg, setMsg] = useState("");
   const { userIns } = useParams();
 
   useEffect(() => {
-    console.log(numbers);
-  }, [numbers]);
+    // pega o nome do usuário
+    const getUserInfo = async () => {
+      let data = await getInfo({ key: userIns });
+      setUsername(data.data.instance_data.user.name);
+    };
+    getUserInfo();
+  });
 
   useEffect(() => {
-    fetch(
-      // busca as informações do usuário pegando sua id nos próprios parametros da aplicação
-      `${process.env.REACT_APP_URL}/instance/getInfo`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          key: userIns,
-        }),
-      }
-    ).then(async (res) => {
-      let data = await res.json();
-
-      setUsername(data.instance_data.user.name);
-    });
-  }, []);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/contacts/consultContacts`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
+    // pega os contatos do usuário
+    const loadContacts = async () => {
+      let data = await getContacts({
         user_token: localStorage.getItem("userToken"),
-      }),
-    }).then(async (res) => {
-      let data = await res.json();
-
-      switch (res.status) {
-        case 200:
-          setContacts(data);
-          break;
-      }
-    });
+      });
+      setContacts(data.data);
+    };
+    loadContacts();
   }, []);
 
-  const addNewContact = (e) => {
+  const addContact = async (e) => {
+    // adiciona um novo contato
     if (contactNumber > 0 && contactName != "") {
-      fetch(`${process.env.REACT_APP_URL}/contacts/addContact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          phone_number: contactNumber,
-          contact_name: contactName,
-          user_token: localStorage.getItem("userToken"),
-          user_id: userIns,
-        }),
-      }).then(async (res) => {
-        await window.location.reload(false);
-
-        switch (res.status) {
-          case 200:
-            break;
-          case 503:
-            alert("número já está registrado");
-            break;
-        }
+      let data = await addNewContact({
+        phone_number: contactNumber,
+        contact_name: contactName,
+        user_token: localStorage.getItem("userToken"),
+        user_id: userIns,
       });
+      window.location.reload(false);
     } else {
       alert("preencha os campos");
       e.preventDefault();
     }
   };
 
-  function deleteContact(number) {
-    fetch(`${process.env.REACT_APP_URL}/contacts/deleteContact`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        phone_number: number,
-        user_token: localStorage.getItem("userToken"),
-      }),
+  const deleteContact = async (number) => {
+    // deleta o contato do usuário
+    let data = await deleteUserContact({
+      phone_number: number,
+      user_token: localStorage.getItem("userToken"),
     });
 
     window.location.reload(false);
-  }
-
-  const sendMsg = (e) => {
-    if (numbers.length > 1) {
-      fetch(`${process.env.REACT_APP_URL}/message/sendMultipleMessages`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userIns,
-          number_list: numbers,
-          msg: msg,
-        }),
-      });
-    } else {
-      fetch(`${process.env.REACT_APP_URL}/message/sendMessage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userIns,
-          msg: msg,
-          phone_number: numbers[0],
-        }),
-      });
-    }
   };
 
-  function convertToPhone(p) {
-    p =
-      "+" +
-      p.substr(0, 2) +
-      " (" +
-      p.substr(2, 2) +
-      ") " +
-      p.substr(4, 4) +
-      "-" +
-      p.substr(8, 4);
-    return p;
-  }
+  const sendMsg = async (e) => {
+    // enviar mensagens automática através do painel de usuário
+    if (numbers.length > 1) {
+      await sendMultipleMessages({
+        user_id: userIns,
+        number_list: numbers,
+        msg: msg,
+      });
+    } else {
+      await sendSingleMessage({
+        user_id: userIns,
+        phone_number: numbers[0],
+        msg: msg,
+      });
+    }
+
+    e.preventDefault();
+  };
 
   return (
     <Container>
@@ -198,7 +136,7 @@ function UserPanel() {
           </ContactList>
         </FirstColumn>
         <SecondColumn>
-          <form onSubmit={addNewContact}>
+          <form onSubmit={addContact}>
             <h3>Adicionar novo contato</h3>
             <ContactNameInput
               type="text"
@@ -215,7 +153,7 @@ function UserPanel() {
             <SendMsgBtn type="submit" value="Enviar" />
           </form>
           <form onSubmit={(e) => sendMsg(e)}>
-            <h3>Olá {userName} 👋</h3>
+            <h3>Olá {username} 👋</h3>
             <MessageInput
               type="text"
               placeholder="Sua mensagem.."

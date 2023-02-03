@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const socket = require("../../index");
+const socket = require("../../../index");
 
-router.post("/userHandler", async (req, res) => {
+const userHandler = async (req, res) => {
   console.log(req.body);
 
   switch (req.body.type) {
@@ -12,20 +12,56 @@ router.post("/userHandler", async (req, res) => {
       }
       break;
     case "message":
-      let messageContent = req.body.body.text.messages[0].message.conversation;
+      // let messageContent = req.body.body.text.messages[0].message.conversation;
+      // let extendedMessageContent = req.body.body.text.extendedTextMessage;
+      // console.log("jooj = " + extendedMessageContent)
 
-      if (messageContent) {
-        if (req.body.body.key.fromMe == false) {
+      // if (req.body.body.message.documentMessage) {
+      //   if (req.body.body.key.fromMe == false) {
+      //     socket.ioObject.emit("message", {
+      //       content: req.body.body.message.documentMessage.url,
+      //       from: req.body.body.text.messages[0].key.remoteJid.split("@")[0],
+      //       to: req.body.instanceKey,
+      //       type: "document",
+      //     });
+      //   }
+      // }
+
+      if (req.body.body.key.fromMe == false) {
+        // mensagens comuns
+        if (req.body.body.message.conversation) {
           socket.ioObject.emit("message", {
-            content: messageContent,
+            content: req.body.body.text.messages[0].message.conversation,
             from: req.body.body.text.messages[0].key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
+            type: "text",
+          });
+        } else if (req.body.body.message.imageMessage) { // imagens
+          socket.ioObject.emit("message", {
+            content: req.body.body.message.imageMessage.url,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            type: "image",
+          });
+        } else if ( // mensagens marcadas
+          req.body.body.message.extendedTextMessage.contextInfo.quotedMessage
+        ) {
+          socket.ioObject.emit("message", {
+            content: req.body.body.message.extendedTextMessage.text,
+            quotedContent:
+              req.body.body.message.extendedTextMessage.contextInfo
+                .quotedMessage.conversation,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            type: "quotedText",
           });
         }
       }
 
       break;
   }
-});
+};
 
-module.exports = (app) => app.use("/webHook", router);
+module.exports = {
+  userHandler,
+};

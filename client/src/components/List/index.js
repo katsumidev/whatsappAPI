@@ -4,6 +4,7 @@ import ListItem from "../ListItem";
 import { useModalContext } from "../../modal.context";
 import Modal from "../Modal";
 import { useNavigate } from "react-router";
+import { ListInstance } from "../../services/api";
 
 function List() {
   const [allIns, setIns] = useState([]); // instância ou "ID" dos usuários
@@ -14,25 +15,12 @@ function List() {
     openModal,
   } = useModalContext(); // context usado para gerenciar o modal de leitura do QRCODE
 
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/instance/listIns`, { // Lista todos os usuários conectados na API e que possuem o token registrado (esse token vai ser o token de login do usuário, ainda a ser feito)
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        userToken: localStorage.getItem("userToken"),
-      })
-    }).then(async (res) => {
-      let data = await res.json();
-
-      switch (res.status) {
-        case 200:
-          setIns(data);
-          break;
-      }
-    });
+  useEffect(() => { // lista as instâncias do usuário dono do token requerido do localStorage
+    const listIns = async () => {
+      let data = await ListInstance({userToken: localStorage.getItem("userToken")})
+      setIns(data.data)
+    }
+    listIns();
   }, []);
 
   return (

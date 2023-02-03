@@ -29,3 +29,5 @@ module.exports = (req, res, next) => {
     return res.send(req.userId)
   });
 };
+
+// este middleware não é usado em nenhum lugar, é para ser usado futuramente

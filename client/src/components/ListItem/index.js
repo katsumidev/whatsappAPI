@@ -8,65 +8,34 @@ import {
   Options,
   LiveChatButton,
 } from "./styles";
+import { convertToPhone } from "../../utils/conversions";
+import { getInfo, deleteInstance } from "../../services/api";
 
 function ListItem(props) {
   const [insInfo, setInsInfo] = useState({ username: "", userId: "" }); // informações da instância do usuário
   const [valid, setValid] = useState(true); // verifica se o número é válido (usado para atualizar em tempo real o front)
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_URL}/instance/getInfo`, {
-      // Busca pelo usuário recebido por props, pegando suas informações
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        key: props.name,
-      }),
-    }).then(async (res) => {
-      let data = await res.json();
-      switch (res.status) {
-        case 200:
-          setInsInfo({
-            username: data.instance_data.user.name,
-            userId: data.instance_data.user.id.split(":")[0], // pega o numero de telefone do usuário da string retornada
-          });
-          break;
-      }
-    });
+    // pega o nome e o telefone do usuário
+    const getUserInfo = async () => {
+      let data = await getInfo({ key: props.name });
+      setInsInfo({
+        username: data.data.instance_data.user.name,
+        userId: data.data.instance_data.user.id.split(":")[0],
+      });
+    };
+    getUserInfo();
   }, []);
 
-  const DeleteNumber = () => {
-    fetch(`${process.env.REACT_APP_URL}/instance/deleteIns`, {
-      // Busca pelo usuário recebido por props, deletando sua instância no banco de dados
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        key: props.name,
-        userToken: "teste",
-      }),
-    })
+  const DeleteNumber = async () => {
+    // deleta a instância do usuário
+    let data = await deleteInstance({
+      key: props.name,
+      userToken: localStorage.getItem("userToken"),
+    });
 
-      setValid(false);
+    setValid(false);
   };
-
-  function convertToPhone(p) {
-    p =
-      "+" +
-      p.substr(0, 2) +
-      " (" +
-      p.substr(2, 2) +
-      ") " +
-      p.substr(4, 4) +
-      "-" +
-      p.substr(8, 4);
-    return p;
-  }
-
 
   return (
     <>
