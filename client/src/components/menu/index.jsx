@@ -15,7 +15,7 @@ function Menu() {
             <p><Link className='link' to="/:userIns/settings/customFields">Campos personalizados</Link></p>
             <p><Link className='link' to="/:userIns/settings/tags">Etiquetas</Link></p>
             <p><Link className='link' to="/:userIns/settings/fastReplies">Respostas rápidas</Link></p>
-            <p><Link className='link'>Administradores</Link></p>
+            <p><Link className='link' to="/:userIns/settings/managers">Administradores</Link></p>
             <p><Link className='link'>Boas vindas, Respostas Padrão e Erro</Link></p>
             <p><Link className='link'>Companhia</Link></p>
             <p><Link className='link'>Logs</Link></p>

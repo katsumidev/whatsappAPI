@@ -10,6 +10,7 @@ import WhatsApp from "./components/whatsapp";
 import Fields from "./components/fields";
 import Tags from "./components/tags";
 import Responses from "./components/responses";
+import Admin from "./components/admin";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -26,6 +27,7 @@ function App() {
           <Route path="/:userIns/settings/customFields" element={<Fields/>}/>
           <Route path="/:userIns/settings/tags" element={<Tags/>}/>
           <Route path="/:userIns/settings/fastReplies" element={<Responses/>}/>
+          <Route path="/:userIns/settings/managers" element={<Admin/>}/>
         </Routes>
         <GlobalStyle />
       </ModalProvider>
