@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import Menu from "../menu";
 import { AddField, ContentTable, DownloadButton, HeaderContainer, SelectField, SelectFieldContainer } from "./styles";
 import { useParams } from "react-router";
+import FieldsModal from "../fieldsModal";
 
 function Fields() {
 
     const [fields, SetField] = useState([]);
     const [selectedTable, setSelectedTable] = useState('user');
+    const [isModalVisibleForm, setIsModalVisibleForm] = useState(false);
     const {userIns} = useParams();
 
     const handleAddInf = () => {
@@ -60,7 +62,7 @@ function Fields() {
                         Baixe relatório
                     </DownloadButton>
                 )}
-                <AddField onClick={handleAddInf}>
+                <AddField onClick={() => setIsModalVisibleForm(true)}>
                     +
                 </AddField>
             </HeaderContainer>
@@ -127,6 +129,7 @@ function Fields() {
                         )
                     })}
             </ContentTable>
+            {isModalVisibleForm && <FieldsModal><h2>Oi</h2></FieldsModal> }
         </>
     )
 }

@@ -14,6 +14,7 @@ import Admin from "./components/admin";
 import Welcome from "./components/welcome";
 import Company from "./components/company";
 import Logs from "./components/logs";
+import FieldsModal from "./components/fieldsModal";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -34,6 +35,7 @@ function App() {
           <Route path="/:userIns/settings/defaultValues" element={<Welcome/>}/>
           <Route path="/:userIns/settings/company" element={<Company/>}/>
           <Route path="/:userIns/settings/logs" element={<Logs/>}/>
+          <Route path="/teste" element={<FieldsModal/>}/>
         </Routes>
         <GlobalStyle />
       </ModalProvider>
