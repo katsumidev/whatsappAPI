@@ -83,6 +83,7 @@ function Responses() {
                                     <textarea className="replies-items" 
                                     value={textarea || field.text} 
                                     disabled={edit ? true : false}
+                                    onChange={(e) => setTextArea(e.target.value)}
                                     />
                                 </td>
                                 <td>

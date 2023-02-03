@@ -69,13 +69,26 @@ function Fields() {
                     </td>
                 </tr>
                 {fields.map((field, index) => {
-                        return <tr key={index}>
-                                <td><p>{field.name}</p></td>
-                                <td><p className="itens">{field.type}</p></td>
-                                <td><p className="itens">{field.description}</p></td>
-                                <td><button onClick={() => deleteField(field.name)}>🗑️</button></td>
+                        return (
+                            <tr key={index}>
+                                <td>
+                                    <p>{field.name}</p>
+                                </td>
+                                <td>
+                                    <p className="itens">{field.type}</p>
+                                </td>
+                                <td>
+                                    <p className="itens">{field.description}</p>
+                                </td>
+                                <td>
+                                    <button 
+                                    onClick={() => deleteField(field.name)}
+                                    >
+                                        🗑️
+                                    </button>
+                                </td>
                                </tr>
-                        
+                        )
                     })}
             </ContentTable>
         </>

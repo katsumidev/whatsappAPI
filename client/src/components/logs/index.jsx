@@ -1,7 +1,10 @@
+import { useParams } from 'react-router';
 import Menu from '../menu/index'
 import { Log, SelectTop } from './styles';
 
 function Logs() {
+    const {userIns} = useParams();
+
     return (
         <>
         <Menu />

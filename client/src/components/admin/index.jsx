@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Menu from "../menu";
 import { AddField, ContentTable, ShowAdm } from "./styles";
+import { useParams } from "react-router";
 
 function Admin() {
 
     const [fields, SetField] = useState([]);
+    const {userIns} = useParams();
 
     const handleAddInf = () => {
         const newInfo = [
@@ -101,19 +103,100 @@ function Admin() {
                 </tr>
                 {
                 fields.map((field, index) => {
-                        return <tr key={index}>
-                                <td><p className="itens">{field.name}</p></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.controls ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.audience ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.campany ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.trasmition ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.automation ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.flow ? true : false} /></td>
-                                <td><input type="checkbox" className="check_box" name="controls" id="controls" checked={field.configs ? true : false} /></td>
-                                <td><input type="checkbox" className="last_box" name="controls" id="controls" checked={field.chat ? true : false} /></td>
-                                <td><button onClick={() => deleteField(field.name)}>🗑️</button></td>
-                               </tr>
-                        
+                        return (
+                            <tr key={index}>
+                                <td>
+                                    <p className="itens">{field.name}</p>
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.controls ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.audience ? true : false
+                                        } 
+                                        />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.campany ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.trasmition ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.automation ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.flow ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="check_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.configs ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <input type="checkbox" 
+                                    className="last_box" 
+                                    name="controls" 
+                                    id="controls" 
+                                    checked={
+                                        field.chat ? true : false
+                                        } 
+                                    />
+                                </td>
+                                <td>
+                                    <button 
+                                        onClick={() => deleteField(field.name)}
+                                    >
+                                        🗑️
+                                    </button>
+                                </td>
+                            </tr>
+                        )
                     })}
             </ContentTable>
         </>

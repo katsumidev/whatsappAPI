@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Audience, Button, Container, FormLeft, FormRIght } from "./styles";
 import Menu from "../menu";
+import { useParams } from "react-router";
 
 function Company() {
+    const {userIns} = useParams();
+
+
     const timeZones = [
         { value: 'UTC-12', label: '(UTC-12:00) International Date Line West' },
         { value: 'UTC-11', label: '(UTC-11:00) Coordinated Universal Time-11' },
-        // ...
         { value: 'UTC+12', label: '(UTC+12:00) Coordinated Universal Time+12' },
       ];
       

@@ -1,7 +1,11 @@
+import { useParams } from 'react-router';
 import Menu from '../menu/index'
 import { ButtonSave, Container, LeftContainer, RightContainer, TextArea } from './styles';
 
 function Welcome() {
+    const {userIns} = useParams();
+
+
     return (
         <>
             <Menu/>

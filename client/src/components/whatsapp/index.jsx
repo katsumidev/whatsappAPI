@@ -1,8 +1,11 @@
 import { GrCircleAlert } from "react-icons/gr";
 import { RightContent, ServerContainer, ServerStatus } from "./style";
 import Menu from "../menu";
+import { useParams } from "react-router";
 
 function WhatsApp() {
+    const {userIns} = useParams();
+
     return (
         <>
         <Menu/>

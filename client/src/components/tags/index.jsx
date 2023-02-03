@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Menu from "../menu";
 import { AddField, ContentTable } from "./styles";
+import { useParams } from "react-router";
 
 function Tags() {
 
     const [fields, SetField] = useState([]);
     const [edit, setEdit] = useState(true);
     const [inputValue, setInputValue] = useState('');
+    const {userIns} = useParams();
+    
 
     /*
     Se aparecer o bug de atualizar mutiplos campos se liga na dica do chatgpt
