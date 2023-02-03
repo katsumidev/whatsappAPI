@@ -113,6 +113,7 @@ export const MessageContainer = styled.li`
   padding: 6px;
   gap: 10px;
   word-break: break-word;
+  margin: 10px 0;
   box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
   background-color: ${(props) =>
     props.receiver ? "white" : "var(--accent-color)"};
@@ -125,9 +126,15 @@ export const MessageContainer = styled.li`
 
   sub {
     font-size: 10px;
-    color: ${(props) => props.receiver ? "#919191" : "#00000"};
+    color: ${(props) => (props.receiver ? "#919191" : "#00000")};
     word-break: keep-all;
     align-self: flex-end;
+  }
+
+  img {
+    width: 300px;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -139,12 +146,52 @@ export const MessageBtn = styled(RiSendPlaneFill)`
 export const ClipIcon = styled(AiOutlinePaperClip)`
   color: black;
   cursor: pointer;
-`
+`;
 
 export const SendFileInput = styled.input`
   display: none;
-`
+`;
 
-export const Sentinel = styled.li`
+export const Sentinel = styled.li``;
 
-`
+export const DocumentContaner = styled.div``;
+
+export const QuotedMessageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+export const Quoted = styled.div`
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: var(--secundary-background);
+  gap: 2px;
+
+  p {
+    font-size: 13px;
+    padding: 0;
+    color: var(--secundaryText);
+  }
+
+  b {
+    font-size: 13px;
+    color: var(--accent-color-hover);
+  }
+`;
+
+export const NormalMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  sub {
+    align-self: flex-end;
+  }
+`;

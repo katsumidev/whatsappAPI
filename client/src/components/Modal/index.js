@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, ModalBox, FinishButton, Background } from "./styles";
 import { io } from "socket.io-client";
 import { useModalContext } from "../../modal.context";
+import { InitiateInstance } from "../../services/api";
 
 function Modal() {
   const {
@@ -16,35 +17,24 @@ function Modal() {
   const [html, setHTML] = useState("");
   const socket = io("http://localhost:3001");
 
-  const initIns = (e) => {
-    fetch(
-      // faz uma requisição para a API "cadastrando" o usuário
-      `${process.env.REACT_APP_URL}/instance/initUser`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          key: username,
-          token: process.env.REACT_APP_SECRET_TOKEN,
-          userToken: localStorage.getItem("userToken"),
-        }),
-      }
-    ).then(async (res) => {
-      let data = await res.json();
-      let parser = new DOMParser(); // a requisição retorna um código HTML no formato de uma string
+  const initIns = async (e) => {
+    e.preventDefault()
 
-      var doc = parser.parseFromString(data.qrdata, "text/html"); // converte a string em formato HTML
-      let qrcode = doc.getElementById("qrcode_box").src; // busca somente o link do qrcode gerado pela API 
-
-      setKey(data.key); // define a instância do usuário
-      setQrStatus(true); // diz que o qrcode já foi gerado
-      setHTML(qrcode); // link do qrcode
+    // cria uma nova instância de usuário
+    let data = await InitiateInstance({
+      key: username,
+      token: process.env.REACT_APP_SECRET_TOKEN,
+      userToken: localStorage.getItem("userToken"),
     });
 
-    e.preventDefault();
+    let parser = new DOMParser();
+
+    var doc = parser.parseFromString(data.data.qrdata, "text/html");
+    var qrcode = doc.getElementById("qrcode_box").src;
+
+    setKey(data.data.key);
+    setQrStatus(true);
+    setHTML(qrcode);
   };
 
   useEffect(() => {
@@ -67,14 +57,17 @@ function Modal() {
     <Container>
       <Background onClick={() => closeModal()} />
       <ModalBox>
-        <form onSubmit={initIns}>
+        <form onSubmit={(e) => initIns(e)}>
           <input
             type="text"
             name="username"
             placeholder="Seu nome.."
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input type="submit" className="submitButton" />
+          <input
+            type="submit"
+            className="submitButton"
+          />
         </form>
         {qrGenerated && (
           <>

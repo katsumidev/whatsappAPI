@@ -33,7 +33,7 @@ const getChat = async (req, res) => {
 };
 
 const newMessage = async (req, res) => {
-  const { text, from, to, chatId, currentDate } = req.body;
+  const { text, from, to, chatId, type, quotedMessage } = req.body;
   const newMessage = new ChatMessage(req.body);
 
   try {
@@ -49,7 +49,10 @@ const newMessage = async (req, res) => {
       }),
     }).then(async (response) => {
       await newMessage.save();
-      await LiveChat.findByIdAndUpdate(chatId, { message: text });
+      await LiveChat.findByIdAndUpdate(chatId, {
+        message: text,
+      });
+
       return res.status(200).send("mensagem enviada com sucesso");
     });
   } catch (err) {
