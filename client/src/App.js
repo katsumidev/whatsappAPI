@@ -12,6 +12,7 @@ import Tags from "./components/tags";
 import Responses from "./components/responses";
 import Admin from "./components/admin";
 import Welcome from "./components/welcome";
+import Company from "./components/company";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -30,6 +31,7 @@ function App() {
           <Route path="/:userIns/settings/fastReplies" element={<Responses/>}/>
           <Route path="/:userIns/settings/managers" element={<Admin/>}/>
           <Route path="/:userIns/settings/defaultValues" element={<Welcome/>}/>
+          <Route path="/:userIns/settings/company" element={<Company/>}/>
         </Routes>
         <GlobalStyle />
       </ModalProvider>
