@@ -54,7 +54,11 @@ function ChatPage() {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
-      setChatMsgs(data.slice(1).slice(currentPage));
+      if (data.lenght > 20) {
+        setChatMsgs(data.slice(1).slice(currentPage));
+      } else {
+        setChatMsgs(data)
+      }
     };
     getMessageDetails();
   }, [selectedContact, chatId, newMessageFlag, currentPage]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
