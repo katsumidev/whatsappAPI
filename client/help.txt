@@ -1,0 +1,31 @@
+Você precisa adicionar um estado para cada campo de forma individual. Uma solução é criar um array de estados com o mesmo tamanho que o array de fields. Cada estado será responsável por controlar o valor de um campo específico.
+
+Por exemplo:
+
+javascript
+
+const [fields, setFields] = useState([
+    { name: "Campo 1", description: "Descrição 1" },
+    { name: "Campo 2", description: "Descrição 2" }
+]);
+const [fieldValues, setFieldValues] = useState(fields.map(field => field.name));
+const [edit, setEdit] = useState(true);
+
+const handleChange = (index, value) => {
+    const newFieldValues = [...fieldValues];
+    newFieldValues[index] = value;
+    setFieldValues(newFieldValues);
+};
+
+return (
+    <>
+        {fields.map((field, index) => (
+            <input
+                key={index}
+                value={fieldValues[index]}
+                onChange={e => handleChange(index, e.target.value)}
+                disabled={edit ? true : false}
+            />
+        ))}
+    </>
+);

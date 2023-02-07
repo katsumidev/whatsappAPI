@@ -28,7 +28,6 @@ const getImage = async (req, res) => {
       filename: req.params.filename,
     });
 
-    console.log(file);
     const readStream = gridfsBucket.openDownloadStream(file._id);
     readStream.pipe(res);
   } catch (err) {

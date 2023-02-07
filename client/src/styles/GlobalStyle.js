@@ -6,7 +6,6 @@ export default createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         font-family: 'Quicksand', sans-serif;
-        overflow-x: hidden;
     }
     
     body {
@@ -19,11 +18,14 @@ export default createGlobalStyle`
     :root {
         --main-background: #ffffff;
         --mainText: #000000;
-        --secundaryText: 	#696969	;
+        --secundaryText: #696969;
         --secundary-background: #F0F2F5;
         --tertiary-background: #F5F6F6;
         --chat-background: #F4F1EB;
-        --accent-color:  #00FFAB;
+        --accent-color: #D9FDD3;
         --accent-color-hover:  #14C38E;
+        --accent-color-secundary: #D1F4CC;
+        --grey: #7B8890;
+        --sendImage-background: #E9EDEF;
     }
 `;

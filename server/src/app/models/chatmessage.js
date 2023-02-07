@@ -17,6 +17,9 @@ const MessageSchema = new mongoose.Schema(
     quotedMessage: {
       type: String,
     },
+    caption: {
+      type: String,
+    },
     type: {
       type: String,
     },
