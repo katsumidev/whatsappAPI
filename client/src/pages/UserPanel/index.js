@@ -18,6 +18,7 @@ import {
 import InputMask from "react-input-mask";
 import CheckboxGroup from "react-checkbox-group";
 import { convertToPhone } from "../../utils/conversions";
+import defaultPic from "../../assets/defaultPic.jpg";
 import { useParams } from "react-router";
 import {
   getInfo,
@@ -115,7 +116,9 @@ function UserPanel() {
                     return (
                       <ContactRow key={index}>
                         <ContactInfo>
-                          <ProfilePicture src={contact.pfp}></ProfilePicture>
+                          <ProfilePicture
+                            src={contact.pfp != null ? contact.pfp : defaultPic}
+                          ></ProfilePicture>
                           <ContactColumn>
                             <b>{contact.contact}</b>
                             <p>{convertToPhone(contact.number)}</p>

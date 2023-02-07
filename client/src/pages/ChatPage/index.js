@@ -28,9 +28,11 @@ import {
   ContactsList,
   Menu,
   VideoContainer,
+  DocumentViewer,
   EmojiMenu,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
+import { Document, Page, pdfjs } from "react-pdf";
 import {
   FloatingMenu,
   MainButton,
@@ -38,6 +40,7 @@ import {
 } from "react-floating-button-menu";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
+import defaultPic from "../../assets/defaultPic.jpg"
 import { ContactList, SendMsgBtn } from "../UserPanel/styles";
 import { convertToDate } from "../../utils/conversions";
 import {
@@ -49,6 +52,7 @@ import {
   sendImage,
   sendDoc,
   sendVid,
+  sendAudio
 } from "../../services/api";
 import {
   BsImage,
@@ -87,7 +91,7 @@ function ChatPage() {
       if (data.lenght > 20) {
         setChatMsgs(data.slice(1).slice(currentPage));
       } else {
-        setChatMsgs(data)
+        setChatMsgs(data);
       }
     };
     getMessageDetails();
@@ -237,6 +241,7 @@ function ChatPage() {
     });
     setCurrentPage(-10);
     setFile();
+    setIsOpen(false);
   };
 
   async function handleGetMsgs() {
@@ -277,6 +282,9 @@ function ChatPage() {
       case "video":
         await sendVid({ from: userIns, data: data });
         break;
+      case "audio":
+        await sendAudio({ from: userIns, data: data });
+        break;
     }
 
     handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file");
@@ -299,6 +307,18 @@ function ChatPage() {
     setIsOpen(false);
   };
 
+  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+  const pdf_styles = {
+    width: 250,
+    "@media max-width: 400": {
+      width: 250,
+    },
+    "@media orientation: landscape": {
+      width: 250,
+    },
+  };
+
   return (
     <Container>
       <ContactsList>
@@ -313,7 +333,7 @@ function ChatPage() {
                 selectedContact.contactId == contact.number ? "selected" : "not"
               }
             >
-              <ContactPfp src={contact.pfp} />
+              <ContactPfp src={contact.pfp != null ? contact.pfp : defaultPic} />
               <ContactName>{contact.contact}</ContactName>
             </ContactRow>
           );
@@ -321,7 +341,7 @@ function ChatPage() {
       </ContactsList>
       <ChatMain>
         <ContactTopBar>
-          <ContactPfp src={selectedContact.contactPfp} />
+          <ContactPfp src={selectedContact.contactPfp != null ? selectedContact.contactPfp : defaultPic} />
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
         {isOpen ? (
@@ -329,7 +349,19 @@ function ChatPage() {
             <ImageOptions>
               <CloseBtn onClick={() => closeImagePreview()}>X</CloseBtn>
             </ImageOptions>
-            <Image src={fileUrl}></Image>
+            {file.type.includes("application") && (
+              <DocumentViewer>
+                <Document file={fileUrl}>
+                  <Page
+                    pageNumber={1}
+                    width={400}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                  />
+                </Document>
+              </DocumentViewer>
+            )}
+            {file.type.includes("image") && <Image src={fileUrl} />}
             <SendOptions>
               <Caption
                 type="text"
@@ -507,9 +539,10 @@ const ImageMessage = ({ message }) => {
           <source src={message.text} type="video/mp4" />
         </VideoContainer>
       )}
-      {message?.text?.includes(".png") || message?.text?.includes(".jpg") && (
-        <img src={message.text} alt={message.text} />
-      )}
+      {message?.text?.includes(".png") ||
+        (message?.text?.includes(".jpg") && (
+          <img src={message.text} alt={message.text} />
+        ))}
     </>
   );
 };

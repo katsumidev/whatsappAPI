@@ -114,6 +114,14 @@ export const sendVid = async (data) => {
   }
 };
 
+export const sendAudio = async (data) => {
+  try {
+    return await axios.post(`http://localhost:3333/message/audio?key=${data.from}`, data.data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+}
+
 export const getCurrentChat = async (data) => {
   try {
     return await axios.post(`${url}/livechat/getChat`, data);

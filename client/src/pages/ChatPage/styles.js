@@ -195,6 +195,17 @@ export const QuotedMessageContainer = styled.div`
   gap: 5px;
 `;
 
+export const DocumentViewer = styled.div`
+  width: 80%;
+  margin: 10px;
+
+  canvas {
+    width: 40% !important;
+    height: auto !important;
+    margin: 0 auto;
+  }
+`;
+
 export const Quoted = styled.div`
   padding: 12px;
   border-radius: 6px;
@@ -301,4 +312,4 @@ export const Menu = styled.div`
 export const VideoContainer = styled.video`
   width: 100%;
   height: 100%;
-`
+`;

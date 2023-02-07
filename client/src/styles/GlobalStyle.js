@@ -13,6 +13,7 @@ export default createGlobalStyle`
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         color: var(--mainText);
+        -webkit-background-clip: text;
     }
 
     :root {
