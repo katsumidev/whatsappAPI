@@ -19,11 +19,12 @@ export default createGlobalStyle`
     :root {
         --main-background: #ffffff;
         --mainText: #000000;
-        --secundaryText: 	#696969	;
+        --secundaryText: #696969;
         --secundary-background: #F0F2F5;
         --tertiary-background: #F5F6F6;
         --chat-background: #F4F1EB;
-        --accent-color:  #00FFAB;
+        --accent-color: #D9FDD3;
         --accent-color-hover:  #14C38E;
+        --grey: #7B8890;
     }
 `;

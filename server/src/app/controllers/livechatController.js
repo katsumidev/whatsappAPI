@@ -33,27 +33,30 @@ const getChat = async (req, res) => {
 };
 
 const newMessage = async (req, res) => {
-  const { text, from, to, chatId, type, quotedMessage } = req.body;
+  const { text, from, to, chatId, type, quotedMessage, caption } = req.body;
   const newMessage = new ChatMessage(req.body);
 
   try {
-    fetch(`http://localhost:3333/message/text?key=${from}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        id: to,
-        message: text,
-      }),
-    }).then(async (response) => {
-      await newMessage.save();
-      await LiveChat.findByIdAndUpdate(chatId, {
-        message: text,
+    if (type != "file") {
+      fetch(`http://localhost:3333/message/text?key=${from}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          id: to,
+          message: text,
+        }),
+      }).then(async (response) => {
+        return res.status(200).send("mensagem enviada com sucesso");
       });
+    }
 
-      return res.status(200).send("mensagem enviada com sucesso");
+    await newMessage.save();
+    await LiveChat.findByIdAndUpdate(chatId, {
+      message: text,
+      caption: caption,
     });
   } catch (err) {
     return res.send(err);
