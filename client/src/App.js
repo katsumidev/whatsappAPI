@@ -22,7 +22,7 @@ function App() {
   return (
     <BrowserRouter>
       <ModalProvider>
-        <Header />
+        {/* <Header /> */}
         <Routes>
           <Route path="/" element={<Main />} />
           <Route exact path="/panel/:userIns" element={<UserPanel />} />

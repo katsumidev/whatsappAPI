@@ -6,7 +6,6 @@ export default createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         font-family: 'Quicksand', sans-serif;
-        overflow-x: hidden;
     }
     
     body {
@@ -25,6 +24,8 @@ export default createGlobalStyle`
         --chat-background: #F4F1EB;
         --accent-color: #D9FDD3;
         --accent-color-hover:  #14C38E;
+        --accent-color-secundary: #D1F4CC;
         --grey: #7B8890;
+        --sendImage-background: #E9EDEF;
     }
 `;

@@ -14,7 +14,7 @@ import {
   MessageBtn,
   SendFileInput,
   ClipIcon,
-  DocumentContaner,
+  DocumentContainer,
   QuotedMessageContainer,
   NormalMessage,
   Quoted,
@@ -25,14 +25,17 @@ import {
   SendOptions,
   Caption,
   EmojiSelectorMenu,
-  EmojiMenu
+  ContactsList,
+  Menu,
+  VideoContainer,
+  EmojiMenu,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import {
   FloatingMenu,
   MainButton,
   ChildButton,
-} from 'react-floating-button-menu';
+} from "react-floating-button-menu";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import { ContactList, SendMsgBtn } from "../UserPanel/styles";
@@ -44,7 +47,15 @@ import {
   sendMessage,
   uploadFile,
   sendImage,
+  sendDoc,
+  sendVid,
 } from "../../services/api";
+import {
+  BsImage,
+  IoDocument,
+  BsCameraVideoFill,
+  HiDownload,
+} from "../../styles/Icons";
 
 function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
@@ -54,12 +65,11 @@ function ChatPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [newMessageFlag, setNewMessageFlag] = useState(false);
   const [floatMenuOpen, setFloatMenuOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-  const [image, setImage] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
   const [caption, setCaption] = useState("");
   const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
-  const chatRef = useRef(); // hook auxiliar para o scroll do chat
+  const fileinput = useRef(null); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
     chatId: "",
     contactId: "",
@@ -154,7 +164,7 @@ function ChatPage() {
         chatId: chatId,
         from: from,
         to: to,
-        text: image,
+        text: fileUrl,
         caption: caption,
         type: "file",
       };
@@ -202,9 +212,8 @@ function ChatPage() {
     }
 
     setFile();
-    setImage("");
+    setFileUrl("");
     setMessage("");
-    setImageUrl("");
 
     await sendMessage(messageValue); // salve a mensagem
 
@@ -242,19 +251,30 @@ function ChatPage() {
         data.append("file", file);
 
         let response = await uploadFile(data);
-        setImage(response.data);
+        setFileUrl(response.data);
       }
     };
     getImage();
   }, [file]);
 
-  const handleImageMessage = async () => {
+  const handleFileMessage = async () => {
     const data = new FormData();
     data.append("file", file);
     data.append("id", selectedContact.contactId);
     data.append("caption", caption);
 
-    await sendImage({ from: userIns, data: data });
+    switch (file.type.split("/")[0]) {
+      case "image":
+        await sendImage({ from: userIns, data: data });
+        break;
+      case "application":
+        await sendDoc({ from: userIns, data: data });
+        break;
+      case "video":
+        await sendVid({ from: userIns, data: data });
+        break;
+    }
+
     handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file");
 
     setCaption("");
@@ -265,7 +285,8 @@ function ChatPage() {
   const onFileChange = (e) => {
     // sempre que o usuário selecionar um novo arquivo, salva as caracteristicas do arquivo nos estados:
     setFile(e.target.files[0]);
-    setImageUrl(e.target.files[0].name);
+    setFileUrl(e.target.files[0].name);
+
     setIsOpen(true);
   };
 
@@ -276,7 +297,7 @@ function ChatPage() {
 
   return (
     <Container>
-      <ContactList>
+      <ContactsList>
         {contacts.map((contact, index) => {
           return (
             <ContactRow
@@ -293,7 +314,7 @@ function ChatPage() {
             </ContactRow>
           );
         })}
-      </ContactList>
+      </ContactsList>
       <ChatMain>
         <ContactTopBar>
           <ContactPfp src={selectedContact.contactPfp} />
@@ -304,7 +325,7 @@ function ChatPage() {
             <ImageOptions>
               <CloseBtn onClick={() => closeImagePreview()}>X</CloseBtn>
             </ImageOptions>
-            <Image src={image}></Image>
+            <Image src={fileUrl}></Image>
             <SendOptions>
               <Caption
                 type="text"
@@ -314,7 +335,7 @@ function ChatPage() {
               <MessageBtn
                 className="file"
                 size={30}
-                onClick={() => handleImageMessage()}
+                onClick={() => handleFileMessage()}
               />
             </SendOptions>
           </SendImageContainer>
@@ -394,12 +415,48 @@ function ChatPage() {
                 size={26}
                 onClick={() => setEmojiMenuOpen(!emojiMenuIsOpen)}
               />
-              <label htmlFor="fileinput">
-                <ClipIcon size={30} />
-              </label>
+              <Menu>
+                <FloatingMenu
+                  slideSpeed={500}
+                  direction="up"
+                  spacing={10}
+                  isOpen={floatMenuOpen}
+                >
+                  <MainButton
+                    iconResting={<ClipIcon size={30} />}
+                    iconActive={<ClipIcon size={30} />}
+                    onClick={() => setFloatMenuOpen(!floatMenuOpen)}
+                    background="transparent"
+                    style={{ boxShadow: "none" }}
+                    size={30}
+                  />
+                  <ChildButton
+                    icon={<BsImage size={20} color="#FFFFFF" />}
+                    size={40}
+                    background="#BF59CF"
+                    onClick={() => fileinput.current.click()}
+                    style={{ boxShadow: "none" }}
+                  />
+                  <ChildButton
+                    icon={<BsCameraVideoFill size={20} color="#FFFFFF" />}
+                    size={40}
+                    background="#EC407A"
+                    onClick={() => fileinput.current.click()}
+                    style={{ boxShadow: "none" }}
+                  />
+                  <ChildButton
+                    icon={<IoDocument size={20} color="#FFFFFF" />}
+                    size={40}
+                    background="#5F66CD"
+                    onClick={() => fileinput.current.click()}
+                    style={{ boxShadow: "none" }}
+                  />
+                </FloatingMenu>
+              </Menu>
               <SendFileInput
                 type="file"
                 id="fileinput"
+                ref={fileinput}
                 onChange={(e) => onFileChange(e)}
               />
               <ChatInput
@@ -428,11 +485,25 @@ function ChatPage() {
 }
 
 const ImageMessage = ({ message }) => {
+  const handleDownloadFile = (url) => {
+    window.open(`${url}`);
+  };
+
   return (
     <>
-      {message?.text?.includes(".pdf") ? (
-        <DocumentContaner></DocumentContaner>
-      ) : (
+      {message?.text?.includes(".pdf") && (
+        <DocumentContainer onClick={() => handleDownloadFile(message.text)}>
+          <IoDocument size={30} fill="#F34646" />
+          <p>{message.text.split("file-")[1]}</p>
+          <HiDownload size={30} fill="#92AD9E" />
+        </DocumentContainer>
+      )}
+      {message?.text?.includes(".mp4") && (
+        <VideoContainer controls>
+          <source src={message.text} type="video/mp4" />
+        </VideoContainer>
+      )}
+      {message?.text?.includes(".png") || message?.text?.includes(".jpg") && (
         <img src={message.text} alt={message.text} />
       )}
     </>

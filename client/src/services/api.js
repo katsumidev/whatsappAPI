@@ -98,6 +98,22 @@ export const sendImage = async (data) => {
   }
 };
 
+export const sendDoc = async (data) => {
+  try {
+    return await axios.post(`http://localhost:3333/message/doc?key=${data.from}`, data.data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};
+
+export const sendVid = async (data) => {
+  try {
+    return await axios.post(`http://localhost:3333/message/video?key=${data.from}`, data.data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};
+
 export const getCurrentChat = async (data) => {
   try {
     return await axios.post(`${url}/livechat/getChat`, data);
@@ -109,6 +125,14 @@ export const getCurrentChat = async (data) => {
 export const getMessages = async (data) => {
   try {
     return await axios.post(`${url}/livechat/getMessages`, data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};
+
+export const downloadFile = async (data) => {
+  try {
+    return await axios.post(`${url}/files/getImage`, data);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }

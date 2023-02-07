@@ -1,23 +1,29 @@
 import styled from "styled-components";
-import { RiSendPlaneFill, AiOutlinePaperClip, MdOutlineEmojiEmotions } from "../../styles/Icons";
+import {
+  RiSendPlaneFill,
+  AiOutlinePaperClip,
+  MdOutlineEmojiEmotions,
+} from "../../styles/Icons";
 import background from "../../assets/background.png";
 
 export const Container = styled.div`
-  width: 100vw;
-  height: calc(100vh - 60px);
-  margin-top: 60px;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: row;
+  background-color: var(--main-background);
+  overflow: hidden;
 `;
 
-export const ContactsList = styled.ul`
+export const ContactsList = styled.div`
   display: flex;
   flex-direction: column;
-  width: fit-content;
+  width: 30%;
+  height: 100vh;
 `;
 
-export const ContactRow = styled.li`
-  width: 450px;
+export const ContactRow = styled.div`
+  width: 100%;
   height: auto;
   padding: 12px;
   margin: 0;
@@ -50,35 +56,37 @@ export const ContactPfp = styled.img`
 export const ContactInfo = styled.div``;
 
 export const ChatMain = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: auto;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   background-color: var(--chat-background);
+  position: relative;
 `;
 
-export const Chat = styled.ul`
+export const Chat = styled.div`
   padding: 26px;
   flex: 1;
-  position: relative;
+  overflow: auto;
+  height: 100%;
 `;
 
 export const ChatInputContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 80px;
+  padding: 16px;
   background-color: var(--secundary-background);
   margin-top: auto;
   gap: 20px;
-  position: relative;
+  bottom: 0;
 `;
 
 export const ChatInput = styled.input`
-  width: 70%;
   padding: 16px;
+  width: 100%;
   outline: none;
   border: none;
   border-radius: 12px;
@@ -96,14 +104,14 @@ export const ContactTopBar = styled.div`
   margin-top: 0;
   padding: 12px;
   gap: 15px;
-  overflow: hidden;
+  top: 0;
 
   p {
     font-weight: 600;
   }
 `;
 
-export const MessageContainer = styled.li`
+export const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
   color: black;
@@ -158,7 +166,7 @@ export const ClipIcon = styled(AiOutlinePaperClip)`
 export const EmojiSelectorMenu = styled(MdOutlineEmojiEmotions)`
   color: var(--grey);
   cursor: pointer;
-`
+`;
 
 export const SendFileInput = styled.input`
   display: none;
@@ -166,7 +174,20 @@ export const SendFileInput = styled.input`
 
 export const Sentinel = styled.li``;
 
-export const DocumentContaner = styled.div``;
+export const DocumentContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  background-color: var(--accent-color-secundary);
+  padding: 16px;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+
+  p {
+    font-size: 13px;
+  }
+`;
 
 export const QuotedMessageContainer = styled.div`
   display: flex;
@@ -217,6 +238,7 @@ export const SendImageContainer = styled.div`
   left: 0;
   padding: 26px;
   overflow: hidden;
+  background-color: var(--sendImage-background);
 
   display: flex;
   flex-direction: column;
@@ -236,10 +258,11 @@ export const CloseBtn = styled.p`
   overflow: hidden;
 `;
 export const Image = styled.img`
-  width: 50%;
+  width: 35%;
   height: auto;
   border-radius: 6px;
   margin: 10px;
+  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
 `;
 
 export const SendOptions = styled.div`
@@ -265,8 +288,17 @@ export const Caption = styled.input`
 
 export const EmojiMenu = styled.div`
   position: absolute;
-  top: -200px;
-  left: 0;
+  bottom: 10%;
+  left: 10px;
   z-index: 1;
-  overflow: hidden;
+`;
+
+export const Menu = styled.div`
+  position: relative;
+  bottom: 75px;
+`;
+
+export const VideoContainer = styled.video`
+  width: 100%;
+  height: 100%;
 `
