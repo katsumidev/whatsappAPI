@@ -66,7 +66,7 @@ import {
   BsFillPauseFill,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
-import {RHAP_UI} from "react-h5-audio-player"
+import { RHAP_UI } from "react-h5-audio-player";
 import "./styles.css";
 import { BsPlay } from "react-icons/bs";
 
@@ -554,60 +554,55 @@ const FileMessage = ({ message }) => {
           <PreviewBackground onClick={() => openImageFullPreview()} />
         </ImagePreview>
       )}
-      {message?.text?.includes(".pdf") && (
+      {[".pdf", ".doc", ".rar", ".zip"].some(el => message?.text?.includes(el)) && (
         <DocumentContainer onClick={() => handleDownloadFile(message.text)}>
           <IoDocument size={30} fill="#F34646" />
           <p>{message.text.split("file-")[1]}</p>
           <HiDownload size={30} fill="#92AD9E" />
         </DocumentContainer>
       )}
-      {message?.text?.includes(".mp4") && (
+      {[".mp4", ".mov"].some(el => message?.text?.includes(el)) && (
         <VideoContainer controls>
           <source src={message.text} type="video/mp4" />
           <sub>{convertToDate(message.date)}</sub>
         </VideoContainer>
       )}
-      {message?.text?.includes(".mp3") && (
-        <AudioMessage>
-          <AudioPlayer
-            src={message.text}
-            style={{
-              width: "300px",
-              backgroundColor: "transparent",
-              border: "none",
-              boxShadow: "none",
-              padding: "0",
-              margin: "0",
-              fontSize: "12px"
-            }}        
-            customProgressBarSection={
-              [
-                "DURATION",
-                "PROGRESS_BAR",
-              ]
-            }
-            customAdditionalControls={[]}
-            customVolumeControls={[]}
-            showSkipControls={false}
-            showJumpControls={false}
-            showFilledProgress={true}
-            showFilledVolume={false}
-            customIcons={{
-              play: <BsFillPlayFill />,
-              pause: <BsFillPauseFill />,
-            }}
-            layout="horizontal-reverse"
-          />
-        </AudioMessage>
-      )}
-      {message?.text?.includes(".png") ||
-        (message?.text?.includes(".jpg") && (
+      {
+      [".mp3", ".wav"].some(el => message?.text?.includes(el)) && (
+          <AudioMessage>
+            <AudioPlayer
+              src={message.text}
+              style={{
+                width: "300px",
+                backgroundColor: "transparent",
+                border: "none",
+                boxShadow: "none",
+                padding: "0",
+                margin: "0",
+                fontSize: "12px",
+              }}
+              customProgressBarSection={["DURATION", "PROGRESS_BAR"]}
+              customAdditionalControls={[]}
+              customVolumeControls={[]}
+              showSkipControls={false}
+              showJumpControls={false}
+              showFilledProgress={true}
+              showFilledVolume={false}
+              customIcons={{
+                play: <BsFillPlayFill />,
+                pause: <BsFillPauseFill />,
+              }}
+              layout="horizontal-reverse"
+            />
+          </AudioMessage>
+        )}
+      {[".png", ".jpg", ".jpeg"].some(el => message?.text?.includes(el)) && (
           <ImageMessage
             src={message.text}
             alt={message.text}
             onClick={() => openImageFullPreview(message.text)}
           />
-        ))}
+        )}
     </>
   );
 };

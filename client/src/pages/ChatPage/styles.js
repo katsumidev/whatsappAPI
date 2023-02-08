@@ -123,6 +123,7 @@ export const MessageContainer = styled.div`
   padding: 6px;
   word-break: break-word;
   margin: 10px 0;
+  gap: 5px;
   box-shadow: var(--boxShadow);
   background-color: ${(props) =>
     props.receiver ? "white" : "var(--accent-color)"};
