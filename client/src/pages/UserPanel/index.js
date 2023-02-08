@@ -14,11 +14,13 @@ import {
   ContactInfo,
   ContactOptions,
   Main,
+  ImportContacts,
 } from "./styles";
 import InputMask from "react-input-mask";
 import CheckboxGroup from "react-checkbox-group";
 import { convertToPhone } from "../../utils/conversions";
 import defaultPic from "../../assets/defaultPic.jpg";
+import * as XLSX from 'xlsx';
 import { useParams } from "react-router";
 import {
   getInfo,
@@ -58,6 +60,37 @@ function UserPanel() {
     };
     loadContacts();
   }, []);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const firtSheet = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firtSheet];
+      const array = XLSX.utils.sheet_to_json(worksheet);
+      try {
+        array.map(async (files) => {
+          console.log(`numero: ${files.telefone}, sobrenome: ${files.sobrenome}`)
+          await addNewContact({
+            phone_number: files.telefone,
+            contact_name: files.sobrenome,
+            user_token: localStorage.getItem("userToken"),
+            user_id: userIns
+          })
+        });
+        console.log("Salvo com sucesso")
+      } catch (error) {
+        alert("Erro ao importar")
+      }
+    }
+
+    reader.readAsArrayBuffer(file);
+  
+  }
+
 
   const addContact = async (e) => {
     // adiciona um novo contato
@@ -139,6 +172,7 @@ function UserPanel() {
           </ContactList>
         </FirstColumn>
         <SecondColumn>
+        <ImportContacts type="file" onChange={handleFileChange}/>
           <form onSubmit={addContact}>
             <h3>Adicionar novo contato</h3>
             <ContactNameInput
