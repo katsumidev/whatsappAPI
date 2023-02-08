@@ -62,7 +62,9 @@ const INITIAL_NODES = [
       x: 1000,
       y: 400,
     },
-    data: {}
+    data: {
+      "conetudo": "oi"
+    }
   },
 ]
 
@@ -111,7 +113,7 @@ function Flow() {
         />
         <Controls />
       </ReactFlow>
-      <Toolbar.Root style={{position: 'fixed', top: '80px' }}
+      <Toolbar.Root style={{ position: 'fixed', top: '80px' }}
       className='fixed flex top-20 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-24 w-4/6 overflow-hidden'>
         <Toolbar.Button
         className='h-14 w-20 mr-6  rounded-lg bg-green-300  mt-4'

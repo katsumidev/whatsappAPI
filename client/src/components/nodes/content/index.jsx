@@ -9,14 +9,16 @@ import { Container, H1 } from './styles';
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ContetntSquare = ({ selected }) => {
+const ContetntSquare = (props) => {
+
   return (
-    <Container>
+    <Container onClick={props.onClick}>
       <H1><BiBookContent/>Conteúdo</H1>
+      <p>{props.data.conetudo}</p>
       <NodeResizer 
       minHeight={200}
       minWidth={200}
-      isVisible={selected}
+      isVisible={props.selected}
       lineClassName='border-blue-400'
       handleClassName='h-3 w-3 bg-white border-2 rounded border-blue-400'
       />
