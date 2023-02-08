@@ -31,7 +31,7 @@ export const ContactRow = styled.div`
   flex-direction: row;
   align-items: center;
   transition: all 0.2s;
-  box-shadow: 0 -1px 1px -1px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--boxShadow);
   background-color: ${(props) =>
     props.selected == "selected"
       ? "var(--secundary-background)"
@@ -91,7 +91,7 @@ export const ChatInput = styled.input`
   border: none;
   border-radius: 12px;
   font-size: 11pt;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 `;
 
 export const ContactTopBar = styled.div`
@@ -105,6 +105,7 @@ export const ContactTopBar = styled.div`
   padding: 12px;
   gap: 15px;
   top: 0;
+  box-shadow: var(--boxShadow);
 
   p {
     font-weight: 600;
@@ -120,10 +121,9 @@ export const MessageContainer = styled.div`
   max-width: 60%;
   width: fit-content;
   padding: 6px;
-  gap: 10px;
   word-break: break-word;
   margin: 10px 0;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
   background-color: ${(props) =>
     props.receiver ? "white" : "var(--accent-color)"};
   margin-left: ${(props) => (props.receiver ? "0" : "auto")};
@@ -182,7 +182,7 @@ export const DocumentContainer = styled.div`
   background-color: var(--accent-color-secundary);
   padding: 16px;
   border-radius: 6px;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 
   p {
     font-size: 13px;
@@ -240,6 +240,38 @@ export const NormalMessage = styled.div`
   }
 `;
 
+export const ImagePreview = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  padding: 26px;
+  z-index: 999;
+
+  img {
+    width: 50%;
+    height: auto;
+    border-radius: 16px;
+  }
+`;
+
+export const PreviewBackground = styled.div`
+  background-color: var(--secundary-background);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  z-index: -1;
+  position: absolute;
+`;
+
+export const AudioMessage = styled.div``;
+
 export const SendImageContainer = styled.div`
   max-width: 100%;
   max-height: 100%;
@@ -273,7 +305,12 @@ export const Image = styled.img`
   height: auto;
   border-radius: 6px;
   margin: 10px;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
+`;
+
+export const ImageMessage = styled.img`
+  border-radius: 4px;
+  cursor: pointer;
 `;
 
 export const SendOptions = styled.div`
@@ -294,7 +331,7 @@ export const Caption = styled.input`
   border: none;
   width: 100%;
   background-color: var(--secundary-background);
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 `;
 
 export const EmojiMenu = styled.div`

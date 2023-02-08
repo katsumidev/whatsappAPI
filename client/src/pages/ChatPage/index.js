@@ -30,6 +30,10 @@ import {
   VideoContainer,
   DocumentViewer,
   EmojiMenu,
+  ImageMessage,
+  ImagePreview,
+  PreviewBackground,
+  AudioMessage,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -40,8 +44,7 @@ import {
 } from "react-floating-button-menu";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
-import defaultPic from "../../assets/defaultPic.jpg"
-import { ContactList, SendMsgBtn } from "../UserPanel/styles";
+import defaultPic from "../../assets/defaultPic.jpg";
 import { convertToDate } from "../../utils/conversions";
 import {
   getContacts,
@@ -52,14 +55,20 @@ import {
   sendImage,
   sendDoc,
   sendVid,
-  sendAudio
+  sendAudio,
 } from "../../services/api";
 import {
   BsImage,
   IoDocument,
   BsCameraVideoFill,
   HiDownload,
+  BsFillPlayFill,
+  BsFillPauseFill,
 } from "../../styles/Icons";
+import AudioPlayer from "react-h5-audio-player";
+import {RHAP_UI} from "react-h5-audio-player"
+import "./styles.css";
+import { BsPlay } from "react-icons/bs";
 
 function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
@@ -309,16 +318,6 @@ function ChatPage() {
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-  const pdf_styles = {
-    width: 250,
-    "@media max-width: 400": {
-      width: 250,
-    },
-    "@media orientation: landscape": {
-      width: 250,
-    },
-  };
-
   return (
     <Container>
       <ContactsList>
@@ -333,7 +332,9 @@ function ChatPage() {
                 selectedContact.contactId == contact.number ? "selected" : "not"
               }
             >
-              <ContactPfp src={contact.pfp != null ? contact.pfp : defaultPic} />
+              <ContactPfp
+                src={contact.pfp != null ? contact.pfp : defaultPic}
+              />
               <ContactName>{contact.contact}</ContactName>
             </ContactRow>
           );
@@ -341,7 +342,13 @@ function ChatPage() {
       </ContactsList>
       <ChatMain>
         <ContactTopBar>
-          <ContactPfp src={selectedContact.contactPfp != null ? selectedContact.contactPfp : defaultPic} />
+          <ContactPfp
+            src={
+              selectedContact.contactPfp != null
+                ? selectedContact.contactPfp
+                : defaultPic
+            }
+          />
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
         {isOpen ? (
@@ -362,6 +369,11 @@ function ChatPage() {
               </DocumentViewer>
             )}
             {file.type.includes("image") && <Image src={fileUrl} />}
+            {file.type.includes("video") && (
+              <video controls>
+                <source src={fileUrl} type="video/mp4" />
+              </video>
+            )}
             <SendOptions>
               <Caption
                 type="text"
@@ -397,8 +409,9 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <ImageMessage message={msg} />
+                                <FileMessage message={msg} />
                                 <p>{msg.caption}</p>
+                                <sub>{convertToDate(msg.date)}</sub>
                               </>
                             ) : (
                               <NormalMessage>
@@ -424,7 +437,7 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <ImageMessage message={msg} />
+                                <FileMessage message={msg} />
                                 <p>{msg.caption}</p>
                               </>
                             ) : (
@@ -448,7 +461,7 @@ function ChatPage() {
                 </EmojiMenu>
               )}
               <EmojiSelectorMenu
-                size={26}
+                size={30}
                 onClick={() => setEmojiMenuOpen(!emojiMenuIsOpen)}
               />
               <Menu>
@@ -520,13 +533,27 @@ function ChatPage() {
   );
 }
 
-const ImageMessage = ({ message }) => {
+const FileMessage = ({ message }) => {
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [fullImageView, setFullImageView] = useState(false);
+
   const handleDownloadFile = (url) => {
     window.open(`${url}`);
   };
 
+  const openImageFullPreview = (e) => {
+    setPreviewUrl(e != "" ? e : "");
+    setFullImageView(!fullImageView);
+  };
+
   return (
     <>
+      {fullImageView && (
+        <ImagePreview>
+          <img src={previewUrl} />
+          <PreviewBackground onClick={() => openImageFullPreview()} />
+        </ImagePreview>
+      )}
       {message?.text?.includes(".pdf") && (
         <DocumentContainer onClick={() => handleDownloadFile(message.text)}>
           <IoDocument size={30} fill="#F34646" />
@@ -537,11 +564,49 @@ const ImageMessage = ({ message }) => {
       {message?.text?.includes(".mp4") && (
         <VideoContainer controls>
           <source src={message.text} type="video/mp4" />
+          <sub>{convertToDate(message.date)}</sub>
         </VideoContainer>
+      )}
+      {message?.text?.includes(".mp3") && (
+        <AudioMessage>
+          <AudioPlayer
+            src={message.text}
+            style={{
+              width: "300px",
+              backgroundColor: "transparent",
+              border: "none",
+              boxShadow: "none",
+              padding: "0",
+              margin: "0",
+              fontSize: "12px"
+            }}        
+            customProgressBarSection={
+              [
+                "DURATION",
+                "PROGRESS_BAR",
+              ]
+            }
+            customAdditionalControls={[]}
+            customVolumeControls={[]}
+            showSkipControls={false}
+            showJumpControls={false}
+            showFilledProgress={true}
+            showFilledVolume={false}
+            customIcons={{
+              play: <BsFillPlayFill />,
+              pause: <BsFillPauseFill />,
+            }}
+            layout="horizontal-reverse"
+          />
+        </AudioMessage>
       )}
       {message?.text?.includes(".png") ||
         (message?.text?.includes(".jpg") && (
-          <img src={message.text} alt={message.text} />
+          <ImageMessage
+            src={message.text}
+            alt={message.text}
+            onClick={() => openImageFullPreview(message.text)}
+          />
         ))}
     </>
   );

@@ -28,5 +28,6 @@ export default createGlobalStyle`
         --accent-color-secundary: #D1F4CC;
         --grey: #7B8890;
         --sendImage-background: #E9EDEF;
+        --boxShadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
     }
 `;
