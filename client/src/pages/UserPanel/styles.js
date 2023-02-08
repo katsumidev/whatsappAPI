@@ -156,3 +156,10 @@ export const ContactOptions = styled.div`
   align-items: center;
   gap: 3px;
 `
+
+
+export const ImportContacts = styled.input`
+background-color: #FFF;
+width: 150px;
+height: 60px;
+`
