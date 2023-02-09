@@ -78,6 +78,8 @@ const deleteContact = async (req, res) => {
 const consultContacts = async (req, res) => {
   const { user_token } = req.body;
 
+  console.log("kfaw")
+
   User.find({ userId: user_token }, (err, arr) => {
     arr.forEach((items) => {
       contacts = items.contactList;

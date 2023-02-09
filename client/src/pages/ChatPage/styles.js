@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {
   RiSendPlaneFill,
   AiOutlinePaperClip,
+  HiDownload,
   MdOutlineEmojiEmotions,
 } from "../../styles/Icons";
 import background from "../../assets/background.png";
@@ -114,6 +115,7 @@ export const ContactTopBar = styled.div`
 
 export const MessageContainer = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   color: black;
   border-radius: 6px;
@@ -132,6 +134,7 @@ export const MessageContainer = styled.div`
   p {
     font-size: 14px;
     padding: 0 25px 0 5px;
+    margin-bottom: 0;
   }
 
   sub {
@@ -139,6 +142,7 @@ export const MessageContainer = styled.div`
     color: ${(props) => (props.receiver ? "#919191" : "#00000")};
     word-break: keep-all;
     align-self: flex-end;
+    padding: 6px 0;
   }
 
   img {
@@ -180,7 +184,7 @@ export const DocumentContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  background-color: var(--chat-accent-color-secundary);
+  background-color: var(--accent-color-secundary);
   padding: 16px;
   border-radius: 6px;
   box-shadow: var(--boxShadow);
@@ -370,4 +374,12 @@ export const AudioPreviewContainer = styled.div`
     color: var(--grey);
     font-weight: 500;
   }
+`
+
+export const DownloadOverlay = styled(HiDownload)`
+  color: white;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 `

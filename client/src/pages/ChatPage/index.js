@@ -34,7 +34,8 @@ import {
   ImagePreview,
   PreviewBackground,
   AudioMessage,
-  AudioPreviewContainer
+  AudioPreviewContainer,
+  DownloadOverlay
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -554,8 +555,16 @@ const FileMessage = ({ message }) => {
     setFullImageView(!fullImageView);
   };
 
+  function download(dataurl, filename) {
+    const link = document.createElement("a");
+    link.href = dataurl;
+    link.download = filename;
+    link.click();
+  }
+
   return (
     <>
+      <DownloadOverlay onClick={() => download(message.text, "jooj")} />
       {fullImageView && (
         <ImagePreview>
           <img src={previewUrl} />
