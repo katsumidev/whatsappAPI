@@ -2,37 +2,7 @@ import styled from "styled-components";
 import {FaTrash} from "../../styles/Icons"
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  margin: 20px 0;
-  flex-direction: row;
-  justify-content: center;
-  padding: 26px;
-  align-items: center;
 
-  form {
-    background-color: var(--main-background);
-    width: 500px;
-    display: flex;
-    border-radius: 6px;
-    padding: 24px;
-    flex-direction: column;
-    gap: 20px;
-
-    input {
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      transition: all 0.2s;
-      outline: none;
-      background-color: var(--secundary-background);
-
-      :focus {
-        border: 3px solid var(--accent-color);
-      }
-    }
-  }
 `;
 
 export const Main = styled.div`
@@ -132,8 +102,8 @@ export const ContactColumn = styled.div`
 `
 
 export const ProfilePicture = styled.img`
-  width: 42px;
-  height: 42px;
+  width: 32px;
+  height: 32px;
   border-radius: 100%;
 `
 

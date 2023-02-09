@@ -126,7 +126,7 @@ export const MessageContainer = styled.div`
   gap: 5px;
   box-shadow: var(--boxShadow);
   background-color: ${(props) =>
-    props.receiver ? "white" : "var(--accent-color)"};
+    props.receiver ? "white" : "var(--chat-accent-color)"};
   margin-left: ${(props) => (props.receiver ? "0" : "auto")};
 
   p {
@@ -153,7 +153,7 @@ export const MessageBtn = styled(RiSendPlaneFill)`
   cursor: pointer;
 
   .file {
-    background-color: var(--accent-color);
+    background-color: var(--chat-accent-color);
     border-radius: 100%;
     padding: 16px;
   }
@@ -180,7 +180,7 @@ export const DocumentContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  background-color: var(--accent-color-secundary);
+  background-color: var(--chat-accent-color-secundary);
   padding: 16px;
   border-radius: 6px;
   box-shadow: var(--boxShadow);
@@ -227,7 +227,7 @@ export const Quoted = styled.div`
 
   b {
     font-size: 13px;
-    color: var(--accent-color-hover);
+    color: var(--chat-accent-color-hover);
   }
 `;
 
@@ -351,3 +351,23 @@ export const VideoContainer = styled.video`
   width: 100%;
   height: 100%;
 `;
+
+export const AudioPreviewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  svg {
+    background-color: var(--gray);
+    fill: grey;
+    font-size: 100px;
+    color: var(--grey)
+  }
+
+  h3 {
+    color: var(--grey);
+    font-weight: 500;
+  }
+`

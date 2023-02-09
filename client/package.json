@@ -31,6 +31,7 @@
     "react-router": "^6.7.0",
     "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
+    "react-window": "^1.8.8",
     "reactflow": "^11.5.5",
     "socket.io-client": "^4.5.4",
     "styled-components": "^5.3.6",

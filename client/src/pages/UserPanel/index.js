@@ -20,7 +20,12 @@ import InputMask from "react-input-mask";
 import CheckboxGroup from "react-checkbox-group";
 import { convertToPhone } from "../../utils/conversions";
 import defaultPic from "../../assets/defaultPic.jpg";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
+import "../../assets/dist/css/adminlte.min.css";
+import "../../assets/dist/css/style.css";
+import "../../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css";
+import "../../assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";
+import "../../assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css";
 import { useParams } from "react-router";
 import {
   getInfo,
@@ -73,24 +78,24 @@ function UserPanel() {
       const array = XLSX.utils.sheet_to_json(worksheet);
       try {
         array.map(async (files) => {
-          console.log(`numero: ${files.telefone}, sobrenome: ${files.sobrenome}`)
+          console.log(
+            `numero: ${files.telefone}, sobrenome: ${files.sobrenome}`
+          );
           await addNewContact({
             phone_number: files.telefone,
             contact_name: files.sobrenome,
             user_token: localStorage.getItem("userToken"),
-            user_id: userIns
-          })
+            user_id: userIns,
+          });
         });
-        console.log("Salvo com sucesso")
+        console.log("Salvo com sucesso");
       } catch (error) {
-        alert("Erro ao importar")
+        alert("Erro ao importar");
       }
-    }
+    };
 
     reader.readAsArrayBuffer(file);
-  
-  }
-
+  };
 
   const addContact = async (e) => {
     // adiciona um novo contato
@@ -139,67 +144,205 @@ function UserPanel() {
 
   return (
     <Container>
-      <Main>
-        <FirstColumn>
-          <ContactList>
-            <CheckboxGroup name="numbers" value={numbers} onChange={setNumbers}>
-              {(Checkbox) => (
-                <>
-                  {contacts.map((contact, index) => {
-                    return (
-                      <ContactRow key={index}>
-                        <ContactInfo>
-                          <ProfilePicture
-                            src={contact.pfp != null ? contact.pfp : defaultPic}
-                          ></ProfilePicture>
-                          <ContactColumn>
-                            <b>{contact.contact}</b>
-                            <p>{convertToPhone(contact.number)}</p>
-                          </ContactColumn>
-                        </ContactInfo>
-                        <ContactOptions>
-                          <Checkbox value={contact.number} />
-                          <DeleteContactBtn
-                            onClick={() => deleteContact(contact.number)}
+      {/* <!-- Site wrapper --> */}
+      <div className="wrapper">
+        {/* <!-- Content Wrapper. Contains page content --> */}
+        <div className="content-wrapper">
+          {/* <!-- Content Header (Page header) --> */}
+          <section className="content-header">
+            <div className="container-fluid">
+              <div className="row mb-2 d-flex align-items-center">
+                <div className="col-sm-6">
+                  <h1>Audiência</h1>
+                </div>
+                <div className="col-sm-2">
+                  <a className="button-up btn btn-primary btn-sm btn-block">
+                    <i className="fa-solid fa-upload"></i>&nbsp;Importar
+                  </a>
+                </div>
+                <div className="col-sm-2">
+                  <a className="button-up btn btn-primary btn-sm btn-block">
+                    <i className="fa-solid fa-download"></i>&nbsp;Relatório
+                  </a>
+                </div>
+                <div className="col-sm-2">
+                  <a className="button-up btn btn-primary btn-sm btn-block">
+                    <i className="fa-solid fa-circle-user"></i>&nbsp;Novo
+                    contato
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="d-flex">
+            <div className="col-3 scroll-div">
+              <div>
+                <table className="table table-borderless" cellpadding="2px">
+                  <thead>
+                    <tr>
+                      <th scope="col">Etiquetas</th>
+                      <th className="font-weight-normal text-right cor-cinza">
+                        Contatos
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="cor-cinza">camisa_seleção</td>
+                      <td className="text-right cor-cinza">645</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="text-center">
+                  <a className="ver-link" href="#">
+                    Ver Tudo
+                  </a>
+                </div>
+              </div>
+              <div>
+                <table className="table table-borderless" cellpadding="2px">
+                  <thead>
+                    <tr>
+                      <th scope="col">Sequências</th>
+                      <th className="font-weight-normal text-right cor-cinza">
+                        Contatos
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="cor-cinza">Retorno 3 Horas depois</td>
+                      <td className="text-right cor-cinza">0</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="text-center">
+                  <a className="ver-link" href="#">
+                    Ver Tudo
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <table className="table table-borderless" cellpadding="2px">
+                    <thead>
+                      <tr>
+                        <th scope="col">Camapanhas</th>
+                        <th className="font-weight-normal text-right cor-cinza">
+                          Contatos
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="cor-cinza">Imóvel Rua XYZ</td>
+                        <td className="text-right cor-cinza">0</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className="col-9">
+              <div className="d-flex justify-content-end align-items-center">
+                <div className="col-sm-3 justify-content-end">
+                  <a className="button-up btn btn-primary btn-md btn-block">
+                    Filtro
+                  </a>
+                </div>
+                <div className="col-sm-5 input-group flex-nowrap">
+                  <div className="input-group-prepend">
+                    <span
+                      className="input-group-text button-buscar"
+                      id="addon-wrapping"
+                    >
+                      <i className="fa-solid fa-search"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    className="form-control button-buscar"
+                    placeholder="Buscar"
+                    aria-label="Username"
+                    aria-describedby="addon-wrapping"
+                  />
+                </div>
+              </div>
+              <div className="my-4">
+                <table id="example2" className="table">
+                  <thead>
+                    <tr>
+                      <th className="text-center">
+                        <div className="custom-control custom-checkbox">
+                          <input
+                            className="custom-control-input custom-control-input-success"
+                            type="checkbox"
+                            id="customCheckbox1"
                           />
-                        </ContactOptions>
-                      </ContactRow>
-                    );
-                  })}
-                </>
-              )}
-            </CheckboxGroup>
-          </ContactList>
-        </FirstColumn>
-        <SecondColumn>
-        <ImportContacts type="file" onChange={handleFileChange}/>
-          <form onSubmit={addContact}>
-            <h3>Adicionar novo contato</h3>
-            <ContactNameInput
-              type="text"
-              placeholder="Nome do contato"
-              onChange={(e) => setContactName(e.target.value)}
-            />
-            <InputMask
-              mask="+99 (99) 9999-9999"
-              placeholder="+__ ( ) ____-____"
-              onChange={(e) =>
-                setContactNumber(e.target.value.replace(/[\W_]/g, ""))
-              }
-            />
-            <SendMsgBtn type="submit" value="Enviar" />
-          </form>
-          <form onSubmit={(e) => sendMsg(e)}>
-            <h3>Olá {username} 👋</h3>
-            <MessageInput
-              type="text"
-              placeholder="Sua mensagem.."
-              onChange={(e) => setMsg(e.target.value)}
-            />
-            <SendMsgBtn type="submit" value="Enviar" />
-          </form>
-        </SecondColumn>
-      </Main>
+                          <label
+                            for="customCheckbox1"
+                            className="custom-control-label"
+                          ></label>
+                        </div>
+                      </th>
+                      <th className="text-center" scope="col">
+                        #
+                      </th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">N° WhatsApp</th>
+                      <th scope="col">Inscrição</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <CheckboxGroup
+                      name="numbers"
+                      value={numbers}
+                      onChange={setNumbers}
+                    >
+                      {(Checkbox) => (
+                        <>
+                          {contacts.map((contact, index) => {
+                            return (
+                              <tr key={index}>
+                                <td className="text-center">
+                                  <Checkbox value={contact.number} />
+                                </td>
+                                <td className="text-center">
+                                  <span>
+                                    <ProfilePicture
+                                      src={
+                                        contact.pfp != null
+                                          ? contact.pfp
+                                          : defaultPic
+                                      }
+                                    ></ProfilePicture>
+                                  </span>
+                                </td>
+                                <td className="id-nome">{contact.contact}</td>
+                                <td>{convertToPhone(contact.number)}</td>
+                                <td className="inscrito">03/02/2023, 17:43</td>
+                              </tr>
+                            );
+                          })}
+                        </>
+                      )}
+                    </CheckboxGroup>
+                  </tbody>
+                </table>
+              </div>
+              {/* <!-- <div className="d-flex justify-content-center mb-3"> */}
+              <a
+                className="button-up btn btn-primary btn-md btn-block"
+                style={{ width: "30%" }}
+              >
+                Carregar mais
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+      {/* <!-- ./wrapper --> */}
     </Container>
   );
 }

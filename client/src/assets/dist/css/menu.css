@@ -1,0 +1,41 @@
+.atendezap a:hover {
+    color: #34af23 !important;
+}
+
+.brand-text {
+    color: black !important;
+}
+
+.info a {
+    color: black !important;
+}
+
+.info a:hover {
+    color: #34af23 !important;
+}
+
+.nav-pills .nav-link:not(.active):hover {
+    color: #91cc89 !important; 
+  }
+
+.button-menu {
+    background-color: #34af23 !important;
+    color: white;
+}
+
+.button-menu:hover {
+    border-color: #34af23 !important;
+    color: #34af23 !important;
+    background-color: white !important;
+}
+
+.nav-icon {
+    color: #91cc89;
+}
+
+.btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active,
+.show > .btn-light.dropdown-toggle {
+    background-color: white;
+    color: #91cc89;
+    border-color: #91cc89;
+}

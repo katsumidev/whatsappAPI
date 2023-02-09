@@ -34,6 +34,7 @@ import {
   ImagePreview,
   PreviewBackground,
   AudioMessage,
+  AudioPreviewContainer
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -45,6 +46,7 @@ import {
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import defaultPic from "../../assets/defaultPic.jpg";
+import { FixedSizeList as List } from "react-window";
 import { convertToDate } from "../../utils/conversions";
 import {
   getContacts,
@@ -64,11 +66,10 @@ import {
   HiDownload,
   BsFillPlayFill,
   BsFillPauseFill,
+  BsFillFileEarmarkMusicFill,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
-import { RHAP_UI } from "react-h5-audio-player";
 import "./styles.css";
-import { BsPlay } from "react-icons/bs";
 
 function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
@@ -374,6 +375,12 @@ function ChatPage() {
                 <source src={fileUrl} type="video/mp4" />
               </video>
             )}
+            {file.type.includes("audio") && (
+              <AudioPreviewContainer>
+                <BsFillFileEarmarkMusicFill />
+                <h3>Pré-visualização indisponivel.</h3>
+              </AudioPreviewContainer>
+            )}
             <SendOptions>
               <Caption
                 type="text"
@@ -391,6 +398,7 @@ function ChatPage() {
           <>
             <Chat ref={scrollRef}>
               <Sentinel className="sentinel"></Sentinel>
+   
               {chatMsgs.map((msg, index) => {
                 return (
                   <>

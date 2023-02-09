@@ -16,6 +16,7 @@ import Company from "./components/company";
 import Logs from "./components/logs";
 import FieldsModal from "./components/fieldsModal";
 import Flow from "./components/flow";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route exact path="/panel/:userIns" element={<UserPanel />} />
           <Route path="/:userIns/live-chat/:chatId?" element={<ChatPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/:userIns/settings" element={<WhatsApp/>}/>
           <Route path="/:userIns/settings/customFields" element={<Fields/>}/>
           <Route path="/:userIns/settings/tags" element={<Tags/>}/>
