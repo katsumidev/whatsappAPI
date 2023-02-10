@@ -15,3 +15,10 @@ border-top-left-radius: 0.25rem;
 border-top-right-radius: 0.25rem;
 font-size: 12pt;
 `
+
+export const SquareContent = styled.div`
+display: flex;
+height: 40px;
+justify-content: space-between;
+border-bottom: 1px solid #e5e5e5;
+`

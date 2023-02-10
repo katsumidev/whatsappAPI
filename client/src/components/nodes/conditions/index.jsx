@@ -4,17 +4,27 @@ import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsArrowLeftRight} from 'react-icons/bs'
 import { Container, H1 } from './styles';
+import { useDispatch } from 'react-redux';
+import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ConditionSquare = ({ selected }) => {
+const ConditionSquare = ({ selected, data }) => {
+  const dispatch = useDispatch();
+
+  if(selected) {
+    dispatch(changeNode({data, type: 'condition'}))
+  } else {
+    dispatch(undoChange())
+  }
+
   return (
     <Container>
       <H1><BsArrowLeftRight/>Condições</H1>
       <div className='text-center mt-6'>
-        <p>Alguma condição abaixo é verdadeira</p>
+        <p>Alguma condição abaixo é verdadeira</p><br /> <br />
         <p>Todas as condições acima são falsas</p>
       </div>
       <NodeResizer 

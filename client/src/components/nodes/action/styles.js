@@ -15,3 +15,7 @@ border-top-left-radius: 0.25rem;
 border-top-right-radius: 0.25rem;
 font-size: 12pt;
 `
+
+export const SquareContent = styled.div`
+border-bottom: 1px #000;
+`
