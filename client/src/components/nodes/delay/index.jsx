@@ -19,13 +19,13 @@ const DelaySquare = ({ selected, data }) => {
   } else {
     dispatch(undoChange())
   }
+  //vai
 
 
   return (
     <Container>
       <H1><AiOutlineClockCircle/>Delay inteligente</H1>
       <p>Aguardando <strong>{data.delayTime} {data.delayFormat}</strong> e depois continua</p>
-
       <NodeResizer 
       minHeight={200}
       minWidth={200}
