@@ -41,8 +41,15 @@ const userHandler = async (req, res) => {
             content: req.body.body.message.imageMessage.url,
             from: req.body.body.key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
-            type: "image",
+            type: "file",
           });
+        } else if (req.body.body.message.audioMessage) {
+          socket.ioObject.emit("message", {
+            content: req.body.body.message.audioMessage.url,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            type: "file",
+          })
         } else if ( // mensagens marcadas
           req.body.body.message.extendedTextMessage.contextInfo.quotedMessage
         ) {
@@ -55,7 +62,7 @@ const userHandler = async (req, res) => {
             to: req.body.instanceKey,
             type: "quotedText",
           });
-        }
+        } 
       }
 
       break;

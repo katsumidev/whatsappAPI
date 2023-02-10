@@ -21,6 +21,9 @@ export const ContactsList = styled.div`
   flex-direction: column;
   width: 30%;
   height: 100vh;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+    rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 `;
 
 export const ContactRow = styled.div`
@@ -68,7 +71,7 @@ export const ChatMain = styled.div`
 export const Chat = styled.div`
   padding: 26px;
   flex: 1;
-  overflow: auto;
+  overflow-y: scroll;
   height: 100%;
 `;
 
@@ -143,6 +146,10 @@ export const MessageContainer = styled.div`
     word-break: keep-all;
     align-self: flex-end;
     padding: 6px 0;
+
+    svg {
+      margin-left: 5px;
+    }
   }
 
   img {
@@ -177,7 +184,9 @@ export const SendFileInput = styled.input`
   display: none;
 `;
 
-export const Sentinel = styled.li``;
+export const Sentinel = styled.li`
+  background-color: transparent;
+`;
 
 export const DocumentContainer = styled.div`
   display: flex;
@@ -231,7 +240,7 @@ export const Quoted = styled.div`
 
   b {
     font-size: 13px;
-    color: var(--chat-accent-color-hover);
+    color: var(--accent-color-hover);
   }
 `;
 
@@ -242,6 +251,10 @@ export const NormalMessage = styled.div`
 
   sub {
     align-self: flex-end;
+
+    svg {
+      margin-left: 5px;
+    }
   }
 `;
 
@@ -304,6 +317,9 @@ export const ImageOptions = styled.div`
 export const CloseBtn = styled.p`
   cursor: pointer;
   overflow: hidden;
+  color: black;
+  font-size: 20px;
+  height: fit-content;
 `;
 export const Image = styled.img`
   width: 35%;
@@ -364,17 +380,16 @@ export const AudioPreviewContainer = styled.div`
   gap: 20px;
 
   svg {
-    background-color: var(--gray);
     fill: grey;
     font-size: 100px;
-    color: var(--grey)
+    color: var(--grey);
   }
 
   h3 {
     color: var(--grey);
     font-weight: 500;
   }
-`
+`;
 
 export const DownloadOverlay = styled(HiDownload)`
   color: white;
@@ -382,4 +397,4 @@ export const DownloadOverlay = styled(HiDownload)`
   top: 10px;
   right: 10px;
   cursor: pointer;
-`
+`;

@@ -1,5 +1,5 @@
 export { GrFormClose } from "react-icons/gr";
-export { AiFillEye, AiOutlinePaperClip } from "react-icons/ai";
+export { AiFillEye, AiOutlinePaperClip, AiFillFileZip } from "react-icons/ai";
 export { FaTrash } from "react-icons/fa";
 export {
   BsFillChatFill,
@@ -8,7 +8,8 @@ export {
   BsFillPlayFill,
   BsFillPauseFill,
   BsFillFileEarmarkMusicFill,
-  BsWhatsapp
+  BsWhatsapp,
+  BsCheckAll,
 } from "react-icons/bs";
 export { RiSendPlaneFill } from "react-icons/ri";
 export { MdOutlineEmojiEmotions } from "react-icons/md";

@@ -35,7 +35,8 @@ import {
   PreviewBackground,
   AudioMessage,
   AudioPreviewContainer,
-  DownloadOverlay
+  Scroller,
+  DownloadOverlay,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -68,6 +69,8 @@ import {
   BsFillPlayFill,
   BsFillPauseFill,
   BsFillFileEarmarkMusicFill,
+  AiFillFileZip,
+  BsCheckAll,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -82,6 +85,7 @@ function ChatPage() {
   const [floatMenuOpen, setFloatMenuOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
+  const [acceptedFiles, setAcceptedFiles] = useState("");
   const [caption, setCaption] = useState("");
   const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
   const fileinput = useRef(null); // hook auxiliar para o scroll do chat
@@ -99,7 +103,7 @@ function ChatPage() {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
-      if (data.lenght > 20) {
+      if (data.length > 20) {
         setChatMsgs(data.slice(1).slice(currentPage));
       } else {
         setChatMsgs(data);
@@ -121,10 +125,6 @@ function ChatPage() {
       intersectionObserver.disconnect();
     };
   }, []);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ transition: "smooth" });
-  }, [currentPage]);
 
   useEffect(() => {
     // esse hook é disparado no primeiro load da página e serve para buscar a lista de contatos do usuário
@@ -250,8 +250,9 @@ function ChatPage() {
       contactPfp: pfp,
       contactName: name,
     });
-    setCurrentPage(-10);
+    setCurrentPage(-20);
     setFile();
+    setAcceptedFiles("");
     setIsOpen(false);
   };
 
@@ -318,6 +319,28 @@ function ChatPage() {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    const openSelector = async () => {
+      if (acceptedFiles) {
+        await fileinput.current.click();
+      }
+    };
+    openSelector();
+    setAcceptedFiles("");
+  }, [acceptedFiles]);
+
+  const handleEnter = (e) => {
+    if (e.key == "Enter") {
+      handleSendMsg(chatId, userIns, selectedContact.contactId, message);
+    }
+  };
+
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView());
+    return <div ref={elementRef} />;
+  };
+
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   return (
@@ -358,7 +381,7 @@ function ChatPage() {
             <ImageOptions>
               <CloseBtn onClick={() => closeImagePreview()}>X</CloseBtn>
             </ImageOptions>
-            {file.type.includes("application") && (
+            {file.type.includes("pdf") && (
               <DocumentViewer>
                 <Document file={fileUrl}>
                   <Page
@@ -370,6 +393,13 @@ function ChatPage() {
                 </Document>
               </DocumentViewer>
             )}
+            {!file.type.includes("pdf") &&
+              file.type.includes("application") && (
+                <AudioPreviewContainer>
+                  <AiFillFileZip />
+                  <h3>Pré-visualização indisponivel.</h3>
+                </AudioPreviewContainer>
+              )}
             {file.type.includes("image") && <Image src={fileUrl} />}
             {file.type.includes("video") && (
               <video controls>
@@ -399,7 +429,7 @@ function ChatPage() {
           <>
             <Chat ref={scrollRef}>
               <Sentinel className="sentinel"></Sentinel>
-   
+
               {chatMsgs.map((msg, index) => {
                 return (
                   <>
@@ -412,7 +442,10 @@ function ChatPage() {
                               <p>{msg.quotedMessage}</p>
                             </Quoted>
                             <p>{msg.text}</p>
-                            <sub>{convertToDate(msg.date)}</sub>
+                            <sub>
+                              {convertToDate(msg.date)}
+                              <BsCheckAll size={15} />
+                            </sub>
                           </QuotedMessageContainer>
                         ) : (
                           <>
@@ -420,12 +453,18 @@ function ChatPage() {
                               <>
                                 <FileMessage message={msg} />
                                 <p>{msg.caption}</p>
-                                <sub>{convertToDate(msg.date)}</sub>
+                                <sub>
+                                  {convertToDate(msg.date)}
+                                  <BsCheckAll size={15} />
+                                </sub>
                               </>
                             ) : (
                               <NormalMessage>
                                 <p>{msg.text}</p>
-                                <sub>{convertToDate(msg.date)}</sub>
+                                <sub>
+                                  {convertToDate(msg.date)}
+                                  <BsCheckAll size={15} />
+                                </sub>
                               </NormalMessage>
                             )}
                           </>
@@ -440,7 +479,9 @@ function ChatPage() {
                               <p>{msg.quotedMessage}</p>
                             </Quoted>
                             <p>{msg.text}</p>
-                            <sub>{convertToDate(msg.date)}</sub>
+                            <sub>
+                              {convertToDate(msg.date)}
+                            </sub>
                           </QuotedMessageContainer>
                         ) : (
                           <>
@@ -452,7 +493,9 @@ function ChatPage() {
                             ) : (
                               <NormalMessage receiver>
                                 <p>{msg.text}</p>
-                                <sub>{convertToDate(msg.date)}</sub>
+                                <sub>
+                                  {convertToDate(msg.date)}{" "}
+                                </sub>
                               </NormalMessage>
                             )}
                           </>
@@ -462,6 +505,7 @@ function ChatPage() {
                   </>
                 );
               })}
+              <AlwaysScrollToBottom />
             </Chat>
             <ChatInputContainer>
               {emojiMenuIsOpen && (
@@ -492,21 +536,23 @@ function ChatPage() {
                     icon={<BsImage size={20} color="#FFFFFF" />}
                     size={40}
                     background="#BF59CF"
-                    onClick={() => fileinput.current.click()}
+                    onClick={() => setAcceptedFiles(".jpg, .jpeg, .png")}
                     style={{ boxShadow: "none" }}
                   />
                   <ChildButton
                     icon={<BsCameraVideoFill size={20} color="#FFFFFF" />}
                     size={40}
                     background="#EC407A"
-                    onClick={() => fileinput.current.click()}
+                    onClick={() => setAcceptedFiles(".mp4, .mov")}
                     style={{ boxShadow: "none" }}
                   />
                   <ChildButton
                     icon={<IoDocument size={20} color="#FFFFFF" />}
                     size={40}
                     background="#5F66CD"
-                    onClick={() => fileinput.current.click()}
+                    onClick={() =>
+                      setAcceptedFiles(".pdf, .doc, .zip, .rar, .mp3, .wav")
+                    }
                     style={{ boxShadow: "none" }}
                   />
                 </FloatingMenu>
@@ -514,6 +560,7 @@ function ChatPage() {
               <SendFileInput
                 type="file"
                 id="fileinput"
+                accept={acceptedFiles}
                 ref={fileinput}
                 onChange={(e) => onFileChange(e)}
               />
@@ -521,6 +568,7 @@ function ChatPage() {
                 type="text"
                 placeholder="Mensagem"
                 value={message}
+                onKeyDown={(e) => handleEnter(e)}
                 onChange={(e) => setMessage(e.target.value)}
               />
               <MessageBtn
@@ -571,55 +619,56 @@ const FileMessage = ({ message }) => {
           <PreviewBackground onClick={() => openImageFullPreview()} />
         </ImagePreview>
       )}
-      {[".pdf", ".doc", ".rar", ".zip"].some(el => message?.text?.includes(el)) && (
+      {[".pdf", ".doc", ".rar", ".zip"].some((el) =>
+        message?.text?.includes(el)
+      ) && (
         <DocumentContainer onClick={() => handleDownloadFile(message.text)}>
           <IoDocument size={30} fill="#F34646" />
           <p>{message.text.split("file-")[1]}</p>
           <HiDownload size={30} fill="#92AD9E" />
         </DocumentContainer>
       )}
-      {[".mp4", ".mov"].some(el => message?.text?.includes(el)) && (
+      {[".mp4", ".mov"].some((el) => message?.text?.includes(el)) && (
         <VideoContainer controls>
           <source src={message.text} type="video/mp4" />
           <sub>{convertToDate(message.date)}</sub>
         </VideoContainer>
       )}
-      {
-      [".mp3", ".wav"].some(el => message?.text?.includes(el)) && (
-          <AudioMessage>
-            <AudioPlayer
-              src={message.text}
-              style={{
-                width: "300px",
-                backgroundColor: "transparent",
-                border: "none",
-                boxShadow: "none",
-                padding: "0",
-                margin: "0",
-                fontSize: "12px",
-              }}
-              customProgressBarSection={["DURATION", "PROGRESS_BAR"]}
-              customAdditionalControls={[]}
-              customVolumeControls={[]}
-              showSkipControls={false}
-              showJumpControls={false}
-              showFilledProgress={true}
-              showFilledVolume={false}
-              customIcons={{
-                play: <BsFillPlayFill />,
-                pause: <BsFillPauseFill />,
-              }}
-              layout="horizontal-reverse"
-            />
-          </AudioMessage>
-        )}
-      {[".png", ".jpg", ".jpeg"].some(el => message?.text?.includes(el)) && (
-          <ImageMessage
+      {[".mp3", ".wav"].some((el) => message?.text?.includes(el)) && (
+        <AudioMessage>
+          <AudioPlayer
             src={message.text}
-            alt={message.text}
-            onClick={() => openImageFullPreview(message.text)}
+            style={{
+              width: "300px",
+              backgroundColor: "transparent",
+              border: "none",
+              boxShadow: "none",
+              padding: "0",
+              margin: "0",
+              fontSize: "12px",
+            }}
+            customProgressBarSection={["DURATION", "PROGRESS_BAR"]}
+            customAdditionalControls={[]}
+            customVolumeControls={[]}
+            showSkipControls={false}
+            showJumpControls={false}
+            showFilledProgress={true}
+            showFilledVolume={false}
+            customIcons={{
+              play: <BsFillPlayFill />,
+              pause: <BsFillPauseFill />,
+            }}
+            layout="horizontal-reverse"
           />
-        )}
+        </AudioMessage>
+      )}
+      {[".png", ".jpg", ".jpeg"].some((el) => message?.text?.includes(el)) && (
+        <ImageMessage
+          src={message.text}
+          alt={message.text}
+          onClick={() => openImageFullPreview(message.text)}
+        />
+      )}
     </>
   );
 };
