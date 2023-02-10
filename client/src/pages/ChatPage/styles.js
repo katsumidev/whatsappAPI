@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {
   RiSendPlaneFill,
   AiOutlinePaperClip,
+  HiDownload,
   MdOutlineEmojiEmotions,
 } from "../../styles/Icons";
 import background from "../../assets/background.png";
@@ -20,6 +21,9 @@ export const ContactsList = styled.div`
   flex-direction: column;
   width: 30%;
   height: 100vh;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+    rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 `;
 
 export const ContactRow = styled.div`
@@ -31,7 +35,7 @@ export const ContactRow = styled.div`
   flex-direction: row;
   align-items: center;
   transition: all 0.2s;
-  box-shadow: 0 -1px 1px -1px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--boxShadow);
   background-color: ${(props) =>
     props.selected == "selected"
       ? "var(--secundary-background)"
@@ -67,7 +71,7 @@ export const ChatMain = styled.div`
 export const Chat = styled.div`
   padding: 26px;
   flex: 1;
-  overflow: auto;
+  overflow-y: scroll;
   height: 100%;
 `;
 
@@ -91,7 +95,7 @@ export const ChatInput = styled.input`
   border: none;
   border-radius: 12px;
   font-size: 11pt;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 `;
 
 export const ContactTopBar = styled.div`
@@ -105,6 +109,7 @@ export const ContactTopBar = styled.div`
   padding: 12px;
   gap: 15px;
   top: 0;
+  box-shadow: var(--boxShadow);
 
   p {
     font-weight: 600;
@@ -113,6 +118,7 @@ export const ContactTopBar = styled.div`
 
 export const MessageContainer = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   color: black;
   border-radius: 6px;
@@ -120,17 +126,18 @@ export const MessageContainer = styled.div`
   max-width: 60%;
   width: fit-content;
   padding: 6px;
-  gap: 10px;
   word-break: break-word;
   margin: 10px 0;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  gap: 5px;
+  box-shadow: var(--boxShadow);
   background-color: ${(props) =>
-    props.receiver ? "white" : "var(--accent-color)"};
+    props.receiver ? "white" : "var(--chat-accent-color)"};
   margin-left: ${(props) => (props.receiver ? "0" : "auto")};
 
   p {
     font-size: 14px;
     padding: 0 25px 0 5px;
+    margin-bottom: 0;
   }
 
   sub {
@@ -138,6 +145,11 @@ export const MessageContainer = styled.div`
     color: ${(props) => (props.receiver ? "#919191" : "#00000")};
     word-break: keep-all;
     align-self: flex-end;
+    padding: 6px 0;
+
+    svg {
+      margin-left: 5px;
+    }
   }
 
   img {
@@ -152,7 +164,7 @@ export const MessageBtn = styled(RiSendPlaneFill)`
   cursor: pointer;
 
   .file {
-    background-color: var(--accent-color);
+    background-color: var(--chat-accent-color);
     border-radius: 100%;
     padding: 16px;
   }
@@ -172,7 +184,9 @@ export const SendFileInput = styled.input`
   display: none;
 `;
 
-export const Sentinel = styled.li``;
+export const Sentinel = styled.li`
+  background-color: transparent;
+`;
 
 export const DocumentContainer = styled.div`
   display: flex;
@@ -182,7 +196,7 @@ export const DocumentContainer = styled.div`
   background-color: var(--accent-color-secundary);
   padding: 16px;
   border-radius: 6px;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 
   p {
     font-size: 13px;
@@ -237,8 +251,44 @@ export const NormalMessage = styled.div`
 
   sub {
     align-self: flex-end;
+
+    svg {
+      margin-left: 5px;
+    }
   }
 `;
+
+export const ImagePreview = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  padding: 26px;
+  z-index: 999;
+
+  img {
+    width: 50%;
+    height: auto;
+    border-radius: 16px;
+  }
+`;
+
+export const PreviewBackground = styled.div`
+  background-color: var(--secundary-background);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  z-index: -1;
+  position: absolute;
+`;
+
+export const AudioMessage = styled.div``;
 
 export const SendImageContainer = styled.div`
   max-width: 100%;
@@ -267,13 +317,21 @@ export const ImageOptions = styled.div`
 export const CloseBtn = styled.p`
   cursor: pointer;
   overflow: hidden;
+  color: black;
+  font-size: 20px;
+  height: fit-content;
 `;
 export const Image = styled.img`
   width: 35%;
   height: auto;
   border-radius: 6px;
   margin: 10px;
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
+`;
+
+export const ImageMessage = styled.img`
+  border-radius: 4px;
+  cursor: pointer;
 `;
 
 export const SendOptions = styled.div`
@@ -294,7 +352,7 @@ export const Caption = styled.input`
   border: none;
   width: 100%;
   background-color: var(--secundary-background);
-  box-shadow: rgba(0, 0, 0, 0.05) 1.95px 1.95px 2.6px;
+  box-shadow: var(--boxShadow);
 `;
 
 export const EmojiMenu = styled.div`
@@ -312,4 +370,31 @@ export const Menu = styled.div`
 export const VideoContainer = styled.video`
   width: 100%;
   height: 100%;
+`;
+
+export const AudioPreviewContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  svg {
+    fill: grey;
+    font-size: 100px;
+    color: var(--grey);
+  }
+
+  h3 {
+    color: var(--grey);
+    font-weight: 500;
+  }
+`;
+
+export const DownloadOverlay = styled(HiDownload)`
+  color: white;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 `;

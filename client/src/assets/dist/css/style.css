@@ -1,0 +1,71 @@
+.button-up {
+    background-color: #34af23;
+    color: white;
+    border-color: white;
+}
+
+.button-up:hover {
+    background-color: white;
+    color: #34af23;
+    border-color: #34af23;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: white;
+    color: #91cc89;
+    border-color: #91cc89;
+}
+
+.button-buscar {
+    background-color: white;
+    color: #34af23;
+    border-color: #34af23;
+}
+
+.cor-cinza {
+    color: rgb(155, 155, 155);
+}
+
+table, th, td { 
+    border: -20px solid transparent; 
+} 
+
+.scroll-div {
+    overflow-y: hidden;
+}
+
+.check-box {
+    background-color: #34af23;
+}
+
+input:checked {
+    background-color: green;
+}
+
+.img-fluid {
+    width: 30px;
+}
+
+.id-nome {
+   font-size: 15px;
+   line-height: 16px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   max-width: 25ch;
+   margin: 8px auto;
+   padding: 4px 8px;
+}
+
+.inscrito {
+    font-size: 15px;
+}
+
+.ver-link {
+    color: #34af23;
+}
+
+.ver-link:hover {
+    color: #91cc89;
+}
