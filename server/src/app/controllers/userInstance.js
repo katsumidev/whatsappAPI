@@ -1,4 +1,6 @@
 var crypto = require("crypto");
+const apiUrl = process.env.API_URL
+
 
 function encryptKey(key, userToken) {
   return `${userToken}:${crypto
@@ -12,7 +14,7 @@ const initUser = async (req, res) => {
   const hashed_key = encryptKey(key, userToken);
 
   fetch(
-    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://127.0.0.1:3005/webHook/userHandler`,
+    `${apiUrl}/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=${process.env.SERVER_URL}/webHook/userHandler`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -45,7 +47,7 @@ const initUser = async (req, res) => {
 const deleteIns = async (req, res) => {
   const { key } = req.body;
 
-  fetch(`http://localhost:3333/instance/delete?key=${key}`, {
+  fetch(`${apiUrl}/instance/delete?key=${key}`, {
     // deleta a instância criada para esse usuário
     method: "DELETE",
     headers: {
@@ -55,7 +57,7 @@ const deleteIns = async (req, res) => {
       "Access-Control-Allow-Methods": "GET, POSconst PTIONS =PUT, DELETE",
     },
   }).then(async (response) => {
-    fetch(`http://localhost:3333/instance/logout?key=${key}`, {
+    fetch(`${apiUrl}/instance/logout?key=${key}`, {
       // assim que a instância é deletada, faz o logout do usuário da API
       method: "DELETE",
       headers: {
@@ -71,7 +73,7 @@ const deleteIns = async (req, res) => {
 const listIns = async (req, res) => {
   const { userToken } = req.body;
 
-  fetch(`http://localhost:3333/instance/list`, {
+  fetch(`${apiUrl}/instance/list`, {
     // Lista todos os usuários conectados na API
     method: "get",
     headers: {
@@ -94,7 +96,7 @@ const getInfo = async (req, res) => {
 
   fetch(
     // pega as informações do usuário da API
-    `http://localhost:3333/instance/info?key=${key}`,
+    `${apiUrl}/instance/info?key=${key}`,
     {
       method: "GET",
       headers: {
@@ -122,7 +124,7 @@ const checkStatus = async (req, res) => {
 
   fetch(
     // pega as informações do usuário da API
-    `http://localhost:3333/instance/info?key=${hashed_key}`,
+    `${apiUrl}/instance/info?key=${hashed_key}`,
     {
       method: "GET",
       headers: {

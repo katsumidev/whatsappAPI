@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const apiUrl = process.env.API_URL
 
 const newContact = async (req, res) => {
   const { phone_number, contact_name, user_token, user_id } = req.body;
@@ -18,7 +19,7 @@ const newContact = async (req, res) => {
       return res.status(503).send("O numero já está cadastrado");
     } else {
       fetch(
-        `http://localhost:3333/misc/downProfile?key=${user_id}&id=${phone_number}`,
+        `${apiUrl}/misc/downProfile?key=${user_id}&id=${phone_number}`,
         {
           method: "GET",
           headers: {
@@ -99,7 +100,7 @@ const getContactPic = async (req, res) => {
   const { user_id, contact_number } = req.body;
 
   fetch(
-    `http://localhost:3333/misc/downProfile?key=${user_id}&id=${contact_number}`,
+    `${apiUrl}/misc${apiUrl}user_id}&id=${contact_number}`,
     {
       method: "GET",
       headers: {

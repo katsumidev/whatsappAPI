@@ -1,7 +1,9 @@
+const apiUrl = process.env.API_URL
+
 const sendMessage = async (req, res) => {
   const { user_id, msg, phone_number } = req.body;
 
-  fetch(`http://localhost:3333/message/text?key=${user_id}`, {
+  fetch(`${apiUrl}/message/text?key=${user_id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +22,7 @@ const sendMultipleMessages = async (req, res) => {
   const { user_id, msg, number_list } = req.body;
 
   number_list.forEach((number) => {
-    fetch(`http://localhost:3333/message/text?key=${user_id}`, {
+    fetch(`${apiUrl}/message/text?key=${user_id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 const LiveChat = require("../models/livechat");
 const ChatMessage = require("../models/chatmessage");
+const apiUrl = process.env.API_URL
 
 const getChat = async (req, res) => {
   try {
@@ -38,7 +39,7 @@ const newMessage = async (req, res) => {
 
   try {
     if (type != "file") {
-      fetch(`http://localhost:3333/message/text?key=${from}`, {
+      fetch(`${apiUrl}/message/text?key=${from}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
