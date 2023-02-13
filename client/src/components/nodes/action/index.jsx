@@ -3,26 +3,39 @@ import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsLightningChargeFill} from 'react-icons/bs';
-import { Container, H1 } from './styles';
+import { Container, H1, SquareContent } from './styles';
+import { useDispatch } from 'react-redux';
+import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ActionSquare = ({ selected }) => {
+const ActionSquare = ({ selected, data }) => {
 
-  const lineClassName = 'border-color: rgb(96 165 250);'
-  const handleClassname = 'height: 0.75rem; width: 0.75rem; background: white; border-width: 2px; border-radius: 0.25rem; border-color: rgb(96 165 250)';
+  const dispatch = useDispatch();
+
+  if(selected) {
+    dispatch(changeNode({data, type: 'action'}))
+  } else {
+    dispatch(undoChange())
+  }
+
   return (
     <Container>
       <H1><BsLightningChargeFill/>Ação</H1>
-      
+      <SquareContent>
+        <strong>Inscrição em Sequência</strong>
+        {data.registration === 'esquentaChip' ? (
+          <p>Esquenta chip</p>
+        ): <p>8 Horas do dia seguinte</p>}
+      </SquareContent>
       <NodeResizer 
       minHeight={200}
       minWidth={200}
       isVisible={selected}
-      lineClassName={lineClassName}
-      handleClassName={handleClassname}
+      lineClassName=''
+      handleClassName=''
       />
         <Handle
          id='right'

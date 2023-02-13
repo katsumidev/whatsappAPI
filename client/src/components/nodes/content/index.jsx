@@ -1,18 +1,36 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React from 'react'
+import React, { useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BiBookContent} from 'react-icons/bi';
 import { Container, H1 } from './styles';
+import { useDispatch } from 'react-redux';
+import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ContetntSquare = ({ selected }) => {
+const ContetntSquare = ({selected, data, setOutputData}) => {
+  const [typingDelay, setTypingDelay] = useState(data.range);
+  const dispatch = useDispatch();
+
+  if(selected) {
+    dispatch(changeNode({data, type: 'content'}))
+  } else {
+    dispatch(undoChange())
+  }
+  
+
+/*   const handleClick = () => {
+    setOutputData({ message: 'Hello World!' });
+  }; */
+
   return (
-    <Container>
+    <Container /* onClick={handleClick} */>
       <H1><BiBookContent/>Conteúdo</H1>
+      {selected && <p>Selecionado </p>}
+      <p>O tempo é de: {typingDelay}</p>
       <NodeResizer 
       minHeight={200}
       minWidth={200}

@@ -4,18 +4,29 @@ import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {AiFillAlert} from 'react-icons/ai';
 import { Container, H1 } from './styles';
+import { useDispatch } from 'react-redux';
+import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ButtonSquare = ({ selected }) => {
+const ButtonSquare = ({ selected, data }) => {
+  const dispatch = useDispatch();
+
+  if(selected) {
+    dispatch(changeNode({data, type: 'button'}))
+  } else {
+    dispatch(undoChange())
+  }
+
   return (
     <Container>
       <H1><AiFillAlert/>Botões</H1>
       <div className='text-center mt-6'>
         <p><strong>Normal de 3 em 3</strong></p>
         <p className='text-green-600'>Texto da pergunta</p>
+        {data.textArea}
         <hr className='bg-zinc-500 max-w-full'/>
       </div>
       <NodeResizer 
