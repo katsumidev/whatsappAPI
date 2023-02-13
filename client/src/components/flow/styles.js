@@ -254,20 +254,48 @@ export const ConnectionBody = styled.div`
 
 export const DelayHeader = styled.div`
   width: 100%;
-  height: 35px;
-  background: #ffca92;
+  padding: 12px;
+  background: rgb(255, 202, 146);
+  background: linear-gradient(
+    5deg,
+    rgba(255, 202, 146, 1) 30%,
+    rgba(255, 157, 53, 1) 100%
+  );
   text-align: center;
+  font-weight: 600;
+  color: #FFF;
+  text-transform: capitalize;
 `;
 
 export const InputTimeDelay = styled.input`
   border-radius: 5px;
-  max-width: 45%;
+  padding: 4px;
+  max-width: 90px;
+  outline: none;
+  border: 1px solid var(--grey);
 `;
 
 export const InputTypeTimeDelay = styled.select`
   border-radius: 5px;
   max-width: 45%;
 `;
+
+export const DelayBody = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    align-items: center;
+
+    .react-select-container {
+        max-width: 45%;
+    }
+`
+
+export const Options = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+`
 
 export const NodesSelector = styled.div``;
 
@@ -359,17 +387,4 @@ export const AddNodeBtn = styled.button`
       opacity: 0;
     }
   }
-`;
-
-export const WhatsappLogo = styled.div`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  padding: 8px;
-  background: rgb(94, 250, 120);
-  background: linear-gradient(
-    282deg,
-    rgba(94, 250, 120, 1) 35%,
-    rgba(48, 192, 47, 1) 100%
-  );
 `;

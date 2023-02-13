@@ -2,8 +2,8 @@ import { NodeResizer } from '@reactflow/node-resizer';
 import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
-import {AiOutlineClockCircle} from 'react-icons/ai';
-import { Container, H1 } from './styles';
+import {AiOutlineClockCircle} from '../../../styles/Icons';
+import { Container, DelayLogo, H1, Header } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -24,7 +24,11 @@ const DelaySquare = ({ selected, data }) => {
 
   return (
     <Container>
-      <H1><AiOutlineClockCircle/>Delay inteligente</H1>
+      <Header>
+      <DelayLogo><AiOutlineClockCircle size={32} fill="#FFF" /></DelayLogo>
+      <p>delay inteligente</p>
+      </Header>
+
       <p>Aguardando <strong>{data.delayTime} {data.delayFormat}</strong> e depois continua</p>
       <NodeResizer 
       minHeight={200}

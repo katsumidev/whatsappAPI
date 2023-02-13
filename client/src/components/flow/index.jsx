@@ -29,7 +29,7 @@ import {
   TbArrowFork,
   BiBookContent,
   BsListUl,
-  BsWhatsapp
+  BsWhatsapp,
 } from "../../styles/Icons";
 import ActionSquare from "../nodes/action";
 import {
@@ -54,7 +54,9 @@ import {
   RandomHeader,
   SelectElement,
   NodesBtn,
-  AddNodeBtn
+  AddNodeBtn,
+  DelayBody,
+  Options
 } from "./styles";
 import { useParams } from "react-router";
 import ConnectionLine from "./ConnectionLine";
@@ -354,27 +356,29 @@ function Flow() {
           {node.node.type === "delay" && (
             <>
               <DelayHeader>Delay inteligente</DelayHeader>
-              <InputTimeDelay
-                type="number"
-                value={delayTime}
-                onChange={(e) => setDelayTime(e.target.value)}
-              />
-              <select
-                name=""
-                id=""
-                value={delayFormat}
-                onChange={(e) => setDelayFormat(e.target.value)}
-              >
-                <option value="minutos">Minutos</option>
-                <option value="horas">Horas</option>
-                <option value="dias">Dias</option>
-              </select>
+              <DelayBody>
+                <Options>
+                  <InputTimeDelay
+                    type="number"
+                    value={delayTime}
+                    onChange={(e) => setDelayTime(e.target.value)}
+                  />
+                  <SelectElement
+                    onChange={setDelayFormat}
+                    classNamePrefix="react-select"
+                    options={[
+                      { value: "minutos", label: "Minutos" },
+                      { value: "horas", label: "Horas" },
+                      { value: "dias", label: "Dias" },
+                    ]}
+                  />
+                </Options>
+              </DelayBody>
             </>
           )}
         </Modal>
       )}
       <Container>
-        
         <CircleMenu
           startAngle={180}
           rotationAngle={180}
@@ -434,7 +438,7 @@ function Flow() {
             <AiOutlineClockCircle />
           </CircleMenuItem>
         </CircleMenu>
-     
+
         <ReactFlow
           nodeTypes={NODE_TYPES}
           edgeTypes={edgeTypes}

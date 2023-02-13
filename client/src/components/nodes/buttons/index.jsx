@@ -66,7 +66,7 @@ const ButtonSquare = ({ selected, data }) => {
             position={Position.Right}
           />
         </HandleBtns>
-        <HandleBtns>
+        <HandleBtns parent>
           Email
           <Handle
             id="right"
