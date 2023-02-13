@@ -4,17 +4,28 @@ import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {AiOutlineClockCircle} from 'react-icons/ai';
 import { Container, H1 } from './styles';
+import { useDispatch } from 'react-redux';
+import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const DelaySquare = ({ selected }) => {
+const DelaySquare = ({ selected, data }) => {
+  const dispatch = useDispatch();
+
+  if(selected) {
+    dispatch(changeNode({data, type: 'delay'}))
+  } else {
+    dispatch(undoChange())
+  }
+  //vai
+
+
   return (
     <Container>
       <H1><AiOutlineClockCircle/>Delay inteligente</H1>
-      <p>Aguardando <strong>0 minutuos</strong> e depois continua</p>
-
+      <p>Aguardando <strong>{data.delayTime} {data.delayFormat}</strong> e depois continua</p>
       <NodeResizer 
       minHeight={200}
       minWidth={200}

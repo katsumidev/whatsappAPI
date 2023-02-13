@@ -10,8 +10,12 @@ export const Container = styled.div`
 `;
 
 export const H1 = styled.h1`
-  background-color: #ffeca7;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  font-size: 12pt;
-`;
+background-color: #ffeca7;
+border-top-left-radius: 0.25rem;
+border-top-right-radius: 0.25rem;
+font-size: 12pt;
+`
+
+export const SquareContent = styled.div`
+border-bottom: 1px #000;
+`
