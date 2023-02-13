@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
   MessageInput,
@@ -19,41 +19,39 @@ import {
 import InputMask from "react-input-mask";
 import CheckboxGroup from "react-checkbox-group";
 import { convertToPhone } from "../../utils/conversions";
-import defaultPic from "../../assets/defaultPic.jpg";
+import { useModalContext } from "../../modal.context";
 import * as XLSX from "xlsx";
+import defaultPic from "../../assets/defaultPic.jpg";
 import "../../assets/dist/css/adminlte.min.css";
 import "../../assets/dist/css/style.css";
 import "../../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css";
 import "../../assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";
 import "../../assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css";
 import { useParams } from "react-router";
+import { getInfo, getContacts } from "../../services/api";
 import {
-  getInfo,
-  getContacts,
-  addNewContact,
-  deleteUserContact,
-  sendSingleMessage,
-  sendMultipleMessages,
-} from "../../services/api";
+  AiOutlineDownload,
+  AiOutlineUpload,
+  IoMdContact,
+} from "../../styles/Icons";
+import NewUserModal from "../../components/NewUserModal";
+import { addNewContact } from "../../services/api";
 
 function UserPanel() {
-  const [phoneNumber, setPhoneNumber] = useState(0);
   const [contacts, setContacts] = useState([]);
+  const [numbers, setNumbers] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState(0);
   const [contactNumber, setContactNumber] = useState(0);
   const [contactName, setContactName] = useState("");
-  const [numbers, setNumbers] = useState([]);
   const [username, setUsername] = useState("");
   const [msg, setMsg] = useState("");
   const { userIns } = useParams();
+  const fileinput = useRef(null);
 
-  useEffect(() => {
-    // pega o nome do usuário
-    const getUserInfo = async () => {
-      let data = await getInfo({ key: userIns });
-      setUsername(data.data.instance_data.user.name);
-    };
-    getUserInfo();
-  });
+  const {
+    modalState: { visible },
+    openModal,
+  } = useModalContext();
 
   useEffect(() => {
     // pega os contatos do usuário
@@ -65,6 +63,22 @@ function UserPanel() {
     };
     loadContacts();
   }, []);
+
+  const addContact = async (e) => {
+    // adiciona um novo contato
+    if (contactNumber > 0 && contactName != "") {
+      let data = await addNewContact({
+        phone_number: contactNumber,
+        contact_name: contactName,
+        user_token: localStorage.getItem("userToken"),
+        user_id: userIns,
+      });
+      window.location.reload(false);
+    } else {
+      alert("preencha os campos");
+      e.preventDefault();
+    }
+  };
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -89,61 +103,23 @@ function UserPanel() {
           });
         });
         console.log("Salvo com sucesso");
+        window. location. reload(false);
       } catch (error) {
-        alert("Erro ao importar");
       }
     };
 
     reader.readAsArrayBuffer(file);
   };
 
-  const addContact = async (e) => {
-    // adiciona um novo contato
-    if (contactNumber > 0 && contactName != "") {
-      let data = await addNewContact({
-        phone_number: contactNumber,
-        contact_name: contactName,
-        user_token: localStorage.getItem("userToken"),
-        user_id: userIns,
-      });
-      window.location.reload(false);
-    } else {
-      alert("preencha os campos");
-      e.preventDefault();
-    }
-  };
-
-  const deleteContact = async (number) => {
-    // deleta o contato do usuário
-    let data = await deleteUserContact({
-      phone_number: number,
-      user_token: localStorage.getItem("userToken"),
-    });
-
-    window.location.reload(false);
-  };
-
-  const sendMsg = async (e) => {
-    // enviar mensagens automática através do painel de usuário
-    if (numbers.length > 1) {
-      await sendMultipleMessages({
-        user_id: userIns,
-        number_list: numbers,
-        msg: msg,
-      });
-    } else {
-      await sendSingleMessage({
-        user_id: userIns,
-        phone_number: numbers[0],
-        msg: msg,
-      });
-    }
-
-    e.preventDefault();
-  };
-
   return (
     <Container>
+      {visible ? <NewUserModal /> : <></>}
+      <input
+        type="file"
+        ref={fileinput}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
       {/* <!-- Site wrapper --> */}
       <div className="wrapper">
         {/* <!-- Content Wrapper. Contains page content --> */}
@@ -156,25 +132,32 @@ function UserPanel() {
                   <h1>Audiência</h1>
                 </div>
                 <div className="col-sm-2">
-                  <a className="button-up btn btn-primary btn-sm btn-block">
-                    <i className="fa-solid fa-upload"></i>&nbsp;Importar
+                  <a
+                    className="button-up btn btn-primary btn-sm btn-block"
+                    onClick={() => fileinput.current.click()}
+                  >
+                    <AiOutlineUpload size={20} /> &nbsp;Importar Contatos
                   </a>
                 </div>
                 <div className="col-sm-2">
                   <a className="button-up btn btn-primary btn-sm btn-block">
-                    <i className="fa-solid fa-download"></i>&nbsp;Relatório
+                    <AiOutlineDownload size={20} />
+                    &nbsp;Relatório
                   </a>
                 </div>
                 <div className="col-sm-2">
-                  <a className="button-up btn btn-primary btn-sm btn-block">
-                    <i className="fa-solid fa-circle-user"></i>&nbsp;Novo
-                    contato
+                  <a
+                    className="button-up btn btn-primary btn-sm btn-block"
+                    onClick={() => openModal()}
+                  >
+                    <IoMdContact size={20} />
+                    &nbsp;Novo contato
                   </a>
                 </div>
               </div>
             </div>
           </section>
-
+          <div className="hr-divider"></div>
           <section className="d-flex">
             <div className="col-3 scroll-div">
               <div>

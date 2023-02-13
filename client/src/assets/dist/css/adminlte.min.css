@@ -88,6 +88,14 @@ hr {
     overflow: visible
 }
 
+.hr-divider {
+    height: 2px;
+    background-color: grey;
+    width: 100%;
+    opacity: 0.2;
+}
+
+
 h1,
 h2,
 h3,
@@ -807,7 +815,9 @@ pre code {
     -webkit-flex: 0 0 25%;
     -ms-flex: 0 0 25%;
     flex: 0 0 25%;
-    max-width: 25%
+    max-width: 25%;
+    font-size: 12px;
+    margin-right: 20px;
 }
 
 .col-4 {
@@ -846,10 +856,8 @@ pre code {
 }
 
 .col-9 {
-    -webkit-flex: 0 0 75%;
-    -ms-flex: 0 0 75%;
-    flex: 0 0 75%;
-    max-width: 75%
+    width: 100%;
+    max-width: 75%;
 }
 
 .col-10 {
@@ -7994,7 +8002,10 @@ button.bg-dark:hover {
 .d-flex {
     display: -webkit-flex !important;
     display: -ms-flexbox !important;
-    display: flex !important
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 16px;
+    background-color: #F4F6F9;
 }
 
 .d-inline-flex {
@@ -9630,7 +9641,10 @@ button.bg-dark:hover {
 
 .mt-4,
 .my-4 {
-    margin-top: 1.5rem !important
+    margin-top: 1.5rem !important;
+    background-color: #FFF;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
 .mr-4,
@@ -13649,7 +13663,6 @@ body.sidebar-collapse:not(.sidebar-mini-xs):not(.sidebar-mini-md):not(.sidebar-m
     body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer,
     body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
         transition: margin-left .3s ease-in-out;
-        margin-left: 250px
     }
 }
 

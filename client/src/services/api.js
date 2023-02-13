@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const url = process.env.REACT_APP_URL;
+const apiUrl = process.env.REACT_APP_API_URL
 
 export const addNewContact = async (data) => {
   try {
@@ -19,6 +20,7 @@ export const deleteUserContact = async (data) => {
 };
 
 export const getContacts = async (data) => {
+  console.log(url)
   try {
     return await axios.post(`${url}/contacts/consultContacts`, data);
   } catch (error) {
@@ -92,7 +94,7 @@ export const sendMessage = async (data) => {
 
 export const sendImage = async (data) => {
   try {
-    return await axios.post(`http://localhost:3333/message/image?key=${data.from}`, data.data);
+    return await axios.post(`${apiUrl}/message/image?key=${data.from}`, data.data);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -100,7 +102,7 @@ export const sendImage = async (data) => {
 
 export const sendDoc = async (data) => {
   try {
-    return await axios.post(`http://localhost:3333/message/doc?key=${data.from}`, data.data);
+    return await axios.post(`${apiUrl}/message/doc?key=${data.from}`, data.data);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -108,7 +110,7 @@ export const sendDoc = async (data) => {
 
 export const sendVid = async (data) => {
   try {
-    return await axios.post(`http://localhost:3333/message/video?key=${data.from}`, data.data);
+    return await axios.post(`${apiUrl}/message/video?key=${data.from}`, data.data);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -116,7 +118,7 @@ export const sendVid = async (data) => {
 
 export const sendAudio = async (data) => {
   try {
-    return await axios.post(`http://localhost:3333/message/audio?key=${data.from}`, data.data);
+    return await axios.post(`${apiUrl}/message/audio?key=${data.from}`, data.data);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }

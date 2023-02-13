@@ -1,5 +1,12 @@
 export { GrFormClose } from "react-icons/gr";
-export { AiFillEye, AiOutlinePaperClip, AiFillFileZip } from "react-icons/ai";
+export {
+  AiFillEye,
+  AiOutlineUpload,
+  AiOutlineDownload,
+  AiOutlinePaperClip,
+  AiFillFileZip,
+  AiOutlineInfoCircle,
+} from "react-icons/ai";
 export { FaTrash } from "react-icons/fa";
 export {
   BsFillChatFill,
@@ -16,3 +23,4 @@ export { MdOutlineEmojiEmotions } from "react-icons/md";
 export { IoDocument } from "react-icons/io5";
 export { HiDownload, HiLockClosed } from "react-icons/hi";
 export { MdEmail } from "react-icons/md";
+export {IoMdContact} from "react-icons/io"

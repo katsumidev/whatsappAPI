@@ -29,12 +29,12 @@ function ListItem(props) {
 
   const DeleteNumber = async () => {
     // deleta a instância do usuário
-    let data = await deleteInstance({
+    await deleteInstance({
       key: props.name,
       userToken: localStorage.getItem("userToken"),
     });
 
-    setValid(false);
+    setValid(!valid);
   };
 
   return (
@@ -46,7 +46,7 @@ function ListItem(props) {
           <Options>
             <LiveChatButton size={20} onClick={props.openLiveChat} />
             <ViewButton size={20} onClick={props.redirect} />
-            <DeleteButton size={20} onClick={DeleteNumber} />
+            <DeleteButton size={20} onClick={() => DeleteNumber} />
           </Options>
         </Container>
       )}

@@ -12,7 +12,7 @@ const initUser = async (req, res) => {
   const hashed_key = encryptKey(key, userToken);
 
   fetch(
-    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://localhost:3001/webHook/userHandler`,
+    `http://localhost:3333/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=http://127.0.0.1:3005/webHook/userHandler`,
     {
       method: "GET",
       headers: { "Content-Type": "application/json" },

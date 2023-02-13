@@ -10,13 +10,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./src/app/routes/Routes")(app);
 
-const server = app.listen(3001, function () {
-  console.log("escutando na porta 3001");
+const server = app.listen(3005, function () {
+  console.log("escutando na porta 3005");
 });
 
 var io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3002", // ip do front-end
     methods: ["GET", "POST"],
   },
 });

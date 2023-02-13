@@ -108,6 +108,7 @@ function ChatPage() {
       } else {
         setChatMsgs(data);
       }
+      setChatMsgs(data);
     };
     getMessageDetails();
   }, [selectedContact, chatId, newMessageFlag, currentPage]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
@@ -138,7 +139,7 @@ function ChatPage() {
   }, []);
 
   useEffect(() => {
-    let socket = io.connect("http://localhost:3001"); // socket de conexão com o back-end
+    let socket = io.connect(process.env.REACT_APP_URL); // socket de conexão com o back-end
 
     const saveReceiverMsg = async (importedData) => {
       // ao receber a mensagem vinda do socket

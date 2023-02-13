@@ -15,7 +15,7 @@ function Modal() {
   const [qrGenerated, setQrStatus] = useState(false);
   const [userkey, setKey] = useState();
   const [html, setHTML] = useState("");
-  const socket = io("http://localhost:3001");
+  const socket = io("http://127.0.0.1:3005"); // ip do back-end
 
   const initIns = async (e) => {
     e.preventDefault()
@@ -41,7 +41,7 @@ function Modal() {
     // Função para escutar o websocket enviado do backend, se o socket contendo a key for recebido, significa que o usuário escaneou o QRCODE
     socket.on("connect", () => console.log(socket.id));
     socket.on("connect_error", () => {
-      setTimeout(() => socket.connect(), 3001);
+      setTimeout(() => socket.connect(), 3005); // conecta no socket do backend
     });
 
     socket.on("key", (data) => {
