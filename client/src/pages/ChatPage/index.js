@@ -37,6 +37,11 @@ import {
   AudioPreviewContainer,
   Scroller,
   DownloadOverlay,
+  SearchBox,
+  SearchInput,
+  ContactHeader,
+  MyProfile,
+  SearchContainer
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -60,6 +65,8 @@ import {
   sendDoc,
   sendVid,
   sendAudio,
+  getUserPicture,
+  getInfo,
 } from "../../services/api";
 import {
   BsImage,
@@ -71,6 +78,7 @@ import {
   BsFillFileEarmarkMusicFill,
   AiFillFileZip,
   BsCheckAll,
+  BiSearchAlt,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -88,6 +96,9 @@ function ChatPage() {
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [caption, setCaption] = useState("");
   const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
+  const [userPictureUrl, setUserPicture] = useState("");
+  const [searchBox, setSearchBox] = useState("");
+  const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
   const fileinput = useRef(null); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
     chatId: "main",
@@ -342,33 +353,86 @@ function ChatPage() {
     return <div ref={elementRef} />;
   };
 
+  useEffect(() => {
+    // pega o nome e o telefone do usuário
+    const getUserInfo = async () => {
+      let data = await getInfo({ key: userIns });
+      setInsInfo({
+        username: data.data.instance_data.user.name,
+        userId: data.data.instance_data.user.id.split(":")[0],
+      });
+    };
+    getUserInfo();
+  }, []);
+
+  useEffect(() => {
+    const userPicture = async () => {
+      console.log(insInfo)
+      if (insInfo.userId != "") {
+        let data = await getUserPicture({ key: userIns, id: insInfo.userId });
+        setUserPicture(data.data);
+      }
+    };
+    userPicture();
+  }, [insInfo]);
+
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   return (
     <Container>
       <ContactsList>
-        {contacts.map((contact, index) => {
-          return (
-            <ContactRow
-              key={index}
-              onClick={() =>
-                handleGetChat(contact.number, contact.pfp, contact.contact)
-              }
-              selected={
-                selectedContact.contactId == contact.number ? "selected" : "not"
-              }
-            >
-              <ContactPfp
-                src={contact.pfp != null ? contact.pfp : defaultPic}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  currentTarget.src = defaultPic;
-                }}
-              />
-              <ContactName>{contact.contact}</ContactName>
-            </ContactRow>
-          );
-        })}
+        <ContactHeader>
+          <MyProfile>
+            <ContactPfp
+              src={userPictureUrl}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = defaultPic;
+              }}
+            />
+          </MyProfile>
+          <SearchContainer>
+          <SearchBox>
+            <BiSearchAlt />
+            <SearchInput
+              onChange={(e) => setSearchBox(e.target.value)}
+              placeholder="Pesquisar uma conversa..."
+              type="text"
+            />
+          </SearchBox>
+          <hr style={{marginBottom: "0"}} />
+          </SearchContainer>
+       
+        </ContactHeader>
+
+        {contacts
+          .filter((contact) =>
+            contact.contact.toLowerCase().includes(searchBox.toLowerCase())
+          )
+          .map((contact, index) => {
+            return (
+              <ContactRow
+                key={index}
+                onClick={() =>
+                  handleGetChat(contact.number, contact.pfp, contact.contact)
+                }
+                selected={
+                  selectedContact.contactId == contact.number
+                    ? "selected"
+                    : "not"
+                }
+              >
+                <ContactPfp
+                  src={contact.pfp != null ? contact.pfp : defaultPic}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = defaultPic;
+                  }}
+                />
+                <ContactName>{contact.contact}</ContactName>
+              </ContactRow>
+            );
+          })}
       </ContactsList>
       <ChatMain>
         <ContactTopBar>
@@ -437,7 +501,10 @@ function ChatPage() {
         ) : (
           <>
             <Chat ref={scrollRef}>
-              <Sentinel className="sentinel" style={{display: "none"}}></Sentinel>
+              <Sentinel
+                className="sentinel"
+                style={{ display: "none" }}
+              ></Sentinel>
 
               {chatMsgs.map((msg, index) => {
                 return (

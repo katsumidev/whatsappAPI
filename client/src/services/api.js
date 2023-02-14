@@ -44,6 +44,15 @@ export const ListInstance = async (data) => {
   }
 };
 
+export const getUserPicture = async (data) => {
+  try {
+    return await axios.post(`${url}/instance/downloadPfp`, data);
+  } catch (error) {
+    console.log("Error while calling newConversations API ", error);
+  }
+};
+
+
 export const InitiateInstance = async (data) => {
   try {
     return await axios.post(`${url}/instance/initUser`, data);

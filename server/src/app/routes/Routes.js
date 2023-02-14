@@ -33,6 +33,7 @@ route.post("/instance/deleteIns", instance.deleteIns);
 route.post("/instance/listIns", instance.listIns);
 route.post("/instance/getInfo", instance.getInfo);
 route.post("/instance/checkStatus", instance.checkStatus);
+route.post("/instance/downloadPfp", instance.downloadPfp);
 
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);

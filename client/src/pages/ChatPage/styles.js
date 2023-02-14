@@ -16,12 +16,23 @@ export const Container = styled.div`
   overflow: hidden;
 `;
 
+export const ContactHeader = styled.div`
+
+`
+
+export const MyProfile = styled.div`
+  background-color: var(--secundary-background);
+  padding: 10px;
+`
+
 export const ContactsList = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
-  width: 30%;
+  width: 35%;
   height: 100vh;
   overflow-y: auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
 
   ::-webkit-scrollbar {
     display: none;
@@ -33,6 +44,36 @@ export const ContactsList = styled.div`
     rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 `;
+
+export const SearchContainer = styled.div`
+  padding: 10px;
+`
+
+export const SearchBox = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background-color: var(--sendImage-background);
+  padding: 6px;
+
+  svg {
+    margin-left: 10px;
+    color: rgba(0, 0, 0, 0.75);
+  }
+`
+
+export const SearchInput = styled.input`
+ border-radius: 6px;
+  background-color: var(--sendImage-background);
+  border: none;
+  outline: none;
+  margin-left: 20px;
+  font-size: 12px;
+  width: 100%;
+`
 
 export const ContactRow = styled.div`
   width: 100%;
