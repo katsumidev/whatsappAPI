@@ -39,6 +39,7 @@ const newContact = async (req, res) => {
                 phoneNumber: phone_number,
                 contactName: contact_name,
                 picture: data.data,
+                createdAt: new Date(),
               },
             },
           },
@@ -88,6 +89,7 @@ const consultContacts = async (req, res) => {
           number: item.phoneNumber,
           contact: item.contactName,
           pfp: item.picture,
+          date: item.createdAt
         };
       });
 

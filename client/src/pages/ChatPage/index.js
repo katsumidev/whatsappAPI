@@ -90,7 +90,7 @@ function ChatPage() {
   const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
   const fileinput = useRef(null); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
-    chatId: "",
+    chatId: "main",
     contactId: "",
     contactPfp: "",
     contactName: "",
@@ -437,7 +437,7 @@ function ChatPage() {
         ) : (
           <>
             <Chat ref={scrollRef}>
-              <Sentinel className="sentinel"></Sentinel>
+              <Sentinel className="sentinel" style={{display: "none"}}></Sentinel>
 
               {chatMsgs.map((msg, index) => {
                 return (

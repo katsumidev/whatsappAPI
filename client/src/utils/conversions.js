@@ -19,3 +19,8 @@ export const convertToPhone = (p) => {
     return formatedDate;
   };
   
+  export const convertToFullDate = (date) => {
+    let formatedDate = new Date(date)
+      .toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
+    return formatedDate;
+  }

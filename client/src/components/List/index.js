@@ -33,7 +33,7 @@ function List() {
             key={index} // Gera uma lista para todos os usuários que resultaram da busca, renderizando o componente ListItem para cada um.
             name={instance}
             redirect={() => navigate(`/panel/${instance}`)} 
-            openLiveChat={() => navigate(`/${instance}/live-chat`)}
+            openLiveChat={() => navigate(`/${instance}/live-chat/main`)}
           ></ListItem>
         );
       })}
