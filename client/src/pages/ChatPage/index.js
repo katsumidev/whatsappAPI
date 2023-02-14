@@ -35,13 +35,13 @@ import {
   PreviewBackground,
   AudioMessage,
   AudioPreviewContainer,
-  Scroller,
   DownloadOverlay,
   SearchBox,
   SearchInput,
   ContactHeader,
   MyProfile,
-  SearchContainer
+  SearchContainer,
+  Contacts,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -367,7 +367,7 @@ function ChatPage() {
 
   useEffect(() => {
     const userPicture = async () => {
-      console.log(insInfo)
+      console.log(insInfo);
       if (insInfo.userId != "") {
         let data = await getUserPicture({ key: userIns, id: insInfo.userId });
         setUserPicture(data.data);
@@ -392,47 +392,47 @@ function ChatPage() {
             />
           </MyProfile>
           <SearchContainer>
-          <SearchBox>
-            <BiSearchAlt />
-            <SearchInput
-              onChange={(e) => setSearchBox(e.target.value)}
-              placeholder="Pesquisar uma conversa..."
-              type="text"
-            />
-          </SearchBox>
-          <hr style={{marginBottom: "0"}} />
+            <SearchBox>
+              <BiSearchAlt />
+              <SearchInput
+                onChange={(e) => setSearchBox(e.target.value)}
+                placeholder="Pesquisar uma conversa..."
+                type="text"
+              />
+            </SearchBox>
+            <hr style={{ marginBottom: "0" }} />
           </SearchContainer>
-       
         </ContactHeader>
-
-        {contacts
-          .filter((contact) =>
-            contact.contact.toLowerCase().includes(searchBox.toLowerCase())
-          )
-          .map((contact, index) => {
-            return (
-              <ContactRow
-                key={index}
-                onClick={() =>
-                  handleGetChat(contact.number, contact.pfp, contact.contact)
-                }
-                selected={
-                  selectedContact.contactId == contact.number
-                    ? "selected"
-                    : "not"
-                }
-              >
-                <ContactPfp
-                  src={contact.pfp != null ? contact.pfp : defaultPic}
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null;
-                    currentTarget.src = defaultPic;
-                  }}
-                />
-                <ContactName>{contact.contact}</ContactName>
-              </ContactRow>
-            );
-          })}
+        <Contacts>
+          {contacts
+            .filter((contact) =>
+              contact.contact.toLowerCase().includes(searchBox.toLowerCase())
+            )
+            .map((contact, index) => {
+              return (
+                <ContactRow
+                  key={index}
+                  onClick={() =>
+                    handleGetChat(contact.number, contact.pfp, contact.contact)
+                  }
+                  selected={
+                    selectedContact.contactId == contact.number
+                      ? "selected"
+                      : "not"
+                  }
+                >
+                  <ContactPfp
+                    src={contact.pfp != null ? contact.pfp : defaultPic}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null;
+                      currentTarget.src = defaultPic;
+                    }}
+                  />
+                  <ContactName>{contact.contact}</ContactName>
+                </ContactRow>
+              );
+            })}
+        </Contacts>
       </ContactsList>
       <ChatMain>
         <ContactTopBar>

@@ -17,13 +17,20 @@ export const Container = styled.div`
 `;
 
 export const ContactHeader = styled.div`
-
-`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 25.8%;
+`;
 
 export const MyProfile = styled.div`
   background-color: var(--secundary-background);
   padding: 10px;
-`
+`;
+
+export const Contacts = styled.div`
+  margin-top: 120px;
+`;
 
 export const ContactsList = styled.div`
   display: flex;
@@ -32,12 +39,12 @@ export const ContactsList = styled.div`
   width: 35%;
   height: 100vh;
   overflow-y: auto;
-  border-right: 1px solid rgba(0, 0, 0, 0.10);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
 
   ::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none; 
+  -ms-overflow-style: none;
   scrollbar-width: none;
 
   box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
@@ -46,8 +53,11 @@ export const ContactsList = styled.div`
 `;
 
 export const SearchContainer = styled.div`
+  display: flex;
   padding: 10px;
-`
+  width: 100%;
+  background-color: var(--main-background);
+`;
 
 export const SearchBox = styled.div`
   position: relative;
@@ -58,22 +68,23 @@ export const SearchBox = styled.div`
   border-radius: 6px;
   background-color: var(--sendImage-background);
   padding: 6px;
+  width: 100%;
 
   svg {
     margin-left: 10px;
     color: rgba(0, 0, 0, 0.75);
   }
-`
+`;
 
 export const SearchInput = styled.input`
- border-radius: 6px;
+  border-radius: 6px;
   background-color: var(--sendImage-background);
   border: none;
   outline: none;
   margin-left: 20px;
   font-size: 12px;
   width: 100%;
-`
+`;
 
 export const ContactRow = styled.div`
   width: 100%;
