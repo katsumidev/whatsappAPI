@@ -2,8 +2,8 @@ import { NodeResizer } from '@reactflow/node-resizer';
 import React, { useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
-import {AiOutlineArrowsAlt} from 'react-icons/ai';
-import { Container, H1, SquareContent } from './styles';
+import {BsArrowsAngleExpand} from '../../../styles/Icons';
+import { Container, H1, SquareContent, RandomLogo, Header, Text, Sub } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -23,7 +23,15 @@ const RandomSquare = ({ selected, data }) => {
 
   return (
     <Container>
-      <H1><AiOutlineArrowsAlt/>Randomizador</H1>
+        <Header>
+        <RandomLogo>
+          <BsArrowsAngleExpand size={32} style={{ color: "#fff" }} />
+        </RandomLogo>
+        <Text>
+          <p>Randomizador</p>
+          <Sub>Se conecte com outro fluxo</Sub>
+        </Text>
+      </Header>
       <SquareContent>
         <strong>1</strong>
         {data.randomRangeOne}%

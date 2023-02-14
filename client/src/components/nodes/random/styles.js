@@ -26,3 +26,45 @@ export const H1 = styled.h1`
 export const SquareContent = styled.div`
 border-bottom: 1px #000;
 `
+
+
+export const RandomLogo = styled.div`
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(106.5deg, rgba(255, 215, 185, 0.91) 23%, rgba(223, 159, 247, 0.8) 93%);
+`;
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow: auto;
+`;
+
+export const Sub = styled.div`
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+`;
+
+export const Text = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  p {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600 !important;
+    margin: 0;
+    color: var(--grey);
+  }
+`;

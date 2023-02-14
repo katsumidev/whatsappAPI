@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BiBookContent} from 'react-icons/bi';
-import { Container, H1 } from './styles';
+import {BsWhatsapp} from "../../../styles/Icons"
+import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -28,9 +29,27 @@ const ContetntSquare = ({selected, data, setOutputData}) => {
 
   return (
     <Container /* onClick={handleClick} */>
-      <H1><BiBookContent/>Conteúdo</H1>
-      {selected && <p>Selecionado </p>}
-      <p>O tempo é de: {typingDelay}</p>
+       <Header>
+        <WhatsappLogo>
+          <BsWhatsapp size={25} fill="#FFF" />
+        </WhatsappLogo>
+        <Text>
+          <p>enviar whatsapp</p>
+          <sub>Conteúdo</sub>
+        </Text>
+      </Header>
+      <MiniChat className="text-center mt-6">
+        <Message>
+          Texto da pergunta{" "}
+          <sub>
+            {new Date().toLocaleTimeString("pt-BR", {
+              hour: "numeric",
+              minute: "numeric",
+            })}
+          </sub>
+        </Message>
+        {data.textArea}
+      </MiniChat>
       <NodeResizer 
       minHeight={200}
       minWidth={200}

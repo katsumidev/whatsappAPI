@@ -3,7 +3,7 @@ import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsLightningChargeFill} from 'react-icons/bs';
-import { Container, H1, SquareContent } from './styles';
+import { Container, H1, SquareContent, Header, ActionLogo, Text, Sub } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -23,7 +23,13 @@ const ActionSquare = ({ selected, data }) => {
 
   return (
     <Container>
-      <H1><BsLightningChargeFill/>Ação</H1>
+       <Header>
+      <ActionLogo><BsLightningChargeFill size={32} fill="#FFF" /></ActionLogo>
+      <Text>
+      <p>ação</p>
+      <Sub>executa ações quando chamado.</Sub>
+      </Text>
+      </Header>
       <SquareContent>
         <strong>Inscrição em Sequência</strong>
         {data.registration === 'esquentaChip' ? (
