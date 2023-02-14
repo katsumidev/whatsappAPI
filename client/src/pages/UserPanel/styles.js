@@ -1,8 +1,56 @@
 import styled from "styled-components";
 import {FaTrash} from "../../styles/Icons"
 
-export const Container = styled.div`
 
+export const Container = styled.div`
+  .react-paginate {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+
+    svg {
+      color: var(--accent-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .back {
+      transform: rotate(-180deg);
+    }
+
+    li {
+      transition: .2s;
+      width: 35px;
+      height: 35px;
+      padding: 6px;
+      text-align: center;
+      border: 1px solid #dfdfdf;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--accent-color);
+      cursor: pointer;
+      border-radius: 2px;
+
+      :hover {
+        background-color: var(--accent-color);
+        color: var(--accent-color);
+        color: #FFF;
+
+        svg {
+          color: #FFF;
+        }
+      }
+    }
+  }
+
+  .active-page {
+    background-color: var(--accent-color);
+    color: #FFF !important;
+  }
 `;
 
 export const Main = styled.div`
