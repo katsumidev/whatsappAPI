@@ -360,6 +360,10 @@ function ChatPage() {
             >
               <ContactPfp
                 src={contact.pfp != null ? contact.pfp : defaultPic}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null;
+                  currentTarget.src = defaultPic;
+                }}
               />
               <ContactName>{contact.contact}</ContactName>
             </ContactRow>
@@ -374,6 +378,10 @@ function ChatPage() {
                 ? selectedContact.contactPfp
                 : defaultPic
             }
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null;
+              currentTarget.src = defaultPic;
+            }}
           />
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
@@ -480,9 +488,7 @@ function ChatPage() {
                               <p>{msg.quotedMessage}</p>
                             </Quoted>
                             <p>{msg.text}</p>
-                            <sub>
-                              {convertToDate(msg.date)}
-                            </sub>
+                            <sub>{convertToDate(msg.date)}</sub>
                           </QuotedMessageContainer>
                         ) : (
                           <>
@@ -494,9 +500,7 @@ function ChatPage() {
                             ) : (
                               <NormalMessage receiver>
                                 <p>{msg.text}</p>
-                                <sub>
-                                  {convertToDate(msg.date)}{" "}
-                                </sub>
+                                <sub>{convertToDate(msg.date)} </sub>
                               </NormalMessage>
                             )}
                           </>
