@@ -6,12 +6,14 @@ import {BsLightningChargeFill} from 'react-icons/bs';
 import { Container, H1, SquareContent } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
+import { useState } from 'react';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
 const ActionSquare = ({ selected, data }) => {
+  const [action, setAction] = useState(data.actionSelect)
 
   const dispatch = useDispatch();
 
@@ -21,14 +23,24 @@ const ActionSquare = ({ selected, data }) => {
     dispatch(undoChange())
   }
 
+
   return (
     <Container>
       <H1><BsLightningChargeFill/>Ação</H1>
       <SquareContent>
         <strong>Inscrição em Sequência</strong>
-        {data.registration === 'esquentaChip' ? (
-          <p>Esquenta chip</p>
-        ): <p>8 Horas do dia seguinte</p>}
+        {data.actionSelect ? (
+            <>
+              {action === '8hours' ?(
+                <p>8 horas do dia seguinte</p>
+              ): (
+                <p>Esquenta chip</p>
+              )}
+            </>
+          ): <>
+              <p>Selecione uma ação</p>
+            </>
+        }
       </SquareContent>
       <NodeResizer 
       minHeight={200}

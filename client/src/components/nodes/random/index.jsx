@@ -12,6 +12,7 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
 */
 
 const RandomSquare = ({ selected, data }) => {
+  const [ranges, setRanges] = useState(data.randomRange)
 
   const dispatch = useDispatch();
 
@@ -24,26 +25,21 @@ const RandomSquare = ({ selected, data }) => {
   return (
     <Container>
       <H1><AiOutlineArrowsAlt/>Randomizador</H1>
-      <SquareContent>
-        <strong>1</strong>
-        {data.randomRangeOne}%
-      </SquareContent>
-      <SquareContent>
-        <strong>2</strong>
-        {data.randomRangeTwo}%
-      </SquareContent>
-      <SquareContent>
-        <strong>3</strong>
-        {data.randomRangeThree}%
-      </SquareContent>
-      <SquareContent>
-        <strong>4</strong>
-        {data.randomRangeFour}%
-      </SquareContent>
-      <SquareContent>
-        <strong>5</strong>
-        {data.randomRangeFive}%
-      </SquareContent>
+      {data.randomRange === undefined ? (
+        <></>
+      ): (
+        <>
+          {ranges.map((ran, index) => {
+            return (
+              <SquareContent>
+                <strong>{index + 1}</strong>
+                <span>{ran.value}%</span>
+              </SquareContent>
+            )
+          })}
+        </>
+      )}
+      
       <NodeResizer 
       minHeight={200}
       minWidth={200}

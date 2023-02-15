@@ -1,5 +1,5 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React from 'react'
+import React, { useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsArrowsAngleContract} from 'react-icons/bs'
@@ -12,6 +12,7 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
 */
 
 const ConnectionSquare = ({ selected, data }) => {
+  const [connection, setConnection] = useState(data.connection)
   const dispatch = useDispatch();
 
   if(selected) {
@@ -20,10 +21,11 @@ const ConnectionSquare = ({ selected, data }) => {
     dispatch(undoChange())
   }
 
+
   return (
     <Container>
       <H1><BsArrowsAngleContract/>Conexão</H1>
-      <p>Conexão de fluxo: {data.connection}</p>
+      <p>Conexão de fluxo: <strong>{connection}</strong></p>
 
       <NodeResizer 
       minHeight={200}

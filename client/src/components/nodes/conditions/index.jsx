@@ -1,5 +1,5 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React from 'react'
+import React, { useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsArrowLeftRight} from 'react-icons/bs'
@@ -12,6 +12,8 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
 */
 
 const ConditionSquare = ({ selected, data }) => {
+  const [condition, setCondition] = useState(data.condition);
+  const [isOpen, setIsOpen] = useState(data.isOpen);
   const dispatch = useDispatch();
 
   if(selected) {
@@ -20,11 +22,21 @@ const ConditionSquare = ({ selected, data }) => {
     dispatch(undoChange())
   }
 
+  console.log(`Condição: ${data.condition}, isOpen: ${data.isOpen}`);
+
   return (
     <Container>
       <H1><BsArrowLeftRight/>Condições</H1>
       <div className='text-center mt-6'>
         <p>Alguma condição abaixo é verdadeira</p><br /> <br />
+        {data.condition ? (
+          <>
+            <p><strong>Horário de Atendimento</strong> é <b>{isOpen}</b></p>
+            <hr />
+          </>
+        ): (
+          <></>
+        )}
         <p>Todas as condições acima são falsas</p>
       </div>
       <NodeResizer 

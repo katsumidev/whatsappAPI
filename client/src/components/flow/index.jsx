@@ -60,7 +60,20 @@ import {
   CardsButtonsContent,
   CardButtons,
   CardIconButton,
-  CardTextButton
+  CardTextButton,
+  ContainerTextArea,
+  MenuText,
+  MenuLeft,
+  MenuItem,
+  SpanItem,
+  MenuGroupLeft,
+  MenuItemDrop,
+  SpanItemMenuDrop,
+  TextArea,
+  ButtonDelete,
+  CreateNewButton,
+  SelectCondition,
+  InputRangeRandomContainer
 } from "./styles";
 import { useParams } from "react-router";
 import ConnectionLine from "./ConnectionLine";
@@ -154,12 +167,13 @@ function Flow() {
   const [randomRangeThree, setRandomRangeThree] = useState([]);
   const [randomRangeFour, setRandomRangeFour] = useState([]);
   const [randomRangeFIve, setRandomRangeFive] = useState([]);
-  const [actionSelect, setActionSelect] = useState("esquentaChip");
+  const [answers, setAnswers] = useState();
+  const [actionSelect, setActionSelect] = useState();
   const [buttonTextArea, setButtonTextArea] = useState("");
   const [conditionSelect, setConditionSelect] = useState(ConditionSelectList);
-  const [connectionSelect, setConnectionSelect] =
-    useState(ConnectionSelectList);
-  const [conditionValue, setConditionValue] = useState();
+  const [connectionSelect, setConnectionSelect] = useState(ConnectionSelectList);
+  const [conditionValue, setConditionValue] = useState('Quer Reembolsar / trocar');
+  const [isOpen, setIsOpen] = useState('aberto')
   const [connectionValue, setConnectionValue] = useState("");
   const [delayTime, setDelayTime] = useState();
   const [delayFormat, setDelayFormat] = useState();
@@ -289,6 +303,52 @@ function Flow() {
     ])
   };
 
+  // Button Square
+  const [textAreaButton, setTextAreaButton] = useState([{ value: '' }])
+
+  const handleRemoveTextAreaButton = (index) => {
+    setTextAreaButton(textAreaButton.filter((_, i) => i !== index));
+  };
+
+  const handleChangeTextAreaButton = (index, event) => {
+    const values = [...textAreaButton];
+    values[index].value = event.target.value;
+    setTextAreaButton(values);
+  }
+
+  const handleAddTextAreaButton = (e) => {
+    setTextAreaButton(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+  // Random Square State
+  const [rangeInputRandom, setRangeInputRandom] = useState([{ value: '' }]);
+
+  // Random Square Funcs
+  const handleRemoveRangeInput = (index) => {
+    setRangeInputRandom(rangeInputRandom.filter((_, i) => i !== index));
+  };
+
+  const handleChangeRangeInput = (index, event) => {
+    const values = [...rangeInputRandom];
+    values[index].value = event.target.value;
+    setRangeInputRandom(values);
+  }
+
+  const handleAddRangeInput = (e) => {
+    setRangeInputRandom(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+
   const node = useSelector((state) => state.node);
   console.log(node.node.id)
 
@@ -302,9 +362,33 @@ function Flow() {
   })
 
   const [isSave, setIsSave] = useState(false)
+  const [isSaveText, setIsSaveText] = useState(false)
+  const [isSaveAction, setIsSaveAction] = useState(false)
+  const [isSaveConditions, setIsSaveConditions] = useState(false)
+  const [isSaveConnections, setIsSaveConnections] = useState(false)
+  const [isSaveRange, setIsSaveRange] = useState(false)
+  const [isSaveDelay, setIsSaveDelay] = useState(false)
 
   const handleSave = () => {
     setIsSave(true)
+  }
+  const handleSaveText = () => {
+    setIsSaveText(true)
+  }
+  const handleSaveAction = () => {
+    setIsSaveAction(true)
+  }
+  const handleSaveConditions = () => {
+    setIsSaveConditions(true)
+  }
+  const handleSaveConnection = () => {
+    setIsSaveConnections(true)
+  }
+  const handleSaveRandomRange = () => {
+    setIsSaveRange(true)
+  }
+  const handleSaveDelay = () => {
+    setIsSaveDelay(true)
   }
 
   function addSquareNode(type) {
@@ -323,7 +407,16 @@ function Flow() {
           video: isSave ? videoContent : undefined,
           file: isSave ? fileContent : undefined,
           audio: isSave ? audioContent : undefined,
-          text: isSave ? textAreaContent : undefined
+          text: isSave ? textAreaContent : undefined,
+          answers: isSaveText ? answers : undefined,
+          textAreaB: isSaveText ? textAreaButton : undefined,
+          actionSelect: isSaveAction ? actionSelect : undefined,
+          condition: isSaveConditions ? conditionValue : undefined,
+          isOpen: isSaveConditions ? isOpen : undefined,
+          connection: isSaveConnections ? connectionValue : undefined,
+          randomRange: isSaveRange ? rangeInputRandom : undefined,
+          delayTime: isSaveDelay ? delayTime : undefined,
+          delayFormat: isSaveDelay ? delayFormat : undefined,
         },
       },
     ]);
@@ -374,15 +467,43 @@ function Flow() {
                         />
                         <strong>Ativar Digitando</strong>
                       </label>
-                      <button onClick={() => handleRemoveInput(index)}>Deletar</button>
+                      <ButtonDelete onClick={() => handleRemoveInput(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
                 })}
                 {textAreaContent.map((input, index) => {
                   return (
                     <>
-                      <textarea value={input.value} onChange={(e) => handleChangeTextArea(index, e)}/>
-                      <button onClick={() => handleRemoveTextArea(index)}>Deletar</button>
+                      <ContainerTextArea>
+                        <MenuText>
+                          <MenuLeft>
+                            <MenuItem>
+                              <SpanItem>
+                                <b>B</b>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <i>I</i>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <del>S</del>
+                              </SpanItem>
+                            </MenuItem>
+                          </MenuLeft>
+                          <MenuGroupLeft>
+                            <MenuItemDrop>
+                              <SpanItemMenuDrop>
+                              numero-de-indicacoes
+                              </SpanItemMenuDrop>
+                            </MenuItemDrop>
+                          </MenuGroupLeft>
+                        </MenuText>
+                        <TextArea value={input.value} onChange={(e) => handleChangeTextArea(index, e)} />
+                      <ButtonDelete onClick={() => handleRemoveTextArea(index)}>Deletar</ButtonDelete>
+                      </ContainerTextArea>
                     </>
                   )
                  })}
@@ -390,10 +511,10 @@ function Flow() {
                   return (
                     <>
                     <DelayRange>
-                    Tamanho máximo permitido: 2MB, Tipos de arquivos aceitos: jpg, jpeg, png, webp
+                      Tipos de arquivos aceitos: jpg, jpeg, png, webp
                     <input type="file" value={input.value} onChange={(e) => handleChangeImage(index, e)} />
                     </DelayRange>
-                    <button onClick={() => handleRemoveImage(index)}>Deletar</button>
+                    <ButtonDelete onClick={() => handleRemoveImage(index)}>Deletar</ButtonDelete>
                     </>
                   )
                  })}
@@ -401,27 +522,21 @@ function Flow() {
                   return (
                     <DelayRange>
                     <p>
-                      Subir Video
                       Formatos aceitos .mp4
                       Tamanho máx.: 5MB
                     </p>
                     <input type="file" value={input.value} onChange={(e) => handleChangeVideo(index, e)} />
-                    <button onClick={() => handleRemoveVideo(index)}>Deletar</button>
+                    <ButtonDelete onClick={() => handleRemoveVideo(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
                  })}
                   {fileContent.map((input, index) => {
                   return (
                     <DelayRange>
-                    <p>
-                      Subir Arquivo
-                    </p>
-                    <p> Formatos aceitos </p>
-                    <p>pdf,.doc,.docx,.htm,.html,<br /> .json,.xml,.txt,.csv,.zip, <br />.7z,.xls,.xlsx,.ppt,.pptx</p>
-                    <p>Tamanho máx.: 5MB</p>
-                    
-                    <input type="file" value={input.value} onChange={(e) => handleChangeFile(index, e)} />
-                    <button onClick={() => handleRemoveFile(index)}>Deletar</button>
+                    <p>Formatos</p>
+                    <input style={{height: '200'}} type="file" value={input.value} onChange={(e) => handleChangeFile(index, e)} />
+                    <p>pdf,.doc,.docx,.htm,.html, .json,.xml,.txt,.csv,.zip, <br />.7z,.xls,.xlsx,.ppt,.pptx</p>                    
+                    <ButtonDelete onClick={() => handleRemoveFile(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
                  })}
@@ -435,7 +550,7 @@ function Flow() {
                     </p>
                     
                     <input type="file" value={input.value} onChange={(e) => handleChangeAudio(index, e)} />
-                    <button onClick={() => handleRemoveAudio(index)}>Deletar</button>
+                    <ButtonDelete onClick={() => handleRemoveAudio(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
                  })}
@@ -457,7 +572,7 @@ function Flow() {
                   <CardIconButton><FiFile/></CardIconButton>  
                   <CardTextButton>Arquivo</CardTextButton>
                 </CardButtons>  
-                <CardButtons>
+                <CardButtons onClick={handleAddAudio}>
                   <CardIconButton><MdOutlineKeyboardVoice/></CardIconButton>  
                   <CardTextButton>Audio</CardTextButton>
                 </CardButtons>  
@@ -479,36 +594,24 @@ function Flow() {
           {node.node.type === "random" && (
             <>
               <RandomHeader>Randomizador</RandomHeader>
-              <strong>1</strong>
-              <InputRangeRandom
-                type="range"
-                value={randomRangeOne}
-                onChange={(e) => setRandomRangeOne(e.target.value)}
-              />
-              <strong>2</strong>
-              <InputRangeRandom
-                type="range"
-                value={randomRangeTwo}
-                onChange={(e) => setRandomRangeTwo(e.target.value)}
-              />
-              <strong>3</strong>
-              <InputRangeRandom
-                type="range"
-                value={randomRangeThree}
-                onChange={(e) => setRandomRangeThree(e.target.value)}
-              />
-              <strong>4</strong>
-              <InputRangeRandom
-                type="range"
-                value={randomRangeFour}
-                onChange={(e) => setRandomRangeFour(e.target.value)}
-              />
-              <strong>5</strong>
-              <InputRangeRandom
-                type="range"
-                value={randomRangeFIve}
-                onChange={(e) => setRandomRangeFive(e.target.value)}
-              />
+              <p>ATENÇÃO! O soma total deve ser 100%</p>
+              {rangeInputRandom.map((input, index) => {
+                return (
+                  <>
+                  <InputRangeRandomContainer>
+                    <p>{index + 1}</p>
+                    <InputRange type="range" 
+                    value={input.value} 
+                    onChange={(e) => handleChangeRangeInput(index, e)}
+                    />
+                    <span>{input.value}%</span>
+                    <button style={{background: 'transparent', border: 'none', paddingBottom: '15px'}} onClick={() => handleRemoveRangeInput(index)}>X</button>
+                  </InputRangeRandomContainer>
+                  </>
+                )
+              })}
+              <CreateNewButton onClick={rangeInputRandom.length === 5 ? null : handleAddRangeInput}>+ Criar novo Botão</CreateNewButton>
+              <button onClick={handleSaveRandomRange}>Salvar</button>
             </>
           )}
           {node.node.type === "action" && (
@@ -516,44 +619,122 @@ function Flow() {
               <ActionHeader>Ação</ActionHeader>
               <ActionBody>
                 <label>Inscrição em Sequência</label>
-                <SelectElement
-                  onChange={setActionSelect}
+                {/* <SelectElement
+                  onChange={(e) => setActionSelect(e.target.value)}
+                  value={actionSelect}
                   classNamePrefix="react-select"
                   options={[
                     { value: "esquentaChip", label: "Esquenta Chip" },
                     { value: "8hours", label: "8 Horas do dia seguinte" },
                   ]}
                 />
-                {/* <select
+                <ButtonDelete onClick={handleSaveAction}>Salvar</ButtonDelete> */}
+                <select
                   name="registration"
                   value={actionSelect}
                   onChange={(e) => setActionSelect(e.target.value)}
                 >
                   <option value="esquentaChip">Esquenta Chip</option>
                   <option value="8hours">8 Horas do dia seguinte</option>
-                </select> */}
+                </select>
+                <ButtonDelete onClick={handleSaveAction}>Salvar</ButtonDelete>
               </ActionBody>
             </>
           )}
           {node.node.type === "button" && (
             <>
               <ButtonHeader>Botões</ButtonHeader>
-              <ButtonBody>
-                <ButtonTextArea
-                  value={buttonTextArea}
-                  onChange={(e) => setButtonTextArea(e.target.value)}
-                />
-              </ButtonBody>
+              <p>Texto da pergunta</p>
+              <ContainerTextArea>
+                        <MenuText>
+                          <MenuLeft>
+                            <MenuItem>
+                              <SpanItem>
+                                <b>B</b>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <i>I</i>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <del>S</del>
+                              </SpanItem>
+                            </MenuItem>
+                          </MenuLeft>
+                          <MenuGroupLeft>
+                            <MenuItemDrop>
+                              <SpanItemMenuDrop>
+                              numero-de-indicacoes
+                              </SpanItemMenuDrop>
+                            </MenuItemDrop>
+                          </MenuGroupLeft>
+                        </MenuText>
+                        <TextArea value={answers}
+                          onChange={(e) => setAnswers(e.target.value)} />
+                      <ButtonDelete onClick={handleSaveText}>Salvar</ButtonDelete>
+                  </ContainerTextArea>
+                  <hr />
+              {textAreaButton.map((input, index) => {
+                return (
+                  <ContainerTextArea>
+                        <MenuText>
+                          <MenuLeft>
+                            <MenuItem>
+                              <SpanItem>
+                                <b>B</b>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <i>I</i>
+                              </SpanItem>
+                            </MenuItem>
+                            <MenuItem>
+                              <SpanItem>
+                                <del>S</del>
+                              </SpanItem>
+                            </MenuItem>
+                          </MenuLeft>
+                          <MenuGroupLeft>
+                            <MenuItemDrop>
+                              <SpanItemMenuDrop>
+                              numero-de-indicacoes
+                              </SpanItemMenuDrop>
+                            </MenuItemDrop>
+                          </MenuGroupLeft>
+                        </MenuText>
+                        <TextArea value={input.value}
+                          onChange={(e) => handleChangeTextAreaButton(index, e)} />
+                      <ButtonDelete onClick={() => handleRemoveTextAreaButton(index)}>Deletar</ButtonDelete>
+                      <ButtonDelete onClick={handleSaveText}>Salvar</ButtonDelete>
+                  </ContainerTextArea>
+                )
+              })}
+              <CreateNewButton onClick={(e) => handleAddTextAreaButton(e)}>
+                + Novo botão
+              </CreateNewButton>
             </>
           )}
           {node.node.type === "condition" && (
             <>
               <ConditionHeader>Condição</ConditionHeader>
+              <p>O contato deve possuir <b>Alguma</b> das condições abaixo para ser verdadeiro</p>
               <ConditionBody>
-                <select
-                  name=""
-                  id=""
+                <DelayRange>
+                <SelectCondition
+                  onChange={(e) => setIsOpen(e.target.value)}
+                  value={isOpen}
+                >
+                  <option value="aberto"><b>É</b> Aberto</option>
+                  <option value="fechado"><b>É</b> Fechado</option>
+                </SelectCondition>
+                </DelayRange>
+                <SelectCondition
                   onChange={(e) => setConditionValue(e.target.value)}
+                  value={conditionValue}
                 >
                   {conditionSelect.map((cond, index) => {
                     return (
@@ -562,7 +743,8 @@ function Flow() {
                       </option>
                     );
                   })}
-                </select>
+                </SelectCondition>
+                <ButtonDelete onClick={handleSaveConditions}>Salvar</ButtonDelete>
               </ConditionBody>
             </>
           )}
@@ -570,10 +752,11 @@ function Flow() {
             <>
               <ConnectionHeader>Conexão de fluxo</ConnectionHeader>
               <ConnectionBody>
-                <select
+                <SelectCondition
                   name=""
                   id=""
                   onChange={(e) => setConnectionValue(e.target.value)}
+                  value={connectionValue}
                 >
                   {connectionSelect.map((conn, index) => {
                     return (
@@ -582,8 +765,9 @@ function Flow() {
                       </option>
                     );
                   })}
-                </select>
+                </SelectCondition>
               </ConnectionBody>
+              <ButtonDelete onClick={handleSaveConnection}>Salvar</ButtonDelete>
             </>
           )}
           {node.node.type === "delay" && (
@@ -606,6 +790,7 @@ function Flow() {
                     ]}
                   />
                 </Options>
+                <button onClick={handleSaveDelay}>Salvar</button>
               </DelayBody>
             </>
           )}
