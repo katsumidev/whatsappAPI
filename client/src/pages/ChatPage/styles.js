@@ -16,12 +16,74 @@ export const Container = styled.div`
   overflow: hidden;
 `;
 
+export const ContactHeader = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 25.8%;
+`;
+
+export const MyProfile = styled.div`
+  background-color: var(--secundary-background);
+  padding: 10px;
+`;
+
+export const Contacts = styled.div`
+  margin-top: 120px;
+`;
+
 export const ContactsList = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
-  width: 30%;
+  width: 35%;
   height: 100vh;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  overflow-y: auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+    rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+`;
+
+export const SearchContainer = styled.div`
+  display: flex;
+  padding: 10px;
+  width: 100%;
+  background-color: var(--main-background);
+`;
+
+export const SearchBox = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  background-color: var(--sendImage-background);
+  padding: 6px;
+  width: 100%;
+
+  svg {
+    margin-left: 10px;
+    color: rgba(0, 0, 0, 0.75);
+  }
+`;
+
+export const SearchInput = styled.input`
+  border-radius: 6px;
+  background-color: var(--sendImage-background);
+  border: none;
+  outline: none;
+  margin-left: 20px;
+  font-size: 12px;
+  width: 100%;
 `;
 
 export const ContactRow = styled.div`
@@ -144,7 +206,7 @@ export const MessageContainer = styled.div`
     word-break: keep-all;
     align-self: flex-end;
     padding: 6px 0;
-    
+
     svg {
       margin-left: 5px;
     }
@@ -286,7 +348,18 @@ export const PreviewBackground = styled.div`
   position: absolute;
 `;
 
-export const AudioMessage = styled.div``;
+export const AudioMessage = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+
+  img {
+    width: 52px;
+    height: 52px;
+  }
+`;
 
 export const SendImageContainer = styled.div`
   max-width: 100%;
@@ -380,14 +453,14 @@ export const AudioPreviewContainer = styled.div`
   svg {
     fill: grey;
     font-size: 100px;
-    color: var(--grey)
+    color: var(--grey);
   }
 
   h3 {
     color: var(--grey);
     font-weight: 500;
   }
-`
+`;
 
 export const DownloadOverlay = styled(HiDownload)`
   color: white;
@@ -395,4 +468,4 @@ export const DownloadOverlay = styled(HiDownload)`
   top: 10px;
   right: 10px;
   cursor: pointer;
-`
+`;

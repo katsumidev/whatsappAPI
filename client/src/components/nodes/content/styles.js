@@ -38,3 +38,83 @@ export const H1 = styled.h1`
   align-items: center;
   gap: 5px;
 `;
+
+
+
+export const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+export const Text = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 14px;
+
+  p {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600 !important;
+    margin: 0;
+    color: var(--grey);
+  }
+
+  sub {
+    font-size: 15px;
+    font-weight: 600;
+  }
+`;
+
+export const WhatsappLogo = styled.div`
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(94, 250, 120);
+  background: linear-gradient(
+    282deg,
+    rgba(94, 250, 120, 1) 35%,
+    rgba(48, 192, 47, 1) 100%
+  );
+`;
+
+
+export const MiniChat = styled.div`
+  background-color: var(--chat-background);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 15px 6px;
+  border-radius: 12px;
+`;
+
+export const Message = styled.div`
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 6px;
+  text-align: initial;
+  font-size: 12px;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+
+  sub {
+    font-size: 10px;
+    color: ${(props) => (props.receiver ? "#919191" : "#00000")};
+    word-break: keep-all;
+    align-self: flex-end;
+    padding: 6px 0;
+
+    svg {
+      margin-left: 5px;
+    }
+  }
+`;

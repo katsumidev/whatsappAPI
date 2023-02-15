@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BiBookContent} from 'react-icons/bi';
-import { Container, ContentDiv, H1 } from './styles';
+import {BsWhatsapp} from "../../../styles/Icons"
+import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 import {CiImageOn} from 'react-icons/ci'
@@ -30,8 +31,18 @@ const ContetntSquare = ({selected, data, id}) => {
 
   return (
     <Container /* onClick={handleClick} */>
-      <H1><BiBookContent/>Conteúdo</H1>
-      {data.range === undefined ? (
+ <Header>
+        <WhatsappLogo>
+          <BsWhatsapp size={25} fill="#FFF" />
+        </WhatsappLogo>
+        <Text>
+          <p>enviar whatsapp</p>
+          <sub>Conteúdo</sub>
+        </Text>
+      </Header>
+      <MiniChat className="text-center mt-6">
+        <Message>
+             {data.range === undefined ? (
         <></>
       ): (
         <div>
@@ -89,6 +100,15 @@ const ContetntSquare = ({selected, data, id}) => {
           })}
         </>
       )}
+          <sub>
+            {new Date().toLocaleTimeString("pt-BR", {
+              hour: "numeric",
+              minute: "numeric",
+            })}
+          </sub>
+        </Message>
+        {data.textArea}
+      </MiniChat>
       <NodeResizer 
       minHeight={200}
       minWidth={200}

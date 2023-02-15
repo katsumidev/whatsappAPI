@@ -17,8 +17,9 @@ import {
   ImportContacts,
 } from "./styles";
 import InputMask from "react-input-mask";
+import ReactPaginate from "react-paginate";
 import CheckboxGroup from "react-checkbox-group";
-import { convertToPhone } from "../../utils/conversions";
+import { convertToFullDate, convertToPhone } from "../../utils/conversions";
 import { useModalContext } from "../../modal.context";
 import * as XLSX from "xlsx";
 import defaultPic from "../../assets/defaultPic.jpg";
@@ -33,6 +34,9 @@ import {
   AiOutlineDownload,
   AiOutlineUpload,
   IoMdContact,
+  BiSearchAlt,
+  MdArrowBackIos,
+  MdArrowForwardIos
 } from "../../styles/Icons";
 import NewUserModal from "../../components/NewUserModal";
 import { addNewContact } from "../../services/api";
@@ -45,8 +49,22 @@ function UserPanel() {
   const [contactName, setContactName] = useState("");
   const [username, setUsername] = useState("");
   const [msg, setMsg] = useState("");
+  const [searchBox, setSearchBox] = useState("");
+  const [itemOffset, setItemOffset] = useState(0);
   const { userIns } = useParams();
   const fileinput = useRef(null);
+
+  const endOffset = itemOffset + 10;
+  const currentItems = contacts.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(contacts.length / 10);
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 10) % contacts.length;
+    console.log(
+      `User requested page number ${event.selected}, which is offset ${newOffset}`
+    );
+    setItemOffset(newOffset);
+  };
 
   const {
     modalState: { visible },
@@ -64,21 +82,7 @@ function UserPanel() {
     loadContacts();
   }, []);
 
-  const addContact = async (e) => {
-    // adiciona um novo contato
-    if (contactNumber > 0 && contactName != "") {
-      let data = await addNewContact({
-        phone_number: contactNumber,
-        contact_name: contactName,
-        user_token: localStorage.getItem("userToken"),
-        user_id: userIns,
-      });
-      window.location.reload(false);
-    } else {
-      alert("preencha os campos");
-      e.preventDefault();
-    }
-  };
+  useEffect(() => {}, [searchBox]);
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
@@ -103,9 +107,8 @@ function UserPanel() {
           });
         });
         console.log("Salvo com sucesso");
-        window. location. reload(false);
-      } catch (error) {
-      }
+        window.location.reload(false);
+      } catch (error) {}
     };
 
     reader.readAsArrayBuffer(file);
@@ -240,7 +243,7 @@ function UserPanel() {
                       className="input-group-text button-buscar"
                       id="addon-wrapping"
                     >
-                      <i className="fa-solid fa-search"></i>
+                      <BiSearchAlt size={20} />
                     </span>
                   </div>
                   <input
@@ -249,6 +252,7 @@ function UserPanel() {
                     placeholder="Buscar"
                     aria-label="Username"
                     aria-describedby="addon-wrapping"
+                    onChange={(e) => setSearchBox(e.target.value)}
                   />
                 </div>
               </div>
@@ -285,29 +289,74 @@ function UserPanel() {
                     >
                       {(Checkbox) => (
                         <>
-                          {contacts.map((contact, index) => {
-                            return (
-                              <tr key={index}>
-                                <td className="text-center">
-                                  <Checkbox value={contact.number} />
-                                </td>
-                                <td className="text-center">
-                                  <span>
-                                    <ProfilePicture
-                                      src={
-                                        contact.pfp != null
-                                          ? contact.pfp
-                                          : defaultPic
-                                      }
-                                    ></ProfilePicture>
-                                  </span>
-                                </td>
-                                <td className="id-nome">{contact.contact}</td>
-                                <td>{convertToPhone(contact.number)}</td>
-                                <td className="inscrito">03/02/2023, 17:43</td>
-                              </tr>
-                            );
-                          })}
+                          {searchBox != ""
+                            ? contacts
+                                .filter((contact) =>
+                                  contact.contact?.toLowerCase()
+                                    .includes(searchBox?.toLowerCase())
+                                )
+                                .map((contact, index) => {
+                                  return (
+                                    <tr key={index}>
+                                    <td className="text-center">
+                                      <Checkbox value={contact.number} />
+                                    </td>
+                                    <td className="text-center">
+                                      <span>
+                                        <ProfilePicture
+                                          src={
+                                            contact.pfp != null
+                                              ? contact.pfp
+                                              : defaultPic
+                                          }
+                                          onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = defaultPic;
+                                          }}
+                                        ></ProfilePicture>
+                                      </span>
+                                    </td>
+                                    <td className="id-nome">
+                                      {contact.contact}
+                                    </td>
+                                    <td>{convertToPhone(contact.number)}</td>
+                                    <td className="inscrito">
+                                      {convertToFullDate(contact.date)}
+                                    </td>
+                                  </tr>
+                                  )
+                                })
+                            : currentItems.map((contact, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td className="text-center">
+                                      <Checkbox value={contact.number} />
+                                    </td>
+                                    <td className="text-center">
+                                      <span>
+                                        <ProfilePicture
+                                          src={
+                                            contact.pfp != null
+                                              ? contact.pfp
+                                              : defaultPic
+                                          }
+                                          onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = defaultPic;
+                                          }}
+                                        ></ProfilePicture>
+                                      </span>
+                                    </td>
+                                    <td className="id-nome">
+                                      {contact.contact}
+                                    </td>
+                                    <td>{convertToPhone(contact.number)}</td>
+                                    <td className="inscrito">
+                                      {convertToFullDate(contact.date)}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                         </>
                       )}
                     </CheckboxGroup>
@@ -315,12 +364,17 @@ function UserPanel() {
                 </table>
               </div>
               {/* <!-- <div className="d-flex justify-content-center mb-3"> */}
-              <a
-                className="button-up btn btn-primary btn-md btn-block"
-                style={{ width: "30%" }}
-              >
-                Carregar mais
-              </a>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel={<MdArrowForwardIos />}
+                className="react-paginate"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={10}
+                pageCount={pageCount}
+                activeClassName="active-page"
+                previousLabel={<MdArrowForwardIos className="back" />}
+                renderOnZeroPageCount={null}
+              />
             </div>
           </section>
         </div>

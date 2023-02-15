@@ -1,6 +1,5 @@
 var crypto = require("crypto");
-const apiUrl = process.env.API_URL
-
+const apiUrl = process.env.API_URL;
 
 function encryptKey(key, userToken) {
   return `${userToken}:${crypto
@@ -117,6 +116,17 @@ const getInfo = async (req, res) => {
   });
 };
 
+const downloadPfp = async (req, res) => {
+  const { key, id } = req.body;
+
+  fetch(`${apiUrl}/misc/downProfile?key=${key}&id=${id}`, {
+    method: "GET",
+  }).then(async (response) => {
+    let data = await response.json();
+    return res.send(data.data);
+  });
+};
+
 const checkStatus = async (req, res) => {
   const { key, userToken } = req.body;
 
@@ -150,5 +160,6 @@ module.exports = {
   deleteIns,
   listIns,
   getInfo,
-  checkStatus
-}
+  checkStatus,
+  downloadPfp,
+};
