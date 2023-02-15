@@ -110,6 +110,7 @@ export const Modal = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: scroll;
 `;
 // Content Square
 
@@ -123,8 +124,51 @@ export const ContentHeader = styled.div`
 
 export const ContentBody = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
 `;
+
+export const CardsButtonsContent = styled.div`
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+display: flex;
+margin-top: 100px;
+`
+
+export const CardButtons = styled.div`
+display: flex;
+flex-direction: column;
+position: relative;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+box-sizing: border-box;
+margin: 4px;
+width: 80px;
+height: 90px;
+border: 2px dashed #e1e5ea;
+border-radius: 15px;
+background-color: #fff;
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+transition: border-color .15s,color .15s;
+transform: translate3d(0, 0, 0);
+will-change: border-color,color;
+`
+
+export const CardIconButton = styled.div`
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+`
+
+export const CardTextButton = styled.div`
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+`
 
 export const DelayRange = styled.div`
   display: flex;
@@ -132,13 +176,14 @@ export const DelayRange = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 110px;
-  margin-top: 5px;
+  margin-top: 10px;
   width: 90%;
   height: 10%;
   border-radius: 10px;
   color: #5a677d;
   border: 1px dotted gray;
 `;
+
 
 export const InputRange = styled.input`
   margin-right: 0.5rem;

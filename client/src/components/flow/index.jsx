@@ -56,7 +56,11 @@ import {
   NodesBtn,
   AddNodeBtn,
   DelayBody,
-  Options
+  Options,
+  CardsButtonsContent,
+  CardButtons,
+  CardIconButton,
+  CardTextButton
 } from "./styles";
 import { useParams } from "react-router";
 import ConnectionLine from "./ConnectionLine";
@@ -67,6 +71,12 @@ import {
   CircleMenuItem,
   TooltipPlacement,
 } from "react-circular-menu";
+import {AiOutlineFileAdd, AiFillSave} from 'react-icons/ai'
+import {CiImageOn} from 'react-icons/ci'
+import {RxVideo} from 'react-icons/rx'
+import {FiFile} from 'react-icons/fi'
+import {MdOutlineKeyboardVoice} from 'react-icons/md'
+import {TbAlertTriangle} from 'react-icons/tb'
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -84,10 +94,13 @@ const NODE_TYPES = {
   integration: IntegrationSquare,
 };
 
+let idNode = 0;
+
+const getId = () => `nodeid_${idNode++}`
 // data = transporta informações da aplicação até os Nodes
 const INITIAL_NODES = [
   {
-    id: crypto.randomUUID(),
+    id: getId(),
     type: "button",
     position: {
       x: 200,
@@ -96,7 +109,7 @@ const INITIAL_NODES = [
     data: {},
   },
   {
-    id: crypto.randomUUID(),
+    id: getId(),
     type: "square",
     position: {
       x: 1000,
@@ -152,45 +165,165 @@ function Flow() {
   const [delayFormat, setDelayFormat] = useState();
   const { userIns, flowId } = useParams();
 
+  //Content Square State
+  const [inputsContent, setInputsContent] = useState([{ value: 3, idNode: '' }])
+  const [textAreaContent, setTextAreaContent] = useState([{ value: '' }])
+  const [imageContent, setImageContent] = useState([{ value: '' }])
+  const [videoContent, setVideoContent] = useState([{ value: '' }])
+  const [fileContent, setFileContent] = useState([{ value: '' }])
+  const [audioContent, setAudioContent] = useState([{ value: '' }])
+
+  //Content Square Funcs
+  const handleAddRangesInputs = (id) => {
+    setInputsContent(ranges => [
+      ...ranges,
+      {
+        value: '',
+        idNode: id
+      }
+    ])
+  };
+
+  const handleRemoveInput = (index) => {
+    setInputsContent(inputsContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeInputs = (index, event) => {
+    const values = [...inputsContent];
+    values[index].value = event.target.value;
+    setInputsContent(values);
+  }
+
+  const handleRemoveTextArea = (index) => {
+    setTextAreaContent(textAreaContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeTextArea = (index, event) => {
+    const values = [...textAreaContent];
+    values[index].value = event.target.value;
+    setTextAreaContent(values);
+  }
+
+  const handleAddTextArea = (e) => {
+    setTextAreaContent(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+  const handleRemoveImage = (index) => {
+    setImageContent(imageContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeImage = (index, event) => {
+    const values = [...imageContent];
+    values[index].value = event.current.files[0];
+    setImageContent(values);
+  }
+
+  const handleAddImage = (e) => {
+    setImageContent(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+  const handleRemoveVideo = (index) => {
+    setVideoContent(videoContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeVideo = (index, event) => {
+    const values = [...videoContent];
+    values[index].value = event.current.files[0];
+    setVideoContent(values);
+  }
+
+  const handleAddVideo = (e) => {
+    setVideoContent(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+  const handleRemoveFile = (index) => {
+    setFileContent(fileContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeFile = (index, event) => {
+    const values = [...fileContent];
+    values[index].value = event.current.files[0]
+    setFileContent(values);
+  }
+
+  const handleAddFile = (e) => {
+    setFileContent(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
+  const handleRemoveAudio = (index) => {
+    setAudioContent(fileContent.filter((_, i) => i !== index));
+  };
+
+  const handleChangeAudio = (index, event) => {
+    const values = [...audioContent];
+    values[index].value = event.current.files[0];
+    setAudioContent(values);
+  }
+
+  const handleAddAudio = (e) => {
+    setAudioContent(content => [
+      ...content,
+      {
+        value: ''
+      }
+    ])
+  };
+
   const node = useSelector((state) => state.node);
-  const [rangeValue, setRangeValue] = useState(3);
+  console.log(node.node.id)
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
   );
 
-  const dataRange = {
-    randomRangeOne,
-    randomRangeTwo,
-    randomRangeThree,
-    randomRangeFour,
-    randomRangeFIve,
-  };
+  inputsContent.map(con => {
+    console.log(`Valores: ${con.value}`)
+  })
+
+  const [isSave, setIsSave] = useState(false)
+
+  const handleSave = () => {
+    setIsSave(true)
+  }
 
   function addSquareNode(type) {
     setNodes((nodes) => [
       ...nodes,
       {
-        id: crypto.randomUUID(),
+        id: getId(),
         type: type,
         position: {
           x: 750,
           y: 350,
         },
         data: {
-          range: rangeValue,
-          randomRangeOne: randomRangeOne,
-          randomRangeTwo: randomRangeTwo,
-          randomRangeThree: randomRangeThree,
-          randomRangeFour: randomRangeFour,
-          randomRangeFive: randomRangeFIve,
-          registration: actionSelect,
-          textArea: buttonTextArea,
-          condtionValue: conditionValue,
-          connection: connectionValue,
-          delayTime: delayTime,
-          delayFormat: delayFormat,
+          range: isSave ? inputsContent : undefined,
+          image: isSave ? imageContent : undefined,
+          video: isSave ? videoContent : undefined,
+          file: isSave ? fileContent : undefined,
+          audio: isSave ? audioContent : undefined,
+          text: isSave ? textAreaContent : undefined
         },
       },
     ]);
@@ -222,25 +355,125 @@ function Flow() {
             <>
               <ContentHeader>Conteúdo</ContentHeader>
               <ContentBody>
-                <DelayRange>
-                  <InputRange
-                    type="range"
-                    max={6}
-                    value={rangeValue}
-                    onChange={(e) => setRangeValue(e.target.value)}
-                  />
-                  <strong>{rangeValue}seg</strong>
-                  <br />
-                  <label>
-                    <input
-                      type="checkbox"
-                      value={activeTyping}
-                      onChange={(e) => setActiveTyping(e.target.value)}
-                    />
-                    <strong>Ativar Digitando</strong>
-                  </label>
-                </DelayRange>
+                {inputsContent.map((input, index) => {
+                  return (
+                    <DelayRange>
+                      <InputRange
+                        type="range"
+                        max={6}
+                        value={input.value}
+                        onChange={(e) => handleChangeInputs(index, e)}
+                      />
+                      <strong>{input.value}seg</strong>
+                      <br />
+                      <label>
+                        <input
+                          type="checkbox"
+                          value={activeTyping}
+                          onChange={(e) => setActiveTyping(e.target.value)}
+                        />
+                        <strong>Ativar Digitando</strong>
+                      </label>
+                      <button onClick={() => handleRemoveInput(index)}>Deletar</button>
+                    </DelayRange>
+                  )
+                })}
+                {textAreaContent.map((input, index) => {
+                  return (
+                    <>
+                      <textarea value={input.value} onChange={(e) => handleChangeTextArea(index, e)}/>
+                      <button onClick={() => handleRemoveTextArea(index)}>Deletar</button>
+                    </>
+                  )
+                 })}
+                  {imageContent.map((input, index) => {
+                  return (
+                    <>
+                    <DelayRange>
+                    Tamanho máximo permitido: 2MB, Tipos de arquivos aceitos: jpg, jpeg, png, webp
+                    <input type="file" value={input.value} onChange={(e) => handleChangeImage(index, e)} />
+                    </DelayRange>
+                    <button onClick={() => handleRemoveImage(index)}>Deletar</button>
+                    </>
+                  )
+                 })}
+                 {videoContent.map((input, index) => {
+                  return (
+                    <DelayRange>
+                    <p>
+                      Subir Video
+                      Formatos aceitos .mp4
+                      Tamanho máx.: 5MB
+                    </p>
+                    <input type="file" value={input.value} onChange={(e) => handleChangeVideo(index, e)} />
+                    <button onClick={() => handleRemoveVideo(index)}>Deletar</button>
+                    </DelayRange>
+                  )
+                 })}
+                  {fileContent.map((input, index) => {
+                  return (
+                    <DelayRange>
+                    <p>
+                      Subir Arquivo
+                    </p>
+                    <p> Formatos aceitos </p>
+                    <p>pdf,.doc,.docx,.htm,.html,<br /> .json,.xml,.txt,.csv,.zip, <br />.7z,.xls,.xlsx,.ppt,.pptx</p>
+                    <p>Tamanho máx.: 5MB</p>
+                    
+                    <input type="file" value={input.value} onChange={(e) => handleChangeFile(index, e)} />
+                    <button onClick={() => handleRemoveFile(index)}>Deletar</button>
+                    </DelayRange>
+                  )
+                 })}
+                  {audioContent.map((input, index) => {
+                  return (
+                    <DelayRange>
+                    <p>
+                      Subir Áudio
+                      Formatos aceitos .mp3
+                      Tamanho máx.: 5MB
+                    </p>
+                    
+                    <input type="file" value={input.value} onChange={(e) => handleChangeAudio(index, e)} />
+                    <button onClick={() => handleRemoveAudio(index)}>Deletar</button>
+                    </DelayRange>
+                  )
+                 })}
               </ContentBody>
+              <CardsButtonsContent>
+                <CardButtons onClick={handleAddTextArea}>
+                  <CardIconButton><AiOutlineFileAdd/></CardIconButton>  
+                  <CardTextButton>Texto</CardTextButton>
+                </CardButtons>  
+                <CardButtons onClick={handleAddImage}>
+                  <CardIconButton><CiImageOn/></CardIconButton>  
+                  <CardTextButton>Imagem</CardTextButton>
+                </CardButtons>  
+                <CardButtons onClick={handleAddVideo}>
+                  <CardIconButton><RxVideo/></CardIconButton>  
+                  <CardTextButton>Video</CardTextButton>
+                </CardButtons>  
+                <CardButtons onClick={handleAddFile}>
+                  <CardIconButton><FiFile/></CardIconButton>  
+                  <CardTextButton>Arquivo</CardTextButton>
+                </CardButtons>  
+                <CardButtons>
+                  <CardIconButton><MdOutlineKeyboardVoice/></CardIconButton>  
+                  <CardTextButton>Audio</CardTextButton>
+                </CardButtons>  
+                <CardButtons onClick={handleSave}>
+                  <CardIconButton><AiFillSave/></CardIconButton>  
+                  <CardTextButton>Salvar</CardTextButton>
+                </CardButtons>  
+                <CardButtons onClick={() => handleAddRangesInputs(node.node.id)}>
+                  <CardIconButton><AiOutlineClockCircle/></CardIconButton>  
+                  <CardTextButton>Delay</CardTextButton>
+                </CardButtons>  
+                <CardButtons>
+                  <CardIconButton><TbAlertTriangle/></CardIconButton>  
+                  <CardTextButton>Auto Off</CardTextButton>
+                </CardButtons>  
+              </CardsButtonsContent>
             </>
           )}
           {node.node.type === "random" && (
