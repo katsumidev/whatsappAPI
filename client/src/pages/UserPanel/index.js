@@ -292,9 +292,8 @@ function UserPanel() {
                           {searchBox != ""
                             ? contacts
                                 .filter((contact) =>
-                                  contact.contact
-                                    .toLowerCase()
-                                    .includes(searchBox.toLowerCase())
+                                  contact.contact?.toLowerCase()
+                                    .includes(searchBox?.toLowerCase())
                                 )
                                 .map((contact, index) => {
                                   return (

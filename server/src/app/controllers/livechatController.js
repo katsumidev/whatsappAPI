@@ -64,6 +64,64 @@ const newMessage = async (req, res) => {
   }
 };
 
+const saveReceiverMsg = async (data) => {
+  const newMessage = new ChatMessage(data);
+
+  try {
+    if (data.type != "file") {
+      fetch(`${apiUrl}/message/text?key=${data.from}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          id: data.to,
+          message: data.text,
+        }),
+      }).then(async (response) => {
+      });
+    }
+
+    await newMessage.save();
+    await LiveChat.findByIdAndUpdate(data.chatId, {
+      message: data.text,
+      caption: data.caption,
+    });
+  } catch (err) {
+    return console.log("FALHA ", err)
+  }
+}
+
+const getReceiverChat = async (from, to) => {
+  try {
+    const exist = await LiveChat.findOne({
+      // procura no banco de dados o chat correspondente
+      members: {
+        $all: [from, to],
+      },
+    });
+
+    if (!exist) {
+      // se esse chat não existir, ele gera um novo documento no banco pra ele
+      const newChat = new LiveChat({
+        members: [from, to],
+      });
+
+      await newChat.save(); // salva o documento
+    }
+
+    let conversation = await LiveChat.findOne({
+      // se ele já existir, retorna ele para o requisitor
+      members: { $all: [from, to] },
+    });
+
+    return JSON.stringify(conversation);
+  } catch (err) {
+    return err;
+  }
+};
+
 const getMessages = async (req, res) => {
   const { chatId } = req.body;
 
@@ -81,4 +139,6 @@ module.exports = {
   getMessages,
   newMessage,
   getChat,
+  saveReceiverMsg,
+  getReceiverChat
 };

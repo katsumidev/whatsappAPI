@@ -348,7 +348,18 @@ export const PreviewBackground = styled.div`
   position: absolute;
 `;
 
-export const AudioMessage = styled.div``;
+export const AudioMessage = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+
+  img {
+    width: 52px;
+    height: 52px;
+  }
+`;
 
 export const SendImageContainer = styled.div`
   max-width: 100%;

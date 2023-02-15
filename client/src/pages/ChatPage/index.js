@@ -152,28 +152,8 @@ function ChatPage() {
   useEffect(() => {
     let socket = io.connect(process.env.REACT_APP_URL); // socket de conexão com o back-end
 
-    const saveReceiverMsg = async (importedData) => {
+    const saveReceiverMsg = async () => {
       // ao receber a mensagem vinda do socket
-      let data = await getCurrentChat({
-        from: importedData.to,
-        to: importedData.from,
-      });
-      let chatId = data.data._id;
-
-      // chama a função para salvar a mensagem no banco de dados
-      handleSendMsg(
-        chatId,
-        importedData.from,
-        importedData.to,
-        importedData.type == "quotedText"
-          ? {
-              quotedMessage: importedData.quotedContent,
-              message: importedData.content,
-            }
-          : importedData.content,
-        importedData.type
-      );
-
       setNewMessageFlag((prev) => !prev);
     };
 
@@ -207,39 +187,6 @@ function ChatPage() {
         text: text,
         type: "text",
       };
-    }
-
-    switch (
-      type // caso o tipo da mensagem do receiver
-    ) {
-      case "text": // for uma texto comum
-        messageValue = {
-          chatId: chatId,
-          from: from,
-          to: to,
-          text: text,
-          type: "text",
-        };
-        break;
-      case "image": // for uma imagem
-        messageValue = {
-          chatId: chatId,
-          from: from,
-          to: to,
-          text: text,
-          type: "file",
-        };
-        break;
-      case "quotedText":
-        messageValue = {
-          chatId: chatId,
-          from: from,
-          to: to,
-          text: text.message,
-          quotedMessage: text.quotedMessage,
-          type: "quotedText",
-        };
-        break;
     }
 
     setFile();
@@ -406,7 +353,7 @@ function ChatPage() {
         <Contacts>
           {contacts
             .filter((contact) =>
-              contact.contact.toLowerCase().includes(searchBox.toLowerCase())
+              contact.contact?.toLowerCase().includes(searchBox?.toLowerCase())
             )
             .map((contact, index) => {
               return (
@@ -527,7 +474,7 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <FileMessage message={msg} />
+                                <FileMessage message={{msg: msg, pfp: userPictureUrl}} />
                                 <p>{msg.caption}</p>
                                 <sub>
                                   {convertToDate(msg.date)}
@@ -561,7 +508,7 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <FileMessage message={msg} />
+                                <FileMessage message={{msg: msg, pfp: selectedContact.contactPfp}} />
                                 <p>{msg.caption}</p>
                               </>
                             ) : (
@@ -662,7 +609,7 @@ function ChatPage() {
   );
 }
 
-const FileMessage = ({ message }) => {
+const FileMessage = ({message}) => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [fullImageView, setFullImageView] = useState(false);
 
@@ -684,7 +631,7 @@ const FileMessage = ({ message }) => {
 
   return (
     <>
-      <DownloadOverlay onClick={() => download(message.text, "jooj")} />
+      <DownloadOverlay onClick={() => download(message.msg.text, "jooj")} />
       {fullImageView && (
         <ImagePreview>
           <img src={previewUrl} />
@@ -692,24 +639,25 @@ const FileMessage = ({ message }) => {
         </ImagePreview>
       )}
       {[".pdf", ".doc", ".rar", ".zip"].some((el) =>
-        message?.text?.includes(el)
+        message.msg?.text?.includes(el)
       ) && (
-        <DocumentContainer onClick={() => handleDownloadFile(message.text)}>
+        <DocumentContainer onClick={() => handleDownloadFile(message.msg.text)}>
           <IoDocument size={30} fill="#F34646" />
-          <p>{message.text.split("file-")[1]}</p>
+          <p>{message.msg.text.split("file-")[1]}</p>
           <HiDownload size={30} fill="#92AD9E" />
         </DocumentContainer>
       )}
-      {[".mp4", ".mov"].some((el) => message?.text?.includes(el)) && (
+      {[".mp4", ".mov"].some((el) => message.msg?.text?.includes(el)) && (
         <VideoContainer controls>
-          <source src={message.text} type="video/mp4" />
-          <sub>{convertToDate(message.date)}</sub>
+          <source src={message.msg.text} type="video/mp4" />
+          <sub>{convertToDate(message.msg.date)}</sub>
         </VideoContainer>
       )}
-      {[".mp3", ".wav"].some((el) => message?.text?.includes(el)) && (
+      {[".mp3", ".wav"].some((el) => message.msg?.text?.includes(el)) && (
         <AudioMessage>
+          <ContactPfp src={message.pfp} />
           <AudioPlayer
-            src={message.text}
+            src={message.msg.text}
             style={{
               width: "300px",
               backgroundColor: "transparent",
@@ -734,11 +682,11 @@ const FileMessage = ({ message }) => {
           />
         </AudioMessage>
       )}
-      {[".png", ".jpg", ".jpeg"].some((el) => message?.text?.includes(el)) && (
+      {[".png", ".jpg", ".jpeg"].some((el) => message.msg?.text?.includes(el)) && (
         <ImageMessage
-          src={message.text}
-          alt={message.text}
-          onClick={() => openImageFullPreview(message.text)}
+          src={message.msg.text}
+          alt={message.msg.text}
+          onClick={() => openImageFullPreview(message.msg.text)}
         />
       )}
     </>
