@@ -15,6 +15,23 @@ export const Container = styled.div`
   }
 `;
 
+export const ContentDiv = styled.div`
+background-color: #f4f4f4;
+display: flex;
+justify-content: flex-start;
+align-items: center;
+min-height: 36px;
+background: #f4f4f4;
+border-radius: 6px;
+margin-bottom: 9px;
+font-size: 15px;
+line-height: 18px;
+color: #000;
+  .p {
+    padding-top: 5px;
+  }
+`
+
 export const H1 = styled.h1`
   font-size: 12pt;
   display: flex;

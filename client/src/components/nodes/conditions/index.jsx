@@ -13,6 +13,8 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
 */
 
 const ConditionSquare = ({ selected, data }) => {
+  const [condition, setCondition] = useState(data.condition);
+  const [isOpen, setIsOpen] = useState(data.isOpen);
   const dispatch = useDispatch();
 
   if (selected) {
@@ -20,6 +22,8 @@ const ConditionSquare = ({ selected, data }) => {
   } else {
     dispatch(undoChange());
   }
+
+  console.log(`Condição: ${data.condition}, isOpen: ${data.isOpen}`);
 
   return (
     <Container>
@@ -35,6 +39,14 @@ const ConditionSquare = ({ selected, data }) => {
         <True>
           <p>Alguma condição abaixo é verdadeira</p>
         </True>
+          {data.condition ? (
+          <>
+            <p><strong>Horário de Atendimento</strong> é <b>{isOpen}</b></p>
+            <hr />
+          </>
+        ): (
+          <></>
+        )}
         <False>
           <p>Todas as condições acima são falsas</p>
         </False>

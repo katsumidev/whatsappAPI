@@ -110,6 +110,7 @@ export const Modal = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: scroll;
 `;
 // Content Square
 
@@ -121,10 +122,172 @@ export const ContentHeader = styled.div`
   font-weight: 500;
 `;
 
+export const ContainerTextArea = styled.div`
+width: 90%;
+resize: none;
+outline: none;
+margin-top: 10px;
+margin-left: 10px;
+min-height: 145px;
+box-sizing: border-box;
+border-radius: 2px;
+`
+
+export const SelectCondition = styled.select`
+-moz-box-align: center;
+align-items: center;
+background-color: rgb(255, 255, 255);
+border-color: rgb(229, 229, 229);
+border-radius: 4px;
+border-style: solid;
+border-width: 1px;
+box-shadow: none;
+cursor: default;
+display: flex;
+flex-wrap: wrap;
+-moz-box-pack: justify;
+justify-content: space-between;
+min-height: 38px;
+outline: 0px !important;
+position: relative;
+transition: all 100ms ease 0s;
+box-sizing: border-box;
+width: 293px;
+height: 48px;
+margin-top: 4%;
+`
+
+export const MenuText = styled.div`
+background-color: #f5f5f5;
+padding: 5px 0;
+border: 1px solid #d4d4d5;
+border-radius: 2px 2px 0 0;
+width: 100%;
+display: flex;
+flex-direction: row;
+align-items: stretch;
+flex-wrap: wrap;
+`
+
+export const MenuLeft = styled.ul`
+border-radius: 2px;
+background-color: #fff;
+list-style-type: none;
+margin-block-start: 0;
+margin-block-end: 0;
+padding-inline-start: 0;
+display: flex;
+flex-direction: row;
+align-items: stretch;
+`
+
+export const MenuGroupLeft = styled.ul`
+border-radius: 2px;
+background-color: #fff;
+list-style-type: none;
+margin-block-start: 0;
+margin-block-end: 0;
+padding-inline-start: 0;
+display: flex;
+flex-direction: row;
+align-items: stretch;
+margin-left: 5px;
+`
+
+export const MenuItemDrop = styled.li`
+border: 1px solid #ccc;
+user-select: none;
+text-align: center;
+display: flex;
+flex-direction: row;
+align-items: stretch;
+`
+
+export const SpanItemMenuDrop = styled.span`
+min-width: 30px;
+min-height: 30px;
+padding: 3px;
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
+export const TextArea = styled.textarea`
+overflow-y: auto;
+width: 100%;
+height: 80px;
+resize: vertical;
+border-top: none;
+  border-top-color: currentcolor;
+border-top-left-radius: 0;
+border-top-right-radius: 0;
+`
+
+export const MenuItem = styled.li`
+border: 1px solid #ccc;
+user-select: none;
+text-align: center;
+display: flex;
+flex-direction: row;
+align-items: stretch;
+` 
+
+export const SpanItem = styled.span`
+min-width: 30px;
+min-height: 30px;
+padding: 3px;
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
 export const ContentBody = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
 `;
+
+export const CardsButtonsContent = styled.div`
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+display: flex;
+margin-top: 100px;
+`
+
+export const CardButtons = styled.div`
+display: flex;
+flex-direction: column;
+position: relative;
+justify-content: center;
+align-items: center;
+overflow: hidden;
+box-sizing: border-box;
+margin: 4px;
+width: 80px;
+height: 90px;
+border: 2px dashed #e1e5ea;
+border-radius: 15px;
+background-color: #fff;
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+transition: border-color .15s,color .15s;
+transform: translate3d(0, 0, 0);
+will-change: border-color,color;
+`
+
+export const CardIconButton = styled.div`
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+`
+
+export const CardTextButton = styled.div`
+color: #8492a6;
+text-align: center;
+cursor: pointer;
+`
 
 export const DelayRange = styled.div`
   display: flex;
@@ -138,7 +301,39 @@ export const DelayRange = styled.div`
   border-radius: 10px;
   color: #5a677d;
   border: 1px dotted gray;
+  select {
+    max-width: 80%;
+  }
 `;
+
+export const InputRangeRandomContainer = styled.div`
+display: flex;
+gap: 12px;
+`
+
+export const CreateNewButton = styled.div`
+margin-top: 35px;
+height: 50px;
+border: 2px dashed #e1e5ea;
+border-radius: 6px;
+color: #8492a6;
+font-weight: 600;
+font-size: 13px;
+line-height: 18px;
+cursor: pointer;
+text-align: center;
+  :hover {
+    border: 2px dashed #00c64b;
+    cursor: pointer;
+  }
+`
+
+export const ButtonDelete = styled.button`
+max-width: 120px;
+margin-left: 30%;
+border-radius: 10px;
+`
+
 
 export const InputRange = styled.input`
   margin-right: 0.5rem;
@@ -231,12 +426,14 @@ export const ConditionBody = styled.div`
   justify-content: center;
   align-items: center;
   min-height: 110px;
-  margin-top: 5px;
-  width: 12%;
-  padding-left: 80px;
+  margin-top: 25px;
+  width: 90%;
   height: 10%;
   border-radius: 10px;
   color: #5a677d;
+    p {
+      margin-top: 15px;
+    }
 `;
 
 export const ConnectionHeader = styled.div`

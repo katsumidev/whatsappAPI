@@ -1,5 +1,5 @@
 import { NodeResizer } from "@reactflow/node-resizer";
-import React from "react";
+import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
 import { AiFillAlert } from "react-icons/ai";
@@ -24,7 +24,11 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
 */
 
 const ButtonSquare = ({ selected, data }) => {
+  const [text, setText] = useState(data.textAreaB)
+  const [answers, setAnswers] = useState(data.answers)
   const dispatch = useDispatch();
+
+  console.log(`Respostas: ${answers}`)
 
   if (selected) {
     dispatch(changeNode({ data, type: "button" }));
@@ -45,7 +49,12 @@ const ButtonSquare = ({ selected, data }) => {
       </Header>
       <MiniChat className="text-center mt-6">
         <Message>
-          Texto da pergunta{" "}
+          Texto da pergunta:
+          {answers ? (
+             <p><b>{answers}</b></p>
+          ) : (
+           <></>
+          )}
           <sub>
             {new Date().toLocaleTimeString("pt-BR", {
               hour: "numeric",
@@ -53,8 +62,17 @@ const ButtonSquare = ({ selected, data }) => {
             })}
           </sub>
         </Message>
-        <ButtonMessage>Número de pedido</ButtonMessage>
-        <ButtonMessage>Email</ButtonMessage>
+        {data.textAreaB ? (
+          <>
+            {text.map((con) => {
+              return (
+                <ButtonMessage>{con.value}</ButtonMessage>
+              )
+            })}
+          </>
+        ): (
+          <ButtonMessage>Número de pedido</ButtonMessage>
+        )}
         {data.textArea}
       </MiniChat>
       <Buttons>

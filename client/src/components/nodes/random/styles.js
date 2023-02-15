@@ -25,6 +25,9 @@ export const H1 = styled.h1`
 
 export const SquareContent = styled.div`
 border-bottom: 1px #000;
+  span {
+    margin-left: 85%;
+  }
 `
 
 

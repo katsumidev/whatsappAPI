@@ -1,5 +1,5 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BiBookContent} from 'react-icons/bi';
@@ -7,29 +7,31 @@ import {BsWhatsapp} from "../../../styles/Icons"
 import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
+import {CiImageOn} from 'react-icons/ci'
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ContetntSquare = ({selected, data, setOutputData}) => {
+const ContetntSquare = ({selected, data, id}) => {
   const [typingDelay, setTypingDelay] = useState(data.range);
+  const [images, setImages] = useState(data.image);
+  const [videos, setVideos] = useState(data.video);
+  const [files, setFiles] = useState(data.file);
+  const [audios, setAudios] = useState(data.audio);
+  const [text, setText] = useState(data.text);
   const dispatch = useDispatch();
 
   if(selected) {
-    dispatch(changeNode({data, type: 'content'}))
+    dispatch(changeNode({id, type: 'content'}))
   } else {
     dispatch(undoChange())
   }
   
 
-/*   const handleClick = () => {
-    setOutputData({ message: 'Hello World!' });
-  }; */
-
   return (
     <Container /* onClick={handleClick} */>
-       <Header>
+ <Header>
         <WhatsappLogo>
           <BsWhatsapp size={25} fill="#FFF" />
         </WhatsappLogo>
@@ -40,7 +42,64 @@ const ContetntSquare = ({selected, data, setOutputData}) => {
       </Header>
       <MiniChat className="text-center mt-6">
         <Message>
-          Texto da pergunta{" "}
+             {data.range === undefined ? (
+        <></>
+      ): (
+        <div>
+          {typingDelay.map((con) => {
+           return (
+            <ContentDiv>
+              <p>Digintando em {con.value}</p>
+            </ContentDiv>
+           )
+          })}
+        </div>
+      )}
+      {data.image === undefined ? (
+        <></>
+      ) : (
+        <>
+        {images.map(img => {
+          return <ContentDiv>Imagem</ContentDiv>
+        })}
+        </>
+      )}
+      {data.video === undefined ? (
+        <></>
+      ): (
+        <>
+          {videos.map(conn => {
+            return <ContentDiv><p>Video Salvo</p></ContentDiv>
+          })}
+        </>
+      )}
+      {data.file === undefined ? (
+        <></>
+      ): (
+        <>
+          {files.map(conn => {
+            return <ContentDiv><p>Arquivo Salvo</p></ContentDiv>
+          })}
+        </>
+      )}
+      {data.audio === undefined ? (
+        <></>
+      ): (
+        <>
+          {audios.map(conn => {
+            return <ContentDiv><p>Auidio Salvo</p></ContentDiv>
+          })}
+        </>
+      )}
+      {data.text === undefined ? (
+        <></>
+      ): (
+        <>
+          {text.map(conn => {
+            return <ContentDiv><p>{conn.value}</p></ContentDiv>
+          })}
+        </>
+      )}
           <sub>
             {new Date().toLocaleTimeString("pt-BR", {
               hour: "numeric",

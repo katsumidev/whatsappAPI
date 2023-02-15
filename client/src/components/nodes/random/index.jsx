@@ -12,6 +12,7 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
 */
 
 const RandomSquare = ({ selected, data }) => {
+  const [ranges, setRanges] = useState(data.randomRange)
 
   const dispatch = useDispatch();
 
@@ -23,7 +24,7 @@ const RandomSquare = ({ selected, data }) => {
 
   return (
     <Container>
-        <Header>
+  <Header>
         <RandomLogo>
           <BsArrowsAngleExpand size={32} style={{ color: "#fff" }} />
         </RandomLogo>
@@ -32,6 +33,20 @@ const RandomSquare = ({ selected, data }) => {
           <Sub>Se conecte com outro fluxo</Sub>
         </Text>
       </Header>
+      {data.randomRange === undefined ? (
+        <></>
+      ): (
+        <>
+          {ranges.map((ran, index) => {
+            return (
+              <SquareContent>
+                <strong>{index + 1}</strong>
+                <span>{ran.value}%</span>
+              </SquareContent>
+            )
+          })}
+        </>
+      )}
       <SquareContent>
         <strong>1</strong>
         {data.randomRangeOne}%
