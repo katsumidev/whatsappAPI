@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const Container = styled.div`
   border-radius: 12px;
@@ -9,28 +9,28 @@ export const Container = styled.div`
   min-height: 150px;
   padding: 16px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 30px;
-  
+
   :hover {
     border: 3px solid var(--accent-color);
   }
 `;
 
 export const ContentDiv = styled.div`
-background-color: #f4f4f4;
-display: flex;
-justify-content: flex-start;
-align-items: center;
-min-height: 36px;
-background: #f4f4f4;
-border-radius: 6px;
-margin-bottom: 9px;
-font-size: 15px;
-line-height: 18px;
-color: #000;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 36px;
+  background: #f4f4f4;
+  border-radius: 6px;
+  margin-bottom: 9px;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000;
   .p {
     padding-top: 5px;
   }
-`
+`;
 
 export const H1 = styled.h1`
   font-size: 12pt;
@@ -38,8 +38,6 @@ export const H1 = styled.h1`
   align-items: center;
   gap: 5px;
 `;
-
-
 
 export const Header = styled.div`
   display: flex;
@@ -87,7 +85,6 @@ export const WhatsappLogo = styled.div`
     rgba(48, 192, 47, 1) 100%
   );
 `;
-
 
 export const MiniChat = styled.div`
   background-color: var(--chat-background);

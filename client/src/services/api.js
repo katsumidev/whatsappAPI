@@ -156,3 +156,11 @@ export const downloadFile = async (data) => {
     console.log("Error while calling newMessage API", error);
   }
 };
+
+export const getContactLastMessage = async (data) => {
+  try {
+    return await axios.post(`${url}/livechat/getLastMessage`, data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+}

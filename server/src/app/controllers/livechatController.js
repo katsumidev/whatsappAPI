@@ -1,6 +1,6 @@
 const LiveChat = require("../models/livechat");
 const ChatMessage = require("../models/chatmessage");
-const apiUrl = process.env.API_URL
+const apiUrl = process.env.API_URL;
 
 const getChat = async (req, res) => {
   try {
@@ -31,6 +31,25 @@ const getChat = async (req, res) => {
   } catch (err) {
     return res.send(err);
   }
+};
+
+const getLastMessage = async (req, res) => {
+  const { from, to } = req.body;
+
+  let conversation = await LiveChat.findOne({
+    members: { $all: [from, to] },
+  });
+
+  let string = JSON.stringify(conversation);
+  let obj = JSON.parse(string);
+  let chatId = obj._id;
+
+  const lastMessage = await ChatMessage.findOne({
+    chatId: chatId,
+    from: to,
+  }).sort({ $natural: -1 });
+
+  return res.json(lastMessage);
 };
 
 const newMessage = async (req, res) => {
@@ -79,8 +98,7 @@ const saveReceiverMsg = async (data) => {
           id: data.to,
           message: data.text,
         }),
-      }).then(async (response) => {
-      });
+      }).then(async (response) => {});
     }
 
     await newMessage.save();
@@ -89,9 +107,9 @@ const saveReceiverMsg = async (data) => {
       caption: data.caption,
     });
   } catch (err) {
-    return console.log("FALHA ", err)
+    return console.log("FALHA ", err);
   }
-}
+};
 
 const getReceiverChat = async (from, to) => {
   try {
@@ -140,5 +158,6 @@ module.exports = {
   newMessage,
   getChat,
   saveReceiverMsg,
-  getReceiverChat
+  getReceiverChat,
+  getLastMessage,
 };

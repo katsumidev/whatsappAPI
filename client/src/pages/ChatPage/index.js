@@ -42,6 +42,7 @@ import {
   MyProfile,
   SearchContainer,
   Contacts,
+  LastMessage,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -67,6 +68,7 @@ import {
   sendAudio,
   getUserPicture,
   getInfo,
+  getContactLastMessage,
 } from "../../services/api";
 import {
   BsImage,
@@ -97,6 +99,9 @@ function ChatPage() {
   const [caption, setCaption] = useState("");
   const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
   const [userPictureUrl, setUserPicture] = useState("");
+  const [contactsMessages, setContactsMessages] = useState([
+    { contact: "", message: "" },
+  ]);
   const [searchBox, setSearchBox] = useState("");
   const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
   const fileinput = useRef(null); // hook auxiliar para o scroll do chat
@@ -323,6 +328,33 @@ function ChatPage() {
     userPicture();
   }, [insInfo]);
 
+  useEffect(() => {
+    console.log(contactsMessages);
+  }, [contactsMessages]);
+
+  useEffect(() => {
+    const getLast = async () => {
+      contacts.map(async (contact) => {
+        let data = await getContactLastMessage({
+          from: userIns,
+          to: contact.number,
+        });
+
+        if (data.data.text !== null) {
+          if (
+            !contactsMessages.some((number) => number.contact == contact.number)
+          ) {
+            setContactsMessages((contactsMessages) => [
+              ...contactsMessages,
+              { contact: contact.number, message: data.data.text },
+            ]);
+          }
+        }
+      });
+    };
+    getLast();
+  }, [contacts, newMessageFlag]);
+
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   return (
@@ -356,6 +388,10 @@ function ChatPage() {
               contact.contact?.toLowerCase().includes(searchBox?.toLowerCase())
             )
             .map((contact, index) => {
+              var result = contactsMessages.filter((obj) => {
+                return obj.contact == contact.number;
+              });
+
               return (
                 <ContactRow
                   key={index}
@@ -375,7 +411,14 @@ function ChatPage() {
                       currentTarget.src = defaultPic;
                     }}
                   />
-                  <ContactName>{contact.contact}</ContactName>
+                  <ContactName>
+                    <p>{contact.contact}</p>
+                    {result != [] ? (
+                      <small>{result[0]?.message}</small>
+                    ) : (
+                      console.log("equal")
+                    )}
+                  </ContactName>
                 </ContactRow>
               );
             })}
@@ -474,7 +517,9 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <FileMessage message={{msg: msg, pfp: userPictureUrl}} />
+                                <FileMessage
+                                  message={{ msg: msg, pfp: userPictureUrl }}
+                                />
                                 <p>{msg.caption}</p>
                                 <sub>
                                   {convertToDate(msg.date)}
@@ -508,7 +553,12 @@ function ChatPage() {
                           <>
                             {msg.type === "file" ? (
                               <>
-                                <FileMessage message={{msg: msg, pfp: selectedContact.contactPfp}} />
+                                <FileMessage
+                                  message={{
+                                    msg: msg,
+                                    pfp: selectedContact.contactPfp,
+                                  }}
+                                />
                                 <p>{msg.caption}</p>
                               </>
                             ) : (
@@ -609,7 +659,7 @@ function ChatPage() {
   );
 }
 
-const FileMessage = ({message}) => {
+const FileMessage = ({ message }) => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [fullImageView, setFullImageView] = useState(false);
 
@@ -682,7 +732,9 @@ const FileMessage = ({message}) => {
           />
         </AudioMessage>
       )}
-      {[".png", ".jpg", ".jpeg"].some((el) => message.msg?.text?.includes(el)) && (
+      {[".png", ".jpg", ".jpeg"].some((el) =>
+        message.msg?.text?.includes(el)
+      ) && (
         <ImageMessage
           src={message.msg.text}
           alt={message.msg.text}

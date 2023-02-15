@@ -4,7 +4,7 @@ import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BiBookContent} from 'react-icons/bi';
 import {BsWhatsapp} from "../../../styles/Icons"
-import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message } from './styles';
+import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message, ContentDiv } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 import {CiImageOn} from 'react-icons/ci'

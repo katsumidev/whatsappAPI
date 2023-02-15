@@ -109,7 +109,24 @@ export const ContactRow = styled.div`
   }
 `;
 
-export const ContactName = styled.p``;
+export const ContactName = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100% !important;
+
+  p {
+    padding: 0 !important;
+    font-weight: 600;
+  } 
+  small {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 80%;
+    color: var(--grey);
+  }
+`;
 
 export const ContactPfp = styled.img`
   border-radius: 100%;
@@ -360,6 +377,12 @@ export const AudioMessage = styled.div`
     height: 52px;
   }
 `;
+
+export const LastMessage = styled.div`
+  font-size: 12px;
+  color: black;
+  background-color: blue;
+`
 
 export const SendImageContainer = styled.div`
   max-width: 100%;

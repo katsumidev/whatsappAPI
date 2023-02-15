@@ -22,6 +22,7 @@ route.post("/contacts/getContactPic",  contacts.getContactPic);
 route.post("/livechat/getChat", livechat.getChat);
 route.post("/livechat/getMessages", livechat.getMessages);
 route.post("/livechat/newMessage", livechat.newMessage);
+route.post("/livechat/getLastMessage", livechat.getLastMessage);
 
 //messages
 route.post("/message/sendMessage", message.sendMessage);

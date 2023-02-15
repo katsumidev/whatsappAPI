@@ -1,5 +1,5 @@
 import { NodeResizer } from "@reactflow/node-resizer";
-import React from "react";
+import React, {useState} from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
 import { BsArrowLeftRight } from "react-icons/bs";
