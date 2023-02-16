@@ -23,6 +23,9 @@ const MessageSchema = new mongoose.Schema(
     type: {
       type: String,
     },
+    read: {
+      type: Boolean,
+    },
     date: { type: Date, default: Date.now },
   },
   {

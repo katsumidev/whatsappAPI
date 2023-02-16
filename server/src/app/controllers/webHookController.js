@@ -42,6 +42,7 @@ const userHandler = async (req, res) => {
             from: req.body.body.text.messages[0].key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
             chatId: chatId,
+            read: false,
             type: "text",
           });
 
@@ -49,24 +50,41 @@ const userHandler = async (req, res) => {
             type: "text",
           });
         } else if (req.body.body.message.imageMessage) {
+          const buffer = Buffer.from(req.body.body.msgContent, "base64");
+          const path = "/uploads/" + req.body.body.message.imageMessage.fileSha256 + ".jpg"
+          fs.writeFileSync(path, buffer);
+
           // imagens
           await livechat.saveReceiverMsg({
-            text: req.body.body.message.imageMessage.url,
+            text: path,
             from: req.body.body.key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
             chatId: chatId,
+            read: false,
             type: "file",
           });
 
           socket.ioObject.emit("message", {
             type: "file",
           });
+        } else if (req.body.body.message.stickerMessage) {
+          console.log(req.body.body.message.stickerMessage)
+
+          await livechat.saveReceiverMsg({
+            text: req.body.body.message.stickerMessage.url,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            chatId: chatId,
+            read: false,
+            type: "file",
+          })
         } else if (req.body.body.message.audioMessage) {
           await livechat.saveReceiverMsg({
             text: req.body.body.message.audioMessage.url,
             from: req.body.body.key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
             chatId: chatId,
+            read: false,
             type: "file",
           });
 
@@ -85,6 +103,7 @@ const userHandler = async (req, res) => {
             from: req.body.body.key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
             chatId: chatId,
+            read: false,
             type: "quotedText",
           });
 
@@ -92,6 +111,8 @@ const userHandler = async (req, res) => {
             type: "quotedText",
           });
         }
+      } else {
+        console.log("JOJ")
       }
 
       break;

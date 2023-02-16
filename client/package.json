@@ -28,6 +28,7 @@
     "react-h5-audio-player": "^3.8.6",
     "react-howler": "^5.2.0",
     "react-icons": "^4.7.1",
+    "react-input-emoji": "^4.3.0",
     "react-input-mask": "^2.0.4",
     "react-pdf": "^6.2.2",
     "react-redux": "^8.0.5",

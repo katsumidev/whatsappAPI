@@ -101,6 +101,7 @@ export const Message = styled.div`
   font-size: 12px;
   width: 70%;
   display: flex;
+  margin-bottom: 5px;
   flex-direction: column;
 
   sub {

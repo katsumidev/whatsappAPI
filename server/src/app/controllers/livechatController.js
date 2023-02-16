@@ -42,14 +42,22 @@ const getLastMessage = async (req, res) => {
 
   let string = JSON.stringify(conversation);
   let obj = JSON.parse(string);
-  let chatId = obj._id;
+  let chatId = obj?._id;
 
   const lastMessage = await ChatMessage.findOne({
     chatId: chatId,
     from: to,
   }).sort({ $natural: -1 });
 
-  return res.json(lastMessage);
+  const unreadMessages = await ChatMessage.find({
+    chatId: chatId,
+    read: false,
+  }).count();
+
+  return res.json({
+    lastMessage: lastMessage,
+    unreadMessagesCount: unreadMessages,
+  });
 };
 
 const newMessage = async (req, res) => {
@@ -147,6 +155,9 @@ const getMessages = async (req, res) => {
     const messages = await ChatMessage.find({
       chatId: chatId,
     });
+
+    await ChatMessage.find({ chatId: chatId }).update({ $set: { read: true } }); // quando clicado no chat, torna todas as mensagens não lidas e mensagens lidas.
+
     return res.status(200).json(messages);
   } catch (err) {
     return res.send(err);
