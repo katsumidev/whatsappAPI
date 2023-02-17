@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   Background,
   ConnectionMode,
@@ -175,9 +175,13 @@ function Flow() {
   const [conditionValue, setConditionValue] = useState('Quer Reembolsar / trocar');
   const [isOpen, setIsOpen] = useState('aberto')
   const [connectionValue, setConnectionValue] = useState("");
-  const [delayTime, setDelayTime] = useState();
+  const [delayTime, setDelayTime] = useState(5);
   const [delayFormat, setDelayFormat] = useState();
   const { userIns, flowId } = useParams();
+
+  /*Update nodes feature*/
+
+  
 
   //Content Square State
   const [inputsContent, setInputsContent] = useState([{ value: 3, idNode: '' }])
@@ -350,7 +354,19 @@ function Flow() {
 
 
   const node = useSelector((state) => state.node);
-  console.log(node.node.id)
+  console.log(`Id passado no redux: ${node.node.id}`)
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          delayTime: delayTime
+        }
+      }
+      return nodesMap
+    }))
+  }, [delayTime, setNodes, node.node.id])
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -415,8 +431,6 @@ function Flow() {
           isOpen: isSaveConditions ? isOpen : undefined,
           connection: isSaveConnections ? connectionValue : undefined,
           randomRange: isSaveRange ? rangeInputRandom : undefined,
-          delayTime: isSaveDelay ? delayTime : undefined,
-          delayFormat: isSaveDelay ? delayFormat : undefined,
         },
       },
     ]);

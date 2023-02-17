@@ -23,7 +23,7 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ButtonSquare = ({ selected, data }) => {
+const ButtonSquare = ({ selected, data, id }) => {
   const [text, setText] = useState(data.textAreaB)
   const [answers, setAnswers] = useState(data.answers)
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const ButtonSquare = ({ selected, data }) => {
   console.log(`Respostas: ${answers}`)
 
   if (selected) {
-    dispatch(changeNode({ data, type: "button" }));
+    dispatch(changeNode({ id, type: "button" }));
   } else {
     dispatch(undoChange());
   }

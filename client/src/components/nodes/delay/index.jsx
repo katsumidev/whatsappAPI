@@ -11,18 +11,16 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const DelaySquare = ({ selected, data }) => {
+const DelaySquare = ({ selected, data, id }) => {
   const [delayTime, setDelayTime] = useState(data.delayTime);
-  const [delayFormat, setDelayFormat] = useState(data.delayFormat);
   const dispatch = useDispatch();
 
   if(selected) {
-    dispatch(changeNode({data, type: 'delay'}))
+    dispatch(changeNode({id, type: 'delay'}))
   } else {
     dispatch(undoChange())
   }
 
-  console.log(`Delay: ${delayTime} e formato: ${JSON.stringify(delayFormat)}`);
 
 
 
@@ -32,11 +30,7 @@ const DelaySquare = ({ selected, data }) => {
       <DelayLogo><AiOutlineClockCircle size={32} fill="#FFF" /></DelayLogo>
       <p>delay inteligente</p>
       </Header>
-      {data.delayTime === undefined ? (
-      <p>Aguardando <strong>0 </strong> e depois continua</p>
-      ): (
-      <p>Aguardando <strong>{delayTime} {delayFormat.label}</strong> e depois continua</p>
-      )}
+      <p>Esperando {data.delayTime}</p>
       <NodeResizer 
       minHeight={200}
       minWidth={200}
