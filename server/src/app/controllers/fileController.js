@@ -3,6 +3,7 @@ const grid = require("gridfs-stream");
 const mongoose = require("mongoose");
 const url = process.env.SERVER_URL;
 
+// essa classe é responsavel por fazer o upload dos arquivos do usuário pro banco de dados, salvando eles como buckets no mongo
 let gfs, gridfsBucket;
 const conn = mongoose.connection;
 conn.once("open", () => {
@@ -18,7 +19,7 @@ const uploadFile = async (req, res) => {
     return res.status(404).send("Arquivo não encontrado.");
   }
 
-  const imageUrl = `${url}/file/${req.file.filename}`;
+  const imageUrl = `/file/${req.file.filename}`;
   return res.status(200).json(imageUrl);
 };
 

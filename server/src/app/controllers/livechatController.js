@@ -1,6 +1,15 @@
 const LiveChat = require("../models/livechat");
 const ChatMessage = require("../models/chatmessage");
+const axios = require("axios");
 const apiUrl = process.env.API_URL;
+
+const axiosReq = axios.create({
+  // cria a instância de conexão do axios, passando os headers necessários
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
 const getChat = async (req, res) => {
   try {
@@ -34,6 +43,7 @@ const getChat = async (req, res) => {
 };
 
 const getLastMessage = async (req, res) => {
+  // puxa a ultima mensagem que o contato enviou
   const { from, to } = req.body;
 
   let conversation = await LiveChat.findOne({
@@ -42,14 +52,22 @@ const getLastMessage = async (req, res) => {
 
   let string = JSON.stringify(conversation);
   let obj = JSON.parse(string);
-  let chatId = obj._id;
+  let chatId = obj?._id;
 
   const lastMessage = await ChatMessage.findOne({
     chatId: chatId,
     from: to,
   }).sort({ $natural: -1 });
 
-  return res.json(lastMessage);
+  const unreadMessages = await ChatMessage.find({
+    chatId: chatId,
+    read: false,
+  }).count();
+
+  return res.json({
+    lastMessage: lastMessage,
+    unreadMessagesCount: unreadMessages,
+  });
 };
 
 const newMessage = async (req, res) => {
@@ -58,19 +76,25 @@ const newMessage = async (req, res) => {
 
   try {
     if (type != "file") {
-      fetch(`${apiUrl}/message/text?key=${from}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          id: to,
-          message: text,
-        }),
-      }).then(async (response) => {
-        return res.status(200).send("mensagem enviada com sucesso");
-      });
+      axiosReq
+        .post(
+          `${apiUrl}/message/text?key=${from}`,
+          {
+            id: to,
+            message: text,
+          },
+          {}
+        )
+        .then((axiosRes) => {
+          switch (axiosRes.status) {
+            case 201:
+              return res.status(200).send("mensagem enviada");
+              break;
+            case 404:
+              return res.status(404).send("rota não encontrada");
+              break;
+          }
+        });
     }
 
     await newMessage.save();
@@ -84,31 +108,14 @@ const newMessage = async (req, res) => {
 };
 
 const saveReceiverMsg = async (data) => {
+  // responsavel por salvar as mensagens recebidas por web socket
   const newMessage = new ChatMessage(data);
 
-  try {
-    if (data.type != "file") {
-      fetch(`${apiUrl}/message/text?key=${data.from}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          id: data.to,
-          message: data.text,
-        }),
-      }).then(async (response) => {});
-    }
-
-    await newMessage.save();
-    await LiveChat.findByIdAndUpdate(data.chatId, {
-      message: data.text,
-      caption: data.caption,
-    });
-  } catch (err) {
-    return console.log("FALHA ", err);
-  }
+  await newMessage.save();
+  await LiveChat.findByIdAndUpdate(data.chatId, {
+    message: data.text,
+    caption: data.caption,
+  });
 };
 
 const getReceiverChat = async (from, to) => {
@@ -147,6 +154,9 @@ const getMessages = async (req, res) => {
     const messages = await ChatMessage.find({
       chatId: chatId,
     });
+
+    await ChatMessage.find({ chatId: chatId }).update({ $set: { read: true } }); // quando clicado no chat, torna todas as mensagens não lidas e mensagens lidas.
+
     return res.status(200).json(messages);
   } catch (err) {
     return res.send(err);

@@ -6,7 +6,6 @@ import {
   Container,
   ChatMain,
   ChatInputContainer,
-  ChatInput,
   ContactTopBar,
   MessageContainer,
   Chat,
@@ -24,12 +23,10 @@ import {
   Image,
   SendOptions,
   Caption,
-  EmojiSelectorMenu,
   ContactsList,
   Menu,
   VideoContainer,
   DocumentViewer,
-  EmojiMenu,
   ImageMessage,
   ImagePreview,
   PreviewBackground,
@@ -42,9 +39,10 @@ import {
   MyProfile,
   SearchContainer,
   Contacts,
-  LastMessage,
+  NewMessages,
+  EndColumn,
 } from "./styles";
-import EmojiPicker from "emoji-picker-react";
+import InputEmoji from "react-input-emoji";
 import { Document, Page, pdfjs } from "react-pdf";
 import {
   FloatingMenu,
@@ -55,6 +53,7 @@ import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import defaultPic from "../../assets/defaultPic.jpg";
 import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { convertToDate } from "../../utils/conversions";
 import {
   getContacts,
@@ -81,6 +80,7 @@ import {
   AiFillFileZip,
   BsCheckAll,
   BiSearchAlt,
+  AiFillCamera,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -89,18 +89,18 @@ function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
   const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
   const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
-  const [currentPage, setCurrentPage] = useState(-20);
-  const [isOpen, setIsOpen] = useState(false);
-  const [newMessageFlag, setNewMessageFlag] = useState(false);
-  const [floatMenuOpen, setFloatMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(-15); // usado para otimizar o carregamento do chat
+  const [isOpen, setIsOpen] = useState(false); 
+  const [newMessageFlag, setNewMessageFlag] = useState(false); // flag para verificar se o usuário enviou uma mensagem
+  const [newContactMessageFlag, setNewContactMessageFlag] = useState(false); // flag para verificar se o usuário recebeu uma mensagem
+  const [floatMenuOpen, setFloatMenuOpen] = useState(false); 
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [caption, setCaption] = useState("");
-  const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
   const [userPictureUrl, setUserPicture] = useState("");
   const [contactsMessages, setContactsMessages] = useState([
-    { contact: "", message: "" },
+    { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
   ]);
   const [searchBox, setSearchBox] = useState("");
   const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
@@ -127,7 +127,13 @@ function ChatPage() {
       setChatMsgs(data);
     };
     getMessageDetails();
-  }, [selectedContact, chatId, newMessageFlag, currentPage]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
+  }, [
+    selectedContact,
+    chatId,
+    newMessageFlag,
+    currentPage,
+    newContactMessageFlag,
+  ]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
 
   useEffect(() => {
     const intersectionObserver = new IntersectionObserver((entries) => {
@@ -159,7 +165,7 @@ function ChatPage() {
 
     const saveReceiverMsg = async () => {
       // ao receber a mensagem vinda do socket
-      setNewMessageFlag((prev) => !prev);
+      setNewContactMessageFlag((prev) => !prev);
     };
 
     // hook que recebe as requisições de socket do servidor (os sockets mandam as mensagem recebidas pelo usuário)
@@ -205,26 +211,41 @@ function ChatPage() {
 
   const handleGetChat = async (number, pfp, name) => {
     // essa função serve para buscar as informações do chat selecionado
-    let data = await getCurrentChat({ from: userIns, to: number });
+    if (userIns != null && number != "") {
+      let data = await getCurrentChat({ from: userIns, to: number });
 
-    navigate(`/${userIns}/live-chat/${data.data._id}`);
-    setSelectedContact({
-      chatId: data.data._id,
-      contactId: number,
-      contactPfp: pfp,
-      contactName: name,
-    });
-    setCurrentPage(-20);
-    setFile();
-    setAcceptedFiles("");
-    setIsOpen(false);
+      navigate(`/${userIns}/live-chat/${data.data._id}`);
+      setSelectedContact({
+        chatId: data.data._id,
+        contactId: number,
+        contactPfp: pfp,
+        contactName: name,
+      });
+      setCurrentPage(-15);
+      setFile();
+      setAcceptedFiles("");
+      setIsOpen(false);
+
+      let targetIndex = contactsMessages.findIndex(
+        (index) => index.contact == number
+      );
+
+      if (targetIndex != -1) {
+        // sobrescreve os valores com a nova mensagem recebida
+        let temporaryarray = contactsMessages.slice();
+        temporaryarray[targetIndex].unreadMessages = 0;
+        setContactsMessages(temporaryarray);
+      }
+    }
   };
 
   async function handleGetMsgs() {
     // função usada para buscar o histórico de mensagens do usuário com um determinado contato
-    let data = await getMessages({ chatId: chatId });
+    if (chatId != null) {
+      let data = await getMessages({ chatId: chatId });
 
-    return data.data;
+      return data.data;
+    }
   }
 
   useEffect(() => {
@@ -243,6 +264,7 @@ function ChatPage() {
   }, [file]);
 
   const handleFileMessage = async () => {
+    // envia mensagens de documentos/imagens, audios, documentos em geral
     const data = new FormData();
     data.append("file", file);
     data.append("id", selectedContact.contactId);
@@ -279,11 +301,13 @@ function ChatPage() {
   };
 
   const closeImagePreview = () => {
+    // fecha o preview de imagens
     setFile();
     setIsOpen(false);
   };
 
   useEffect(() => {
+    // abre o seletor de arquivos
     const openSelector = async () => {
       if (acceptedFiles) {
         await fileinput.current.click();
@@ -293,10 +317,9 @@ function ChatPage() {
     setAcceptedFiles("");
   }, [acceptedFiles]);
 
-  const handleEnter = (e) => {
-    if (e.key == "Enter") {
-      handleSendMsg(chatId, userIns, selectedContact.contactId, message);
-    }
+  const handleEnter = (text) => {
+    // função que envia a mensagem digitada pelo usuário caso ele aperte ENTER
+    handleSendMsg(chatId, userIns, selectedContact.contactId, text);
   };
 
   const AlwaysScrollToBottom = () => {
@@ -318,8 +341,8 @@ function ChatPage() {
   }, []);
 
   useEffect(() => {
+    // hook que busca a foto de perfil do usuário da aplicação
     const userPicture = async () => {
-      console.log(insInfo);
       if (insInfo.userId != "") {
         let data = await getUserPicture({ key: userIns, id: insInfo.userId });
         setUserPicture(data.data);
@@ -329,31 +352,57 @@ function ChatPage() {
   }, [insInfo]);
 
   useEffect(() => {
-    console.log(contactsMessages);
-  }, [contactsMessages]);
+    const getLast = () => {
+      contacts?.map(async (contact) => {
+        if (contact != null) {
+          let data = await getContactLastMessage({
+            from: userIns,
+            to: contact.number,
+          }); // retorna a ultima mensagem que o contato enviou, este código é executado para todos os contatos da lista
 
-  useEffect(() => {
-    const getLast = async () => {
-      contacts.map(async (contact) => {
-        let data = await getContactLastMessage({
-          from: userIns,
-          to: contact.number,
-        });
+          if (data.data.lastMessage != null) {
+            // se os dados não forem vazios
+            if (
+              !contactsMessages.some(
+                (number) => number.contact == contact.number
+              ) // se o numéro do contato não está no state de ultimas mensagens
+            ) {
+              setContactsMessages((contactsMessages) => [
+                // salva a ultima mensagem do contato na lista
+                ...contactsMessages,
+                {
+                  contact: contact.number,
+                  message: data.data.lastMessage.text,
+                  date: convertToDate(data.data.lastMessage.date),
+                  type: data.data.lastMessage.type,
+                  unreadMessages: data.data.unreadMessagesCount,
+                },
+              ]);
+            } else {
+              // caso o contato já esteja
+              let targetIndex = contactsMessages.findIndex(
+                (number) => number.contact == contact.number
+              );
 
-        if (data.data.text !== null) {
-          if (
-            !contactsMessages.some((number) => number.contact == contact.number)
-          ) {
-            setContactsMessages((contactsMessages) => [
-              ...contactsMessages,
-              { contact: contact.number, message: data.data.text },
-            ]);
+              if (targetIndex != -1) {
+                // sobrescreve os valores com a nova mensagem recebida
+                let temporaryarray = contactsMessages.slice();
+                temporaryarray[targetIndex].message =
+                  data.data.lastMessage.text;
+                temporaryarray[targetIndex].unreadMessages =
+                  data.data.unreadMessagesCount;
+                temporaryarray[targetIndex].date = convertToDate(
+                  data.data.lastMessage.date
+                );
+                setContactsMessages(temporaryarray);
+              }
+            }
           }
         }
       });
     };
     getLast();
-  }, [contacts, newMessageFlag]);
+  }, [contacts, newContactMessageFlag]); // esse hook é disparado sempre que o usuário recebe uma nova mensagem ou a lista de contatos é atualizada.
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -384,7 +433,7 @@ function ChatPage() {
         </ContactHeader>
         <Contacts>
           {contacts
-            .filter((contact) =>
+            ?.filter((contact) =>
               contact.contact?.toLowerCase().includes(searchBox?.toLowerCase())
             )
             .map((contact, index) => {
@@ -413,12 +462,27 @@ function ChatPage() {
                   />
                   <ContactName>
                     <p>{contact.contact}</p>
-                    {result != [] ? (
-                      <small>{result[0]?.message}</small>
-                    ) : (
-                      console.log("equal")
+                    {result != [] && (
+                      <small>
+                        {(result[0]?.type == "text" && (
+                          <span>
+                            <BsCheckAll /> {result[0]?.message}
+                          </span>
+                        )) ||
+                          (result[0]?.type == "file" && (
+                            <>
+                              <AiFillCamera /> Imagem
+                            </>
+                          ))}
+                      </small>
                     )}
                   </ContactName>
+                  <EndColumn>
+                    <sub>{result[0]?.date}</sub>
+                    {result[0]?.unreadMessages > 0 && (
+                      <NewMessages>{result[0]?.unreadMessages}</NewMessages>
+                    )}
+                  </EndColumn>
                 </ContactRow>
               );
             })}
@@ -463,7 +527,9 @@ function ChatPage() {
                   <h3>Pré-visualização indisponivel.</h3>
                 </AudioPreviewContainer>
               )}
-            {file.type.includes("image") && <Image src={fileUrl} />}
+            {file.type.includes("image") && (
+              <Image src={`${process.env.REACT_APP_URL}${fileUrl}`} />
+            )}
             {file.type.includes("video") && (
               <video controls>
                 <source src={fileUrl} type="video/mp4" />
@@ -491,14 +557,10 @@ function ChatPage() {
         ) : (
           <>
             <Chat ref={scrollRef}>
-              <Sentinel
-                className="sentinel"
-                style={{ display: "none" }}
-              ></Sentinel>
-
-              {chatMsgs.map((msg, index) => {
+              <Sentinel className="sentinel"></Sentinel>
+              {chatMsgs.slice(currentPage).map((msg, index) => {
                 return (
-                  <>
+                  <section key={index}>
                     {userIns == msg.from ? (
                       <MessageContainer key={index}>
                         {msg.type == "quotedText" ? (
@@ -518,7 +580,10 @@ function ChatPage() {
                             {msg.type === "file" ? (
                               <>
                                 <FileMessage
-                                  message={{ msg: msg, pfp: userPictureUrl }}
+                                  message={{
+                                    msg: msg,
+                                    pfp: userPictureUrl,
+                                  }}
                                 />
                                 <p>{msg.caption}</p>
                                 <sub>
@@ -554,6 +619,7 @@ function ChatPage() {
                             {msg.type === "file" ? (
                               <>
                                 <FileMessage
+                                  receiver
                                   message={{
                                     msg: msg,
                                     pfp: selectedContact.contactPfp,
@@ -571,21 +637,12 @@ function ChatPage() {
                         )}
                       </MessageContainer>
                     )}
-                  </>
+                  </section>
                 );
               })}
               <AlwaysScrollToBottom />
             </Chat>
             <ChatInputContainer>
-              {emojiMenuIsOpen && (
-                <EmojiMenu>
-                  <EmojiPicker />
-                </EmojiMenu>
-              )}
-              <EmojiSelectorMenu
-                size={30}
-                onClick={() => setEmojiMenuOpen(!emojiMenuIsOpen)}
-              />
               <Menu>
                 <FloatingMenu
                   slideSpeed={500}
@@ -633,12 +690,14 @@ function ChatPage() {
                 ref={fileinput}
                 onChange={(e) => onFileChange(e)}
               />
-              <ChatInput
-                type="text"
-                placeholder="Mensagem"
+              <InputEmoji
                 value={message}
-                onKeyDown={(e) => handleEnter(e)}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={setMessage}
+                onEnter={handleEnter}
+                cleanOnEnter
+                borderRadius={12}
+                theme="light"
+                placeholder="Digite uma mensagem.."
               />
               <MessageBtn
                 size={30}
@@ -659,7 +718,7 @@ function ChatPage() {
   );
 }
 
-const FileMessage = ({ message }) => {
+const FileMessage = ({ receiver, message }) => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [fullImageView, setFullImageView] = useState(false);
 
@@ -736,9 +795,13 @@ const FileMessage = ({ message }) => {
         message.msg?.text?.includes(el)
       ) && (
         <ImageMessage
-          src={message.msg.text}
+          src={`${process.env.REACT_APP_URL}${message.msg.text}`}
           alt={message.msg.text}
-          onClick={() => openImageFullPreview(message.msg.text)}
+          onClick={() =>
+            openImageFullPreview(
+              `${process.env.REACT_APP_URL}${message.msg.text}`
+            )
+          }
         />
       )}
     </>

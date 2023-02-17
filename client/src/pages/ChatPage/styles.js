@@ -114,17 +114,32 @@ export const ContactName = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100% !important;
+  max-width: 100%;
+  min-width: 50%;
 
   p {
-    padding: 0 !important;
+    margin-bottom: 0 !important;
     font-weight: 600;
-  } 
+  }
+
   small {
-    text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
-    width: 80%;
     color: var(--grey);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    span {
+      display: inline-block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    svg {
+      height: 15px;
+      width: 15px;
+    }
   }
 `;
 
@@ -382,7 +397,7 @@ export const LastMessage = styled.div`
   font-size: 12px;
   color: black;
   background-color: blue;
-`
+`;
 
 export const SendImageContainer = styled.div`
   max-width: 100%;
@@ -491,4 +506,29 @@ export const DownloadOverlay = styled(HiDownload)`
   top: 10px;
   right: 10px;
   cursor: pointer;
+`;
+
+export const NewMessages = styled.div`
+  border-radius: 50%;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 11px;
+  color: #fff;
+  background-color: var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const EndColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+
+  sub {
+    font-size: 11px;
+    color: var(--grey);
+  }
 `;

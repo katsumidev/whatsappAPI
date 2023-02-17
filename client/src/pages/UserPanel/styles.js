@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import {FaTrash} from "../../styles/Icons"
-
+import { FaTrash } from "../../styles/Icons";
 
 export const Container = styled.div`
   .react-paginate {
@@ -22,7 +21,7 @@ export const Container = styled.div`
     }
 
     li {
-      transition: .2s;
+      transition: 0.2s;
       width: 35px;
       height: 35px;
       padding: 6px;
@@ -38,10 +37,10 @@ export const Container = styled.div`
       :hover {
         background-color: var(--accent-color);
         color: var(--accent-color);
-        color: #FFF;
+        color: #fff;
 
         svg {
-          color: #FFF;
+          color: #fff;
         }
       }
     }
@@ -49,7 +48,7 @@ export const Container = styled.div`
 
   .active-page {
     background-color: var(--accent-color);
-    color: #FFF !important;
+    color: #fff !important;
   }
 `;
 
@@ -59,7 +58,7 @@ export const Main = styled.div`
   background-color: var(--secundary-background);
   border-radius: 4px;
   padding: 20px;
-`
+`;
 
 export const MessageInput = styled.textarea`
   max-width: 450px;
@@ -130,7 +129,7 @@ export const ContactRow = styled.li`
 
   p {
     font-size: 14px;
-    color: 	#808080;
+    color: #808080;
   }
 
   b {
@@ -142,42 +141,41 @@ export const ContactInfo = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
-`
+`;
 
 export const ContactColumn = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 export const ProfilePicture = styled.img`
   width: 32px;
   height: 32px;
   border-radius: 100%;
-`
+`;
 
 export const DeleteContactBtn = styled(FaTrash)`
-width: 26px;
-height: 26px;
-padding: 6px;
-transition: all .2s;
-cursor: pointer;
+  width: 26px;
+  height: 26px;
+  padding: 6px;
+  transition: all 0.2s;
+  cursor: pointer;
 
-:hover {
-  color: var(--accent-color-hover);
-  width: 28px;
-  height: 28px;
-}
-`
+  :hover {
+    color: var(--accent-color-hover);
+    width: 28px;
+    height: 28px;
+  }
+`;
 
 export const ContactOptions = styled.div`
   display: flex;
   align-items: center;
   gap: 3px;
-`
-
+`;
 
 export const ImportContacts = styled.input`
-background-color: #FFF;
-width: 150px;
-height: 60px;
-`
+  background-color: #fff;
+  width: 150px;
+  height: 60px;
+`;

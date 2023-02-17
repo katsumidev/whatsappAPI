@@ -3,16 +3,22 @@ var cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
-require('dotenv').config();
+require("dotenv").config(); // chama as configurações de variaveis ambiente
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb", // define o limite de upload para 50 mb
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 
-require("./src/app/routes/Routes")(app);
+require("./src/app/routes/Routes")(app); // rotas do servidor
 
 const server = app.listen(process.env.PORT, function () {
-  console.log("escutando na porta - " + process.env.PORT);
+  console.log("[!!] Servidor aberto na porta - " + process.env.PORT + " [!!]");
 });
 
 var io = require("socket.io")(server, {
@@ -20,10 +26,6 @@ var io = require("socket.io")(server, {
     origin: process.env.CLIENT_URL, // ip do front-end
     methods: ["GET", "POST"],
   },
-});
-
-io.on("connection", function (socket) {
-  console.log("user connected");
 });
 
 const socketIoObject = io;

@@ -1,3 +1,4 @@
+
 import { NodeResizer } from '@reactflow/node-resizer';
 import React from 'react'
 import { Handle, Position } from 'reactflow';
@@ -19,23 +20,25 @@ import {RxVideo} from 'react-icons/rx'
 import {FiFile} from 'react-icons/fi'
 import {MdOutlineKeyboardVoice} from 'react-icons/md'
 
+
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
+
 const ContetntSquare = ({selected, data, id}) => {
+
   const dispatch = useDispatch();
 
-  if(selected) {
-    dispatch(changeNode({id, type: 'content'}))
+  if (selected) {
+    dispatch(changeNode({ id, type: "content" }));
   } else {
-    dispatch(undoChange())
+    dispatch(undoChange());
   }
-  
 
   return (
     <Container /* onClick={handleClick} */>
- <Header>
+      <Header>
         <WhatsappLogo>
           <BsWhatsapp size={25} fill="#FFF" />
         </WhatsappLogo>
@@ -45,6 +48,7 @@ const ContetntSquare = ({selected, data, id}) => {
         </Text>
       </Header>
       <MiniChat className="text-center mt-6">
+
         <Message>
       {data.range ? (
         <>
@@ -118,46 +122,86 @@ const ContetntSquare = ({selected, data, id}) => {
               hour: "numeric",
               minute: "numeric",
             })}
-          </sub>
-        </Message>
+          </>
+        )}
+        {data.audio === undefined ? (
+          <></>
+        ) : (
+          <>
+            {audios.map((conn) => {
+              return (
+                <MessageContainer>
+                  <p>Auidio Salvo</p>
+                </MessageContainer>
+              );
+            })}
+          </>
+        )}
+        {data.text === undefined ? (
+          <></>
+        ) : (
+          <>
+            {text.map((conn) => {
+              return (
+                <MessageContainer>
+                  <p>{conn.value}</p>
+                </MessageContainer>
+              );
+            })}
+          </>
+        )}
         {data.textArea}
       </MiniChat>
-      <NodeResizer 
-      minHeight={200}
-      minWidth={200}
-      isVisible={selected}
-      lineClassName='border-blue-400'
-      handleClassName='h-3 w-3 bg-white border-2 rounded border-blue-400'
+      <NodeResizer
+        minHeight={200}
+        minWidth={200}
+        isVisible={selected}
+        lineClassName="border-blue-400"
+        handleClassName="h-3 w-3 bg-white border-2 rounded border-blue-400"
       />
-        <Handle
-         id='right'
-         type='source'
-         position={Position.Right}
-         className='-right-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80'
-        />
-         
-        <Handle
-         id='left' 
-         type='source' 
-         position={Position.Left}
-         className='-left-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80'
-        />
+      <Handle
+        id="right"
+        type="source"
+        position={Position.Right}
+        className="-right-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80"
+      />
 
-        <Handle
-         id='top'
-         type='source'
-         position={Position.Top}
-         className='-top-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80'
-        />
-         
-        <Handle
-         id='bootom' 
-         type='source' 
-         position={Position.Bottom}
-         className='-bottom-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80'
-        />
+      <Handle
+        id="left"
+        type="source"
+        position={Position.Left}
+        className="-left-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80"
+      />
+
+      <Handle
+        id="top"
+        type="source"
+        position={Position.Top}
+        className="-top-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80"
+      />
+
+      <Handle
+        id="bootom"
+        type="source"
+        position={Position.Bottom}
+        className="-bottom-5 w-3 h-3 border-2 bg-transparent bg-blue-400/80"
+      />
     </Container>
-  )
-}
+  );
+};
 
-export default ContetntSquare
+export const MessageContainer = ({children}) => {
+  return (
+    <Message>
+      {children}
+      <sub>
+        {new Date().toLocaleTimeString("pt-BR", {
+          hour: "numeric",
+          minute: "numeric",
+        })}
+      </sub>
+    </Message>
+  );
+};
+
+export default ContetntSquare;

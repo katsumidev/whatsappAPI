@@ -1,5 +1,13 @@
 var crypto = require("crypto");
 const apiUrl = process.env.API_URL;
+const axios = require("axios");
+
+const axiosReq = axios.create({
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
 function encryptKey(key, userToken) {
   return `${userToken}:${crypto
@@ -9,26 +17,21 @@ function encryptKey(key, userToken) {
 }
 
 const initUser = async (req, res) => {
+  // cria a instância de usuário
   const { token, key, userToken } = req.body;
   const hashed_key = encryptKey(key, userToken);
 
-  fetch(
-    `${apiUrl}/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=${process.env.SERVER_URL}/webHook/userHandler`,
-    {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    }
-  )
+  axiosReq
+    .get(
+      `${apiUrl}/instance/init?token=${token}&key=${hashed_key}&webhook=true&webhookUrl=${process.env.SERVER_URL}/webHook/userHandler`
+    )
     .then(async (response) => {
-      let data = await response.json();
-      console.log(data);
+      let data = await response.data;
 
       if (data.qrcode.url != "") {
+        // gera o qr code do usuário
         setTimeout(() => {
-          fetch(data.qrcode.url, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }).then(async (qrres) => {
+          axiosReq.get(data.qrcode.url).then(async (qrres) => {
             let qr = await qrres.text();
 
             return res.send({ key: data.key, qrdata: qr });
@@ -46,41 +49,34 @@ const initUser = async (req, res) => {
 const deleteIns = async (req, res) => {
   const { key } = req.body;
 
-  fetch(`${apiUrl}/instance/delete?key=${key}`, {
-    // deleta a instância criada para esse usuário
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Methods": "GET, POSconst PTIONS =PUT, DELETE",
-    },
-  }).then(async (response) => {
-    fetch(`${apiUrl}/instance/logout?key=${key}`, {
-      // assim que a instância é deletada, faz o logout do usuário da API
-      method: "DELETE",
+  axios
+    .delete(`${apiUrl}/instance/delete?key=${key}`, {
+      // deleta a instância criada para esse usuário
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Methods": "GET, POSconst PTIONS =PUT, DELETE",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
       },
+    })
+    .then(async (response) => {
+      axios.delete(`${apiUrl}/instance/logout?key=${key}`, {
+        // assim que a instância é deletada, faz o logout do usuário da API
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, DELETE",
+        },
+      });
     });
-  });
 };
 
 const listIns = async (req, res) => {
   const { userToken } = req.body;
-
-  fetch(`${apiUrl}/instance/list`, {
-    // Lista todos os usuários conectados na API
-    method: "get",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  }).then(async (response) => {
-    let data = await response.json();
+  // Lista todos os usuários conectados na API
+  axiosReq.get(`${apiUrl}/instance/list`).then(async (response) => {
+    let data = await response.data;
 
     switch (response.status) {
       case 200:
@@ -93,38 +89,34 @@ const listIns = async (req, res) => {
 const getInfo = async (req, res) => {
   const { key } = req.body;
 
-  fetch(
-    // pega as informações do usuário da API
-    `${apiUrl}/instance/info?key=${key}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  ).then(async (response) => {
-    let data = await response.json();
+  axiosReq
+    .get(
+      // pega as informações do usuário da API
+      `${apiUrl}/instance/info?key=${key}`
+    )
+    .then(async (response) => {
+      let data = await response.data;
 
-    if (data.instance_data.user.id != null) {
-      // se o usuário já está cadastrado no sistema, significa que ele escaneou o qrcode com sucesso.
-      return res.status(200).send(data);
-    } else {
-      // caso o contrário:
-      return res.status(404).send("Usuário não encontrado");
-    }
-  });
+      if (data.instance_data.user.id != null) {
+        // se o usuário já está cadastrado no sistema, significa que ele escaneou o qrcode com sucesso.
+        return res.status(200).send(data);
+      } else {
+        // caso o contrário:
+        return res.status(404).send("Usuário não encontrado");
+      }
+    });
 };
 
 const downloadPfp = async (req, res) => {
+  // baixa a foto de perfil do usuário da aplicação
   const { key, id } = req.body;
 
-  fetch(`${apiUrl}/misc/downProfile?key=${key}&id=${id}`, {
-    method: "GET",
-  }).then(async (response) => {
-    let data = await response.json();
-    return res.send(data.data);
-  });
+  axiosReq
+    .get(`${apiUrl}/misc/downProfile?key=${key}&id=${id}`)
+    .then(async (response) => {
+      let data = await response.data;
+      return res.send(data.data);
+    });
 };
 
 const checkStatus = async (req, res) => {
@@ -132,27 +124,22 @@ const checkStatus = async (req, res) => {
 
   const hashed_key = encryptKey(key, userToken);
 
-  fetch(
-    // pega as informações do usuário da API
-    `${apiUrl}/instance/info?key=${hashed_key}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  ).then(async (response) => {
-    let data = await response.json();
+  axiosReq
+    .get(
+      // pega as informações do usuário da API
+      `${apiUrl}/instance/info?key=${hashed_key}`
+    )
+    .then(async (response) => {
+      let data = await response.data;
 
-    if (data.instance_data.user.id != null) {
-      // se o usuário já está cadastrado no sistema, significa que ele escaneou o qrcode com sucesso.
-      return res.status(200).send("Usuário encontrado e registrado");
-    } else {
-      // caso o contrário:
-      return res.status(404).send("Usuário não encontrado");
-    }
-  });
+      if (data.instance_data.user.id != null) {
+        // se o usuário já está cadastrado no sistema, significa que ele escaneou o qrcode com sucesso.
+        return res.status(200).send("Usuário encontrado e registrado");
+      } else {
+        // caso o contrário:
+        return res.status(404).send("Usuário não encontrado");
+      }
+    });
 };
 
 module.exports = {
