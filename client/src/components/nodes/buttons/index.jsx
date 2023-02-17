@@ -1,12 +1,10 @@
 import { NodeResizer } from "@reactflow/node-resizer";
-import React, { useState } from "react";
+import React from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
-import { AiFillAlert } from "react-icons/ai";
 import { BsWhatsapp } from "../../../styles/Icons";
 import {
   Container,
-  H1,
   WhatsappLogo,
   Header,
   Text,
@@ -23,15 +21,11 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ButtonSquare = ({ selected, data }) => {
-  const [text, setText] = useState(data.textAreaB)
-  const [answers, setAnswers] = useState(data.answers)
+const ButtonSquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
-  console.log(`Respostas: ${answers}`)
-
   if (selected) {
-    dispatch(changeNode({ data, type: "button" }));
+    dispatch(changeNode({ id, type: "button" }));
   } else {
     dispatch(undoChange());
   }
@@ -50,8 +44,8 @@ const ButtonSquare = ({ selected, data }) => {
       <MiniChat className="text-center mt-6">
         <Message>
           Texto da pergunta:
-          {answers ? (
-             <p><b>{answers}</b></p>
+          {data.answers ? (
+             <p><b>{data.answers}</b></p>
           ) : (
            <></>
           )}
@@ -64,7 +58,7 @@ const ButtonSquare = ({ selected, data }) => {
         </Message>
         {data.textAreaB ? (
           <>
-            {text.map((con) => {
+            {data.textAreaB.map((con) => {
               return (
                 <ButtonMessage>{con.value}</ButtonMessage>
               )

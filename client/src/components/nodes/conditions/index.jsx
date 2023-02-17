@@ -1,10 +1,9 @@
 import { NodeResizer } from "@reactflow/node-resizer";
-import React, {useState} from "react";
+import React from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
-import { BsArrowLeftRight } from "react-icons/bs";
 import { TbArrowFork } from "../../../styles/Icons";
-import { Container, H1, Header, ConditionLogo, Text, Conditions, True, False } from "./styles";
+import { Container, Header, ConditionLogo, Text, Conditions, True, False } from "./styles";
 import { useDispatch } from "react-redux";
 import { changeNode, undoChange } from "../../../redux/nodeSlice";
 
@@ -12,13 +11,11 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ConditionSquare = ({ selected, data }) => {
-  const [condition, setCondition] = useState(data.condition);
-  const [isOpen, setIsOpen] = useState(data.isOpen);
+const ConditionSquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
   if (selected) {
-    dispatch(changeNode({ data, type: "condition" }));
+    dispatch(changeNode({ id, type: "condition" }));
   } else {
     dispatch(undoChange());
   }
@@ -41,7 +38,7 @@ const ConditionSquare = ({ selected, data }) => {
         </True>
           {data.condition ? (
           <>
-            <p><strong>Horário de Atendimento</strong> é <b>{isOpen}</b></p>
+            <p><strong>Horário de Atendimento</strong> é <b>{data.isOpen}</b></p>
             <hr />
           </>
         ): (

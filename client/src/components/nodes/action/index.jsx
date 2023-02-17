@@ -3,25 +3,25 @@ import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsLightningChargeFill} from 'react-icons/bs';
-import { Container, H1, SquareContent, Header, ActionLogo, Text, Sub } from './styles';
+import { Container, SquareContent, Header, ActionLogo, Text, Sub } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
-import { useState } from 'react';
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ActionSquare = ({ selected, data }) => {
-  const [action, setAction] = useState(data.actionSelect)
+const ActionSquare = ({ selected, data, id }) => {
 
   const dispatch = useDispatch();
 
   if(selected) {
-    dispatch(changeNode({data, type: 'action'}))
+    dispatch(changeNode({id, type: 'action'}))
   } else {
     dispatch(undoChange())
   }
+
+
 
 
   return (
@@ -35,18 +35,11 @@ const ActionSquare = ({ selected, data }) => {
       </Header>
       <SquareContent>
         <strong>Inscrição em Sequência</strong>
-        {data.actionSelect ? (
-            <>
-              {action === '8hours' ?(
-                <p>8 horas do dia seguinte</p>
-              ): (
-                <p>Esquenta chip</p>
-              )}
-            </>
-          ): <>
-              <p>Selecione uma ação</p>
-            </>
-        }
+        {data.actionSelect === 'esquentaChip' ? (
+          <p>Esquenta chip</p>
+        ): (
+          <p>8 horas do dia seguinte</p>
+        )}
       </SquareContent>
       <NodeResizer 
       minHeight={200}

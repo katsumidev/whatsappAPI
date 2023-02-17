@@ -1,9 +1,9 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React, { useState } from 'react'
+import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsArrowsAngleExpand} from '../../../styles/Icons';
-import { Container, H1, SquareContent, RandomLogo, Header, Text, Sub } from './styles';
+import { Container, SquareContent, RandomLogo, Header, Text, Sub } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -11,13 +11,11 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const RandomSquare = ({ selected, data }) => {
-  const [ranges, setRanges] = useState(data.randomRange)
-
+const RandomSquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
   if(selected) {
-    dispatch(changeNode({data, type: 'random'}))
+    dispatch(changeNode({id, type: 'random'}))
   } else {
     dispatch(undoChange())
   }
@@ -33,11 +31,9 @@ const RandomSquare = ({ selected, data }) => {
           <Sub>Se conecte com outro fluxo</Sub>
         </Text>
       </Header>
-      {data.randomRange === undefined ? (
-        <></>
-      ): (
+      {data.randomRange ? (
         <>
-          {ranges.map((ran, index) => {
+          {data.randomRange.map((ran, index) => {
             return (
               <SquareContent>
                 <strong>{index + 1}</strong>
@@ -46,27 +42,10 @@ const RandomSquare = ({ selected, data }) => {
             )
           })}
         </>
+      ): (
+        <>
+        </>
       )}
-      <SquareContent>
-        <strong>1</strong>
-        {data.randomRangeOne}%
-      </SquareContent>
-      <SquareContent>
-        <strong>2</strong>
-        {data.randomRangeTwo}%
-      </SquareContent>
-      <SquareContent>
-        <strong>3</strong>
-        {data.randomRangeThree}%
-      </SquareContent>
-      <SquareContent>
-        <strong>4</strong>
-        {data.randomRangeFour}%
-      </SquareContent>
-      <SquareContent>
-        <strong>5</strong>
-        {data.randomRangeFive}%
-      </SquareContent>
       <NodeResizer 
       minHeight={200}
       minWidth={200}
