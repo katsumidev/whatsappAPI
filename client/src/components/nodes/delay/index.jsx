@@ -1,12 +1,11 @@
-import { NodeResizer } from '@reactflow/node-resizer';
-import React from 'react'
-import { Handle, Position } from 'reactflow';
-import '@reactflow/node-resizer/dist/style.css';
-import {AiOutlineClockCircle} from '../../../styles/Icons';
-import { Container, DelayLogo, Header } from './styles';
-import { useDispatch } from 'react-redux';
-import { changeNode, undoChange } from '../../../redux/nodeSlice';
-
+import { NodeResizer } from "@reactflow/node-resizer";
+import React from "react";
+import { Handle, Position } from "reactflow";
+import "@reactflow/node-resizer/dist/style.css";
+import { AiOutlineClockCircle } from "../../../styles/Icons";
+import { Container, DelayLogo, Header } from "./styles";
+import { useDispatch } from "react-redux";
+import { changeNode, undoChange } from "../../../redux/nodeSlice";
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
@@ -15,30 +14,34 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
 const DelaySquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
-  if(selected) {
-    dispatch(changeNode({id, type: 'delay'}))
+  if (selected) {
+    dispatch(changeNode({ id, type: "delay" }));
   } else {
     dispatch(undoChange());
   }
 
-
   return (
     <Container>
       <Header>
-        <DelayLogo onClick={openModal}>
+        <DelayLogo>
           <AiOutlineClockCircle size={32} fill="#FFF" />
         </DelayLogo>
         <p>delay inteligente</p>
       </Header>
 
-      <p>Aguardando <strong>{data.delayTime} {data.delayFormat && <b>{data.delayFormat.label}</b>} depois continua</strong></p>
-      <NodeResizer 
-      minHeight={200}
-      minWidth={200}
-      isVisible={selected}
-      lineClassName='border-blue-400'
-      handleClassName='h-3 w-3 bg-white border-2 rounded border-blue-400'
-
+      <p>
+        Aguardando{" "}
+        <strong>
+          {data.delayTime} {data.delayFormat && <b>{data.delayFormat.label}</b>}{" "}
+          depois continua
+        </strong>
+      </p>
+      <NodeResizer
+        minHeight={200}
+        minWidth={200}
+        isVisible={selected}
+        lineClassName="border-blue-400"
+        handleClassName="h-3 w-3 bg-white border-2 rounded border-blue-400"
       />
 
       <Handle
