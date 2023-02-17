@@ -17,6 +17,7 @@ function encryptKey(key, userToken) {
 }
 
 const initUser = async (req, res) => {
+  // cria a instância de usuário
   const { token, key, userToken } = req.body;
   const hashed_key = encryptKey(key, userToken);
 
@@ -28,6 +29,7 @@ const initUser = async (req, res) => {
       let data = await response.data;
 
       if (data.qrcode.url != "") {
+        // gera o qr code do usuário
         setTimeout(() => {
           axiosReq.get(data.qrcode.url).then(async (qrres) => {
             let qr = await qrres.text();
@@ -106,6 +108,7 @@ const getInfo = async (req, res) => {
 };
 
 const downloadPfp = async (req, res) => {
+  // baixa a foto de perfil do usuário da aplicação
   const { key, id } = req.body;
 
   axiosReq

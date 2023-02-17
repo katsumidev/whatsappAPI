@@ -9,9 +9,9 @@ const url = process.env.SERVER_URL;
 
 const userHandler = async (req, res) => {
   switch (req.body.type) {
-    case "connection":
+    case "connection": // se caso o web hook recebido por do tipo de conexão
       if (req.body.body.connection == "open") {
-        socket.ioObject.emit("key", req.body.instanceKey);
+        socket.ioObject.emit("key", req.body.instanceKey); // diga para o front-end que o usuário escaneou o qrcode
       }
       break;
     case "message":
@@ -31,6 +31,7 @@ const userHandler = async (req, res) => {
       // }
 
       if (req.body.body.key.fromMe == false) {
+        // execute apenas se essa mensagem veio de outra pessoa
         let data = await livechat.getReceiverChat(
           // pega o chat da conversa
           req.body.instanceKey,
@@ -55,6 +56,7 @@ const userHandler = async (req, res) => {
             type: "text",
           });
         } else if (req.body.body.message.imageMessage) {
+          // imagens
           const pushName = req.body.body.pushName;
           const buffer = Buffer.from(req.body.body.msgContent, "base64");
 
@@ -74,7 +76,6 @@ const userHandler = async (req, res) => {
           );
           fs.writeFileSync(dest, buffer);
 
-          // imagens
           await livechat.saveReceiverMsg({
             text: `/files/${hashedBuffer}.jpg`,
             from: req.body.body.key.remoteJid.split("@")[0],
@@ -88,6 +89,7 @@ const userHandler = async (req, res) => {
             type: "file",
           });
         } else if (req.body.body.message.stickerMessage) {
+          // figurinhas
           await livechat.saveReceiverMsg({
             text: req.body.body.message.stickerMessage.url,
             from: req.body.body.key.remoteJid.split("@")[0],
@@ -97,6 +99,7 @@ const userHandler = async (req, res) => {
             type: "file",
           });
         } else if (req.body.body.message.audioMessage) {
+          // audios
           await livechat.saveReceiverMsg({
             text: req.body.body.message.audioMessage.url,
             from: req.body.body.key.remoteJid.split("@")[0],
@@ -110,6 +113,7 @@ const userHandler = async (req, res) => {
             type: "file",
           });
         } else if (req.body.body.message.extendedTextMessage.text) {
+          // texto2
           await livechat.saveReceiverMsg({
             text: req.body.body.message.extendedTextMessage.text,
             from: req.body.body.key.remoteJid.split("@")[0],
@@ -142,7 +146,7 @@ const userHandler = async (req, res) => {
             type: "quotedText",
           });
         } else {
-          console.log("sem handle")
+          console.log("sem handle");
         }
       }
 

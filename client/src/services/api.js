@@ -1,5 +1,6 @@
-import axios from "axios";
+// este arquivo guardar todas as funções responsaveis por fazer conexões e requisições ao banco de dados
 
+import axios from "axios";
 const url = process.env.REACT_APP_URL;
 const apiUrl = process.env.REACT_APP_API_URL
 

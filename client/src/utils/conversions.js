@@ -1,3 +1,5 @@
+// classe responsavel por fazer algumas conversões para o brasil
+
 export const convertToPhone = (p) => {
   if (p != null) {
     p =

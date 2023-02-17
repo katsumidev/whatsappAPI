@@ -36,7 +36,7 @@ import {
   IoMdContact,
   BiSearchAlt,
   MdArrowBackIos,
-  MdArrowForwardIos
+  MdArrowForwardIos,
 } from "../../styles/Icons";
 import NewUserModal from "../../components/NewUserModal";
 import { addNewContact } from "../../services/api";
@@ -44,11 +44,6 @@ import { addNewContact } from "../../services/api";
 function UserPanel() {
   const [contacts, setContacts] = useState([]);
   const [numbers, setNumbers] = useState([]);
-  const [phoneNumber, setPhoneNumber] = useState(0);
-  const [contactNumber, setContactNumber] = useState(0);
-  const [contactName, setContactName] = useState("");
-  const [username, setUsername] = useState("");
-  const [msg, setMsg] = useState("");
   const [searchBox, setSearchBox] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
   const { userIns } = useParams();
@@ -59,10 +54,8 @@ function UserPanel() {
   const pageCount = Math.ceil(contacts.length / 10);
 
   const handlePageClick = (event) => {
+    // paginação da data-table
     const newOffset = (event.selected * 10) % contacts.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 
@@ -85,6 +78,7 @@ function UserPanel() {
   useEffect(() => {}, [searchBox]);
 
   const handleFileChange = async (event) => {
+    // responsavel pela função de importação de contatos através de um arquivo excel.
     const file = event.target.files[0];
     const reader = new FileReader();
 
@@ -106,7 +100,6 @@ function UserPanel() {
             user_id: userIns,
           });
         });
-        console.log("Salvo com sucesso");
         window.location.reload(false);
       } catch (error) {}
     };
@@ -292,39 +285,40 @@ function UserPanel() {
                           {searchBox != ""
                             ? contacts
                                 .filter((contact) =>
-                                  contact.contact?.toLowerCase()
+                                  contact.contact
+                                    ?.toLowerCase()
                                     .includes(searchBox?.toLowerCase())
                                 )
                                 .map((contact, index) => {
                                   return (
                                     <tr key={index}>
-                                    <td className="text-center">
-                                      <Checkbox value={contact.number} />
-                                    </td>
-                                    <td className="text-center">
-                                      <span>
-                                        <ProfilePicture
-                                          src={
-                                            contact.pfp != null
-                                              ? contact.pfp
-                                              : defaultPic
-                                          }
-                                          onError={({ currentTarget }) => {
-                                            currentTarget.onerror = null;
-                                            currentTarget.src = defaultPic;
-                                          }}
-                                        ></ProfilePicture>
-                                      </span>
-                                    </td>
-                                    <td className="id-nome">
-                                      {contact.contact}
-                                    </td>
-                                    <td>{convertToPhone(contact.number)}</td>
-                                    <td className="inscrito">
-                                      {convertToFullDate(contact.date)}
-                                    </td>
-                                  </tr>
-                                  )
+                                      <td className="text-center">
+                                        <Checkbox value={contact.number} />
+                                      </td>
+                                      <td className="text-center">
+                                        <span>
+                                          <ProfilePicture
+                                            src={
+                                              contact.pfp != null
+                                                ? contact.pfp
+                                                : defaultPic
+                                            }
+                                            onError={({ currentTarget }) => {
+                                              currentTarget.onerror = null;
+                                              currentTarget.src = defaultPic;
+                                            }}
+                                          ></ProfilePicture>
+                                        </span>
+                                      </td>
+                                      <td className="id-nome">
+                                        {contact.contact}
+                                      </td>
+                                      <td>{convertToPhone(contact.number)}</td>
+                                      <td className="inscrito">
+                                        {convertToFullDate(contact.date)}
+                                      </td>
+                                    </tr>
+                                  );
                                 })
                             : currentItems.map((contact, index) => {
                                 return (

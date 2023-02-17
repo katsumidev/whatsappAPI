@@ -123,13 +123,18 @@ export const ContactName = styled.div`
   }
 
   small {
-    text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
     color: var(--grey);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
+
+    span {
+      display: inline-block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
 
     svg {
       height: 15px;
@@ -526,4 +531,4 @@ export const EndColumn = styled.div`
     font-size: 11px;
     color: var(--grey);
   }
-`
+`;

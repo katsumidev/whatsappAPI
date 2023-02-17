@@ -9,6 +9,7 @@ const axiosReq = axios.create({
 });
 
 const sendMessage = async (req, res) => {
+  // envia apenas um mensagem
   const { user_id, msg, phone_number } = req.body;
 
   axiosReq
@@ -22,6 +23,7 @@ const sendMessage = async (req, res) => {
 };
 
 const sendMultipleMessages = async (req, res) => {
+  // envia mensagens para multiplos contatos
   const { user_id, msg, number_list } = req.body;
 
   number_list.forEach((number) => {

@@ -1,3 +1,5 @@
+// essa classe exporta todos os icones que serão usados na aplicação
+
 export { GrFormClose } from "react-icons/gr";
 export {
   AiFillEye,
@@ -7,7 +9,7 @@ export {
   AiFillFileZip,
   AiOutlineInfoCircle,
   AiOutlineClockCircle,
-  AiFillCamera
+  AiFillCamera,
 } from "react-icons/ai";
 export { FaTrash } from "react-icons/fa";
 export {
@@ -22,14 +24,18 @@ export {
   BsListUl,
   BsLightningCharge,
   BsArrowsAngleContract,
-  BsArrowsAngleExpand
+  BsArrowsAngleExpand,
 } from "react-icons/bs";
 export { RiSendPlaneFill } from "react-icons/ri";
-export { MdOutlineEmojiEmotions, MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
+export {
+  MdOutlineEmojiEmotions,
+  MdArrowForwardIos,
+  MdArrowBackIos,
+} from "react-icons/md";
 export { IoDocument } from "react-icons/io5";
 export { HiDownload, HiLockClosed } from "react-icons/hi";
 export { MdEmail } from "react-icons/md";
 export { IoMdContact } from "react-icons/io";
 export { BiBookContent, BiSearchAlt } from "react-icons/bi";
-export {TbArrowFork} from "react-icons/tb"
-export {GrPrevious} from "react-icons/gr"
+export { TbArrowFork } from "react-icons/tb";
+export { GrPrevious } from "react-icons/gr";

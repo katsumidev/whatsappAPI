@@ -42,7 +42,6 @@ import {
   NewMessages,
   EndColumn,
 } from "./styles";
-import EmojiPicker from "emoji-picker-react";
 import InputEmoji from "react-input-emoji";
 import { Document, Page, pdfjs } from "react-pdf";
 import {
@@ -54,6 +53,7 @@ import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import defaultPic from "../../assets/defaultPic.jpg";
 import { FixedSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { convertToDate } from "../../utils/conversions";
 import {
   getContacts,
@@ -89,11 +89,11 @@ function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
   const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
   const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
-  const [currentPage, setCurrentPage] = useState(-15);
-  const [isOpen, setIsOpen] = useState(false);
-  const [newMessageFlag, setNewMessageFlag] = useState(false);
-  const [newContactMessageFlag, setNewContactMessageFlag] = useState(false);
-  const [floatMenuOpen, setFloatMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(-15); // usado para otimizar o carregamento do chat
+  const [isOpen, setIsOpen] = useState(false); 
+  const [newMessageFlag, setNewMessageFlag] = useState(false); // flag para verificar se o usuário enviou uma mensagem
+  const [newContactMessageFlag, setNewContactMessageFlag] = useState(false); // flag para verificar se o usuário recebeu uma mensagem
+  const [floatMenuOpen, setFloatMenuOpen] = useState(false); 
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
@@ -464,7 +464,11 @@ function ChatPage() {
                     <p>{contact.contact}</p>
                     {result != [] && (
                       <small>
-                        {(result[0]?.type == "text" && result[0]?.message) ||
+                        {(result[0]?.type == "text" && (
+                          <span>
+                            <BsCheckAll /> {result[0]?.message}
+                          </span>
+                        )) ||
                           (result[0]?.type == "file" && (
                             <>
                               <AiFillCamera /> Imagem
@@ -554,10 +558,9 @@ function ChatPage() {
           <>
             <Chat ref={scrollRef}>
               <Sentinel className="sentinel"></Sentinel>
-
               {chatMsgs.slice(currentPage).map((msg, index) => {
                 return (
-                  <>
+                  <section key={index}>
                     {userIns == msg.from ? (
                       <MessageContainer key={index}>
                         {msg.type == "quotedText" ? (
@@ -577,7 +580,10 @@ function ChatPage() {
                             {msg.type === "file" ? (
                               <>
                                 <FileMessage
-                                  message={{ msg: msg, pfp: userPictureUrl }}
+                                  message={{
+                                    msg: msg,
+                                    pfp: userPictureUrl,
+                                  }}
                                 />
                                 <p>{msg.caption}</p>
                                 <sub>
@@ -631,7 +637,7 @@ function ChatPage() {
                         )}
                       </MessageContainer>
                     )}
-                  </>
+                  </section>
                 );
               })}
               <AlwaysScrollToBottom />

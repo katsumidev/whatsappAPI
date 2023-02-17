@@ -6,7 +6,6 @@ export default createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         font-family: 'Quicksand', sans-serif;
-
     }
     
     body {

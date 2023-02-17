@@ -6,6 +6,7 @@ const webhook = require("../controllers/webHookController");
 const instance = require("../controllers/userInstance");
 const files = require("../controllers/fileController");
 const upload = require("../utils/upload");
+const path = require("path")
 
 const route = express.Router();
 
@@ -39,5 +40,6 @@ route.post("/instance/downloadPfp", instance.downloadPfp);
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);
 route.get("/file/:filename", files.getImage)
+route.use("/files", express.static(path.resolve(__dirname, "..", "..", "..", "tmp", "uploads")))
 
 module.exports = (app) => app.use("/", route)

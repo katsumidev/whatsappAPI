@@ -4,6 +4,7 @@ const axios = require("axios");
 const apiUrl = process.env.API_URL;
 
 const axiosReq = axios.create({
+  // cria a instância de conexão do axios, passando os headers necessários
   headers: {
     "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "*",
@@ -42,6 +43,7 @@ const getChat = async (req, res) => {
 };
 
 const getLastMessage = async (req, res) => {
+  // puxa a ultima mensagem que o contato enviou
   const { from, to } = req.body;
 
   let conversation = await LiveChat.findOne({
@@ -106,6 +108,7 @@ const newMessage = async (req, res) => {
 };
 
 const saveReceiverMsg = async (data) => {
+  // responsavel por salvar as mensagens recebidas por web socket
   const newMessage = new ChatMessage(data);
 
   await newMessage.save();
