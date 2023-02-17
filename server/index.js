@@ -1,13 +1,24 @@
 const express = require("express");
 var cors = require("cors");
+const path = require("path/posix");
 const bodyParser = require("body-parser");
 
 const app = express();
 require("dotenv").config();
 
+app.use(
+  "/files",
+  express.static(path.resolve(__dirname, "..", "tmp", "uploads"))
+);
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 
 require("./src/app/routes/Routes")(app);
 

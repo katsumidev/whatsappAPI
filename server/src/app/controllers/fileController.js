@@ -18,7 +18,7 @@ const uploadFile = async (req, res) => {
     return res.status(404).send("Arquivo não encontrado.");
   }
 
-  const imageUrl = `${url}/file/${req.file.filename}`;
+  const imageUrl = `/file/${req.file.filename}`;
   return res.status(200).json(imageUrl);
 };
 

@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const socket = require("../../../index");
+const fs = require("fs");
+const crypto = require("crypto");
 const livechat = require("../controllers/livechatController");
+const path = require("path");
+const url = process.env.SERVER_URL;
 
 const userHandler = async (req, res) => {
   switch (req.body.type) {
@@ -27,7 +31,8 @@ const userHandler = async (req, res) => {
       // }
 
       if (req.body.body.key.fromMe == false) {
-        let data = await livechat.getReceiverChat( // pega o chat da conversa
+        let data = await livechat.getReceiverChat(
+          // pega o chat da conversa
           req.body.instanceKey,
           req.body.body.key.remoteJid.split("@")[0]
         );
@@ -50,13 +55,28 @@ const userHandler = async (req, res) => {
             type: "text",
           });
         } else if (req.body.body.message.imageMessage) {
+          const pushName = req.body.body.pushName;
           const buffer = Buffer.from(req.body.body.msgContent, "base64");
-          const path = "/uploads/" + req.body.body.message.imageMessage.fileSha256 + ".jpg"
-          fs.writeFileSync(path, buffer);
+
+          const hash = crypto.randomBytes(20).toString("hex");
+          const hashedBuffer = `${hash.toString("hex")}-${pushName
+            .replaceAll(/\s/g, "")
+            .replaceAll(/[^0-9a-zA-Z.]/g, "")}`;
+
+          const dest = path.resolve(
+            __dirname,
+            "..",
+            "..",
+            "..",
+            "tmp",
+            "uploads",
+            `${hashedBuffer}.jpg`
+          );
+          fs.writeFileSync(dest, buffer);
 
           // imagens
           await livechat.saveReceiverMsg({
-            text: path,
+            text: `/files/${hashedBuffer}.jpg`,
             from: req.body.body.key.remoteJid.split("@")[0],
             to: req.body.instanceKey,
             chatId: chatId,
@@ -68,8 +88,6 @@ const userHandler = async (req, res) => {
             type: "file",
           });
         } else if (req.body.body.message.stickerMessage) {
-          console.log(req.body.body.message.stickerMessage)
-
           await livechat.saveReceiverMsg({
             text: req.body.body.message.stickerMessage.url,
             from: req.body.body.key.remoteJid.split("@")[0],
@@ -77,7 +95,7 @@ const userHandler = async (req, res) => {
             chatId: chatId,
             read: false,
             type: "file",
-          })
+          });
         } else if (req.body.body.message.audioMessage) {
           await livechat.saveReceiverMsg({
             text: req.body.body.message.audioMessage.url,
@@ -90,6 +108,19 @@ const userHandler = async (req, res) => {
 
           socket.ioObject.emit("message", {
             type: "file",
+          });
+        } else if (req.body.body.message.extendedTextMessage.text) {
+          await livechat.saveReceiverMsg({
+            text: req.body.body.message.extendedTextMessage.text,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            chatId: chatId,
+            read: false,
+            type: "text",
+          });
+
+          socket.ioObject.emit("message", {
+            type: "text",
           });
         } else if (
           // mensagens marcadas
@@ -110,9 +141,9 @@ const userHandler = async (req, res) => {
           socket.ioObject.emit("message", {
             type: "quotedText",
           });
+        } else {
+          console.log("sem handle")
         }
-      } else {
-        console.log("JOJ")
       }
 
       break;

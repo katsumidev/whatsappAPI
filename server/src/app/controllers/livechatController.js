@@ -1,6 +1,14 @@
 const LiveChat = require("../models/livechat");
 const ChatMessage = require("../models/chatmessage");
+const axios = require("axios");
 const apiUrl = process.env.API_URL;
+
+const axiosReq = axios.create({
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
 const getChat = async (req, res) => {
   try {
@@ -66,19 +74,25 @@ const newMessage = async (req, res) => {
 
   try {
     if (type != "file") {
-      fetch(`${apiUrl}/message/text?key=${from}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          id: to,
-          message: text,
-        }),
-      }).then(async (response) => {
-        return res.status(200).send("mensagem enviada com sucesso");
-      });
+      axiosReq
+        .post(
+          `${apiUrl}/message/text?key=${from}`,
+          {
+            id: to,
+            message: text,
+          },
+          {}
+        )
+        .then((axiosRes) => {
+          switch (axiosRes.status) {
+            case 201:
+              return res.status(200).send("mensagem enviada");
+              break;
+            case 404:
+              return res.status(404).send("rota não encontrada");
+              break;
+          }
+        });
     }
 
     await newMessage.save();
@@ -94,29 +108,11 @@ const newMessage = async (req, res) => {
 const saveReceiverMsg = async (data) => {
   const newMessage = new ChatMessage(data);
 
-  try {
-    if (data.type != "file") {
-      fetch(`${apiUrl}/message/text?key=${data.from}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          id: data.to,
-          message: data.text,
-        }),
-      }).then(async (response) => {});
-    }
-
-    await newMessage.save();
-    await LiveChat.findByIdAndUpdate(data.chatId, {
-      message: data.text,
-      caption: data.caption,
-    });
-  } catch (err) {
-    return console.log("FALHA ", err);
-  }
+  await newMessage.save();
+  await LiveChat.findByIdAndUpdate(data.chatId, {
+    message: data.text,
+    caption: data.caption,
+  });
 };
 
 const getReceiverChat = async (from, to) => {

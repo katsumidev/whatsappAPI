@@ -6,7 +6,6 @@ import {
   Container,
   ChatMain,
   ChatInputContainer,
-  ChatInput,
   ContactTopBar,
   MessageContainer,
   Chat,
@@ -24,12 +23,10 @@ import {
   Image,
   SendOptions,
   Caption,
-  EmojiSelectorMenu,
   ContactsList,
   Menu,
   VideoContainer,
   DocumentViewer,
-  EmojiMenu,
   ImageMessage,
   ImagePreview,
   PreviewBackground,
@@ -42,8 +39,8 @@ import {
   MyProfile,
   SearchContainer,
   Contacts,
-  LastMessage,
   NewMessages,
+  EndColumn,
 } from "./styles";
 import EmojiPicker from "emoji-picker-react";
 import InputEmoji from "react-input-emoji";
@@ -83,6 +80,7 @@ import {
   AiFillFileZip,
   BsCheckAll,
   BiSearchAlt,
+  AiFillCamera,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -94,15 +92,15 @@ function ChatPage() {
   const [currentPage, setCurrentPage] = useState(-15);
   const [isOpen, setIsOpen] = useState(false);
   const [newMessageFlag, setNewMessageFlag] = useState(false);
+  const [newContactMessageFlag, setNewContactMessageFlag] = useState(false);
   const [floatMenuOpen, setFloatMenuOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [caption, setCaption] = useState("");
-  const [emojiMenuIsOpen, setEmojiMenuOpen] = useState(false);
   const [userPictureUrl, setUserPicture] = useState("");
   const [contactsMessages, setContactsMessages] = useState([
-    { contact: "", message: "", unreadMessages: 0 },
+    { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
   ]);
   const [searchBox, setSearchBox] = useState("");
   const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
@@ -129,7 +127,13 @@ function ChatPage() {
       setChatMsgs(data);
     };
     getMessageDetails();
-  }, [selectedContact, chatId, newMessageFlag, currentPage]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
+  }, [
+    selectedContact,
+    chatId,
+    newMessageFlag,
+    currentPage,
+    newContactMessageFlag,
+  ]); // o hook é disparado toda vez que o usuário seleciona um chat ou uma mensagem é enviada ou recebida
 
   useEffect(() => {
     const intersectionObserver = new IntersectionObserver((entries) => {
@@ -161,7 +165,7 @@ function ChatPage() {
 
     const saveReceiverMsg = async () => {
       // ao receber a mensagem vinda do socket
-      setNewMessageFlag((prev) => !prev);
+      setNewContactMessageFlag((prev) => !prev);
     };
 
     // hook que recebe as requisições de socket do servidor (os sockets mandam as mensagem recebidas pelo usuário)
@@ -369,6 +373,8 @@ function ChatPage() {
                 {
                   contact: contact.number,
                   message: data.data.lastMessage.text,
+                  date: convertToDate(data.data.lastMessage.date),
+                  type: data.data.lastMessage.type,
                   unreadMessages: data.data.unreadMessagesCount,
                 },
               ]);
@@ -385,6 +391,9 @@ function ChatPage() {
                   data.data.lastMessage.text;
                 temporaryarray[targetIndex].unreadMessages =
                   data.data.unreadMessagesCount;
+                temporaryarray[targetIndex].date = convertToDate(
+                  data.data.lastMessage.date
+                );
                 setContactsMessages(temporaryarray);
               }
             }
@@ -393,7 +402,7 @@ function ChatPage() {
       });
     };
     getLast();
-  }, [contacts, newMessageFlag]); // esse hook é disparado sempre que o usuário recebe uma nova mensagem ou a lista de contatos é atualizada.
+  }, [contacts, newContactMessageFlag]); // esse hook é disparado sempre que o usuário recebe uma nova mensagem ou a lista de contatos é atualizada.
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -453,17 +462,23 @@ function ChatPage() {
                   />
                   <ContactName>
                     <p>{contact.contact}</p>
-                    {result != [] ? (
-                      <small>{result[0]?.message}</small>
-                    ) : (
-                      console.log("equal")
+                    {result != [] && (
+                      <small>
+                        {(result[0]?.type == "text" && result[0]?.message) ||
+                          (result[0]?.type == "file" && (
+                            <>
+                              <AiFillCamera /> Imagem
+                            </>
+                          ))}
+                      </small>
                     )}
                   </ContactName>
-                  {result[0]?.unreadMessages > 0 ? (
-                    <NewMessages>{result[0]?.unreadMessages}</NewMessages>
-                  ) : (
-                    <></>
-                  )}
+                  <EndColumn>
+                    <sub>{result[0]?.date}</sub>
+                    {result[0]?.unreadMessages > 0 && (
+                      <NewMessages>{result[0]?.unreadMessages}</NewMessages>
+                    )}
+                  </EndColumn>
                 </ContactRow>
               );
             })}
@@ -508,7 +523,9 @@ function ChatPage() {
                   <h3>Pré-visualização indisponivel.</h3>
                 </AudioPreviewContainer>
               )}
-            {file.type.includes("image") && <Image src={fileUrl} />}
+            {file.type.includes("image") && (
+              <Image src={`${process.env.REACT_APP_URL}${fileUrl}`} />
+            )}
             {file.type.includes("video") && (
               <video controls>
                 <source src={fileUrl} type="video/mp4" />
@@ -596,7 +613,7 @@ function ChatPage() {
                             {msg.type === "file" ? (
                               <>
                                 <FileMessage
-                                receiver
+                                  receiver
                                   message={{
                                     msg: msg,
                                     pfp: selectedContact.contactPfp,
@@ -772,9 +789,13 @@ const FileMessage = ({ receiver, message }) => {
         message.msg?.text?.includes(el)
       ) && (
         <ImageMessage
-          src={receiver ? `${process.env.REACT_APP_URL}/${message.msg.text}` : message.msg.text}
+          src={`${process.env.REACT_APP_URL}${message.msg.text}`}
           alt={message.msg.text}
-          onClick={() => openImageFullPreview(message.msg.text)}
+          onClick={() =>
+            openImageFullPreview(
+              `${process.env.REACT_APP_URL}${message.msg.text}`
+            )
+          }
         />
       )}
     </>

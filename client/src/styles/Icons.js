@@ -6,7 +6,8 @@ export {
   AiOutlinePaperClip,
   AiFillFileZip,
   AiOutlineInfoCircle,
-  AiOutlineClockCircle
+  AiOutlineClockCircle,
+  AiFillCamera
 } from "react-icons/ai";
 export { FaTrash } from "react-icons/fa";
 export {

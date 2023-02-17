@@ -1,5 +1,13 @@
 const User = require("../models/user");
-const apiUrl = process.env.API_URL
+const apiUrl = process.env.API_URL;
+const axios = require("axios");
+
+const axiosReq = axios.create({
+  headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
 const newContact = async (req, res) => {
   const { phone_number, contact_name, user_token, user_id } = req.body;
@@ -18,40 +26,34 @@ const newContact = async (req, res) => {
     if (duplicate) {
       return res.status(503).send("O numero já está cadastrado");
     } else {
-      fetch(
-        `${apiUrl}/misc/downProfile?key=${user_id}&id=${phone_number}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      ).then(async (response) => {
-        let data = await response.json();
+      axiosReq
+        .get(`${apiUrl}/misc/downProfile?key=${user_id}&id=${phone_number}`)
+        .then(async (response) => {
+          let data = await response.data;
 
-        User.findOneAndUpdate(
-          {
-            userId: user_token,
-          },
-          {
-            $push: {
-              contactList: {
-                phoneNumber: phone_number,
-                contactName: contact_name,
-                picture: data.data,
-                createdAt: new Date(),
+          User.findOneAndUpdate(
+            {
+              userId: user_token,
+            },
+            {
+              $push: {
+                contactList: {
+                  phoneNumber: phone_number,
+                  contactName: contact_name,
+                  picture: data.data,
+                  createdAt: new Date(),
+                },
               },
             },
-          },
-          { new: true },
-          (err, arr) => {
-            if (err) {
-              return res.status(500).send(err);
+            { new: true },
+            (err, arr) => {
+              if (err) {
+                return res.status(500).send(err);
+              }
+              res.status(200).json(arr.contactList);
             }
-            res.status(200).json(arr.contactList);
-          }
-        );
-      });
+          );
+        });
     }
   });
 };
@@ -89,7 +91,7 @@ const consultContacts = async (req, res) => {
           number: item.phoneNumber,
           contact: item.contactName,
           pfp: item.picture,
-          date: item.createdAt
+          date: item.createdAt,
         };
       });
 
@@ -101,19 +103,13 @@ const consultContacts = async (req, res) => {
 const getContactPic = async (req, res) => {
   const { user_id, contact_number } = req.body;
 
-  fetch(
-    `${apiUrl}/misc${apiUrl}user_id}&id=${contact_number}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  ).then(async (response) => {
-    let data = await response.json();
+  axiosReq
+    .get(`${apiUrl}/misc/downProfile?key=${user_id}&id=${contact_number}`)
+    .then(async (response) => {
+      let data = await response.data;
 
-    return res.send(data.data);
-  });
+      return res.send(data.data);
+    });
 };
 
 module.exports = {
