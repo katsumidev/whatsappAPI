@@ -32,7 +32,7 @@ export {
   MdArrowForwardIos,
   MdArrowBackIos,
 } from "react-icons/md";
-export { IoDocument } from "react-icons/io5";
+export { IoDocument, IoClose } from "react-icons/io5";
 export { HiDownload, HiLockClosed } from "react-icons/hi";
 export { MdEmail } from "react-icons/md";
 export { IoMdContact } from "react-icons/io";

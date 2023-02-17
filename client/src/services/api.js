@@ -2,7 +2,7 @@
 
 import axios from "axios";
 const url = process.env.REACT_APP_URL;
-const apiUrl = process.env.REACT_APP_API_URL
+const apiUrl = process.env.REACT_APP_API_URL;
 
 export const addNewContact = async (data) => {
   try {
@@ -21,7 +21,7 @@ export const deleteUserContact = async (data) => {
 };
 
 export const getContacts = async (data) => {
-  console.log(url)
+  console.log(url);
   try {
     return await axios.post(`${url}/contacts/consultContacts`, data);
   } catch (error) {
@@ -52,7 +52,6 @@ export const getUserPicture = async (data) => {
     console.log("Error while calling newConversations API ", error);
   }
 };
-
 
 export const InitiateInstance = async (data) => {
   try {
@@ -104,7 +103,10 @@ export const sendMessage = async (data) => {
 
 export const sendImage = async (data) => {
   try {
-    return await axios.post(`${apiUrl}/message/image?key=${data.from}`, data.data);
+    return await axios.post(
+      `${apiUrl}/message/image?key=${data.from}`,
+      data.data
+    );
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -112,7 +114,10 @@ export const sendImage = async (data) => {
 
 export const sendDoc = async (data) => {
   try {
-    return await axios.post(`${apiUrl}/message/doc?key=${data.from}`, data.data);
+    return await axios.post(
+      `${apiUrl}/message/doc?key=${data.from}`,
+      data.data
+    );
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -120,7 +125,10 @@ export const sendDoc = async (data) => {
 
 export const sendVid = async (data) => {
   try {
-    return await axios.post(`${apiUrl}/message/video?key=${data.from}`, data.data);
+    return await axios.post(
+      `${apiUrl}/message/video?key=${data.from}`,
+      data.data
+    );
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -128,11 +136,14 @@ export const sendVid = async (data) => {
 
 export const sendAudio = async (data) => {
   try {
-    return await axios.post(`${apiUrl}/message/audio?key=${data.from}`, data.data);
+    return await axios.post(
+      `${apiUrl}/message/audio?key=${data.from}`,
+      data.data
+    );
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
-}
+};
 
 export const getCurrentChat = async (data) => {
   try {
@@ -164,4 +175,12 @@ export const getContactLastMessage = async (data) => {
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
-}
+};
+
+export const getUserStatus = async (data) => {
+  try {
+    return await axios.post(`${url}/contacts/getStatus`, data);
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};

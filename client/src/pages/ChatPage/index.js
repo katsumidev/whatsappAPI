@@ -81,23 +81,26 @@ import {
   BsCheckAll,
   BiSearchAlt,
   AiFillCamera,
+  IoClose,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
+import ContactInfoPage from "./ContactInfoPage";
+import FilePreviewPage from "./FilePreviewPage";
 
 function ChatPage() {
   const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
   const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
   const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
   const [currentPage, setCurrentPage] = useState(-15); // usado para otimizar o carregamento do chat
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
+  const [profileView, setProfileView] = useState(false);
   const [newMessageFlag, setNewMessageFlag] = useState(false); // flag para verificar se o usuário enviou uma mensagem
   const [newContactMessageFlag, setNewContactMessageFlag] = useState(false); // flag para verificar se o usuário recebeu uma mensagem
-  const [floatMenuOpen, setFloatMenuOpen] = useState(false); 
+  const [floatMenuOpen, setFloatMenuOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
-  const [caption, setCaption] = useState("");
   const [userPictureUrl, setUserPicture] = useState("");
   const [contactsMessages, setContactsMessages] = useState([
     { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
@@ -176,7 +179,7 @@ function ChatPage() {
     };
   }, []);
 
-  const handleSendMsg = async (chatId, from, to, text, type) => {
+  const handleSendMsg = async (chatId, from, to, text, type, caption) => {
     // função usada para salvar as mensagens tanto do sender quanto do receiver
     let messageValue = {};
 
@@ -263,7 +266,7 @@ function ChatPage() {
     getImage();
   }, [file]);
 
-  const handleFileMessage = async () => {
+  const handleFileMessage = async (caption) => {
     // envia mensagens de documentos/imagens, audios, documentos em geral
     const data = new FormData();
     data.append("file", file);
@@ -285,9 +288,8 @@ function ChatPage() {
         break;
     }
 
-    handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file");
+    handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file", caption);
 
-    setCaption("");
     setIsOpen(false);
     setNewMessageFlag((prev) => !prev);
   };
@@ -303,7 +305,7 @@ function ChatPage() {
   const closeImagePreview = () => {
     // fecha o preview de imagens
     setFile();
-    setIsOpen(false);
+    setIsOpen(!isOpen);
   };
 
   useEffect(() => {
@@ -404,6 +406,10 @@ function ChatPage() {
     getLast();
   }, [contacts, newContactMessageFlag]); // esse hook é disparado sempre que o usuário recebe uma nova mensagem ou a lista de contatos é atualizada.
 
+  const closeView = () => {
+    setProfileView(!profileView);
+  };
+
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   return (
@@ -489,7 +495,7 @@ function ChatPage() {
         </Contacts>
       </ContactsList>
       <ChatMain>
-        <ContactTopBar>
+        <ContactTopBar onClick={closeView}>
           <ContactPfp
             src={
               selectedContact.contactPfp != null
@@ -504,58 +510,23 @@ function ChatPage() {
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
         {isOpen ? (
-          <SendImageContainer>
-            <ImageOptions>
-              <CloseBtn onClick={() => closeImagePreview()}>X</CloseBtn>
-            </ImageOptions>
-            {file.type.includes("pdf") && (
-              <DocumentViewer>
-                <Document file={fileUrl}>
-                  <Page
-                    pageNumber={1}
-                    width={400}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                </Document>
-              </DocumentViewer>
-            )}
-            {!file.type.includes("pdf") &&
-              file.type.includes("application") && (
-                <AudioPreviewContainer>
-                  <AiFillFileZip />
-                  <h3>Pré-visualização indisponivel.</h3>
-                </AudioPreviewContainer>
-              )}
-            {file.type.includes("image") && (
-              <Image src={`${process.env.REACT_APP_URL}${fileUrl}`} />
-            )}
-            {file.type.includes("video") && (
-              <video controls>
-                <source src={fileUrl} type="video/mp4" />
-              </video>
-            )}
-            {file.type.includes("audio") && (
-              <AudioPreviewContainer>
-                <BsFillFileEarmarkMusicFill />
-                <h3>Pré-visualização indisponivel.</h3>
-              </AudioPreviewContainer>
-            )}
-            <SendOptions>
-              <Caption
-                type="text"
-                onChange={(e) => setCaption(e.target.value)}
-                placeholder="Descrição da imagem.."
-              />
-              <MessageBtn
-                className="file"
-                size={30}
-                onClick={() => handleFileMessage()}
-              />
-            </SendOptions>
-          </SendImageContainer>
+          <FilePreviewPage
+            type={file.type}
+            fileUrl={fileUrl}
+            closePreview={closeImagePreview}
+            handleSend={handleFileMessage}
+          />
         ) : (
           <>
+            {profileView && (
+              <ContactInfoPage
+                picture={selectedContact.contactPfp}
+                name={selectedContact.contactName}
+                number={selectedContact.contactId}
+                closeView={closeView}
+              />
+            )}
+
             <Chat ref={scrollRef}>
               <Sentinel className="sentinel"></Sentinel>
               {chatMsgs.slice(currentPage).map((msg, index) => {

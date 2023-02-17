@@ -115,6 +115,22 @@ const getContactPic = async (req, res) => {
       let data = await response.data;
 
       return res.send(data.data);
+    }).catch((err) => {
+      return res.send("[!! No picture found [!!]")
+    });
+};
+
+const getStatus = async (req, res) => {
+  const { user_id, contact_number } = req.body;
+
+  axiosReq
+    .get(`${apiUrl}/misc/getStatus?key=${user_id}&id=${contact_number}`)
+    .then(async (response) => {
+      let data = await response.data;
+      return res.send(data.data);
+    })
+    .catch((err) => {
+      return res.send("[!] No status found [!]");
     });
 };
 
@@ -123,4 +139,5 @@ module.exports = {
   deleteContact,
   consultContacts,
   getContactPic,
+  getStatus,
 };

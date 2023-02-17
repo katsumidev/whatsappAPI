@@ -202,6 +202,7 @@ export const ContactTopBar = styled.div`
   gap: 15px;
   top: 0;
   box-shadow: var(--boxShadow);
+  cursor: pointer;
 
   p {
     font-weight: 600;

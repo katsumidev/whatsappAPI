@@ -83,7 +83,6 @@ const newMessage = async (req, res) => {
             id: to,
             message: text,
           },
-          {}
         )
         .then((axiosRes) => {
           switch (axiosRes.status) {

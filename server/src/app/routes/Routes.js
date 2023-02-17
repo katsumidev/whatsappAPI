@@ -18,6 +18,7 @@ route.post("/contacts/addContact", contacts.newContact);
 route.post("/contacts/deleteContact",  contacts.deleteContact);
 route.post("/contacts/consultContacts",  contacts.consultContacts);
 route.post("/contacts/getContactPic",  contacts.getContactPic);
+route.post("/contacts/getStatus",  contacts.getStatus);
 
 //livechat
 route.post("/livechat/getChat", livechat.getChat);
