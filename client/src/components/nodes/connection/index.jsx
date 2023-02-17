@@ -1,9 +1,9 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React, { useState } from 'react'
+import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
 import {BsArrowsAngleContract} from '../../../styles/Icons'
-import { Container, H1, Header, ConnectionLogo, Text, Sub } from './styles';
+import { Container, Header, ConnectionLogo, Text, Sub, ButtonConnection } from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 
@@ -11,12 +11,11 @@ import { changeNode, undoChange } from '../../../redux/nodeSlice';
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ConnectionSquare = ({ selected, data }) => {
-  const [connection, setConnection] = useState(data.connection)
+const ConnectionSquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
   if(selected) {
-    dispatch(changeNode({data, type: 'connection'}))
+    dispatch(changeNode({id, type: 'connection'}))
   } else {
     dispatch(undoChange())
   }
@@ -31,6 +30,14 @@ const ConnectionSquare = ({ selected, data }) => {
         <Text>
           <p>Conexão</p>
           <Sub>Se conecte com outro fluxo</Sub>
+          {data.connection && (
+            <>
+              <p>{data.connection}</p>
+              <ButtonConnection>
+                Abrir esse fluxo
+              </ButtonConnection>
+            </>
+          )}
         </Text>
       </Header>
       <NodeResizer 

@@ -1,12 +1,10 @@
 import { NodeResizer } from "@reactflow/node-resizer";
-import React, { useState } from "react";
+import React from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
-import { AiFillAlert } from "react-icons/ai";
 import { BsWhatsapp } from "../../../styles/Icons";
 import {
   Container,
-  H1,
   WhatsappLogo,
   Header,
   Text,
@@ -24,11 +22,7 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
 */
 
 const ButtonSquare = ({ selected, data, id }) => {
-  const [text, setText] = useState(data.textAreaB)
-  const [answers, setAnswers] = useState(data.answers)
   const dispatch = useDispatch();
-
-  console.log(`Respostas: ${answers}`)
 
   if (selected) {
     dispatch(changeNode({ id, type: "button" }));
@@ -50,8 +44,8 @@ const ButtonSquare = ({ selected, data, id }) => {
       <MiniChat className="text-center mt-6">
         <Message>
           Texto da pergunta:
-          {answers ? (
-             <p><b>{answers}</b></p>
+          {data.answers ? (
+             <p><b>{data.answers}</b></p>
           ) : (
            <></>
           )}
@@ -64,7 +58,7 @@ const ButtonSquare = ({ selected, data, id }) => {
         </Message>
         {data.textAreaB ? (
           <>
-            {text.map((con) => {
+            {data.textAreaB.map((con) => {
               return (
                 <ButtonMessage>{con.value}</ButtonMessage>
               )

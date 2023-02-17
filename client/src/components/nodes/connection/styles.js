@@ -15,6 +15,24 @@ export const Container = styled.div`
   }
 `;
 
+export const ButtonConnection = styled.button`
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+justify-content: space-around;
+cursor: pointer;
+vertical-align: middle;
+padding: 12px 28px;
+border-radius: 4px;
+height: 48px;
+outline: none;
+border: 1px solid rgba(0,0,0,0);
+font-weight: 600;
+font-size: 13px;
+line-height: 20px;
+color: #fff;
+`
+
 export const H1 = styled.h1`
   font-size: 12pt;
   display: flex;

@@ -6,20 +6,16 @@ import ReactFlow, {
   addEdge,
   useEdgesState,
   useNodesState,
-  useOnSelectionChange,
   MarkerType,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
 import ContetntSquare from "../nodes/content";
-import DefaultEdge from "../edges/Default-edge";
-import * as Toolbar from "@radix-ui/react-toolbar";
 import ButtonSquare from "../nodes/buttons";
 import ConditionSquare from "../nodes/conditions";
 import ConnectionSquare from "../nodes/connection";
 import RandomSquare from "../nodes/random";
 import DelaySquare from "../nodes/delay";
-import styled from "styled-components";
 import IntegrationSquare from "../nodes/integration";
 import {
   AiOutlineClockCircle,
@@ -29,15 +25,12 @@ import {
   TbArrowFork,
   BiBookContent,
   BsListUl,
-  BsWhatsapp,
 } from "../../styles/Icons";
 import ActionSquare from "../nodes/action";
 import {
   ActionBody,
   ActionHeader,
-  ButtonBody,
   ButtonHeader,
-  ButtonTextArea,
   ConditionBody,
   ConditionHeader,
   ConnectionBody,
@@ -48,12 +41,10 @@ import {
   DelayHeader,
   DelayRange,
   InputRange,
-  InputRangeRandom,
   InputTimeDelay,
   Modal,
   RandomHeader,
   SelectElement,
-  NodesBtn,
   AddNodeBtn,
   DelayBody,
   Options,
@@ -82,7 +73,6 @@ import { useSelector } from "react-redux";
 import {
   CircleMenu,
   CircleMenuItem,
-  TooltipPlacement,
 } from "react-circular-menu";
 import {AiOutlineFileAdd, AiFillSave} from 'react-icons/ai'
 import {CiImageOn} from 'react-icons/ci'
@@ -162,14 +152,8 @@ function Flow() {
   const [edges, setEdges, onEdgesChanges] = useEdgesState([]);
   const [nodes, setNodes, onNodesChanges] = useNodesState(INITIAL_NODES);
   const [activeTyping, setActiveTyping] = useState();
-  const [randomRangeOne, setRandomRangeOne] = useState([]);
-  const [randomRangeTwo, setRandomRangeTwo] = useState([]);
-  const [randomRangeThree, setRandomRangeThree] = useState([]);
-  const [randomRangeFour, setRandomRangeFour] = useState([]);
-  const [randomRangeFIve, setRandomRangeFive] = useState([]);
   const [answers, setAnswers] = useState();
   const [actionSelect, setActionSelect] = useState();
-  const [buttonTextArea, setButtonTextArea] = useState("");
   const [conditionSelect, setConditionSelect] = useState(ConditionSelectList);
   const [connectionSelect, setConnectionSelect] = useState(ConnectionSelectList);
   const [conditionValue, setConditionValue] = useState('Quer Reembolsar / trocar');
@@ -177,7 +161,6 @@ function Flow() {
   const [connectionValue, setConnectionValue] = useState("");
   const [delayTime, setDelayTime] = useState(5);
   const [delayFormat, setDelayFormat] = useState();
-  const { userIns, flowId } = useParams();
 
   /*Update nodes feature*/
 
@@ -366,46 +349,180 @@ function Flow() {
       }
       return nodesMap
     }))
-  }, [delayTime, setNodes, node.node.id])
+  }, [delayTime, setNodes]);
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          delayFormat: delayFormat
+        }
+      }
+      return nodesMap
+    }))
+  }, [delayFormat, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          actionSelect: actionSelect
+        }
+      }
+      return nodesMap
+    }))
+  }, [actionSelect, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          connection: connectionValue
+        }
+      }
+      return nodesMap
+    }))
+  }, [connectionValue, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          answers: answers
+        }
+      }
+      return nodesMap
+    }))
+  }, [answers, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          textAreaB: textAreaButton
+        }
+      }
+      return nodesMap
+    }))
+  }, [textAreaButton, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          isOpen: isOpen
+        }
+      }
+      return nodesMap
+    }))
+  }, [isOpen, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          condition: conditionValue
+        }
+      }
+      return nodesMap
+    }))
+  }, [conditionValue, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          randomRange: rangeInputRandom
+        }
+      }
+      return nodesMap
+    }))
+  }, [rangeInputRandom, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          range: inputsContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [inputsContent, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          image: imageContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [imageContent, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          video: videoContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [videoContent, setNodes]);
+ 
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          file: fileContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [fileContent, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          audio: audioContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [audioContent, setNodes]); 
+
+  useEffect(() => {
+    setNodes((nds) => nds.map((nodesMap) => {
+      if(nodesMap.id === node.node.id) {
+        nodesMap.data = {
+          ...nodesMap.data,
+          text: textAreaContent
+        }
+      }
+      return nodesMap
+    }))
+  }, [textAreaContent, setNodes]); 
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
   );
-
-  inputsContent.map(con => {
-    console.log(`Valores: ${con.value}`)
-  })
-
-  const [isSave, setIsSave] = useState(false)
-  const [isSaveText, setIsSaveText] = useState(false)
-  const [isSaveAction, setIsSaveAction] = useState(false)
-  const [isSaveConditions, setIsSaveConditions] = useState(false)
-  const [isSaveConnections, setIsSaveConnections] = useState(false)
-  const [isSaveRange, setIsSaveRange] = useState(false)
-  const [isSaveDelay, setIsSaveDelay] = useState(false)
-
-  const handleSave = () => {
-    setIsSave(true)
-  }
-  const handleSaveText = () => {
-    setIsSaveText(true)
-  }
-  const handleSaveAction = () => {
-    setIsSaveAction(true)
-  }
-  const handleSaveConditions = () => {
-    setIsSaveConditions(true)
-  }
-  const handleSaveConnection = () => {
-    setIsSaveConnections(true)
-  }
-  const handleSaveRandomRange = () => {
-    setIsSaveRange(true)
-  }
-  const handleSaveDelay = () => {
-    setIsSaveDelay(true)
-  }
 
   function addSquareNode(type) {
     setNodes((nodes) => [
@@ -417,21 +534,7 @@ function Flow() {
           x: 750,
           y: 350,
         },
-        data: {
-          range: isSave ? inputsContent : undefined,
-          image: isSave ? imageContent : undefined,
-          video: isSave ? videoContent : undefined,
-          file: isSave ? fileContent : undefined,
-          audio: isSave ? audioContent : undefined,
-          text: isSave ? textAreaContent : undefined,
-          answers: isSaveText ? answers : undefined,
-          textAreaB: isSaveText ? textAreaButton : undefined,
-          actionSelect: isSaveAction ? actionSelect : undefined,
-          condition: isSaveConditions ? conditionValue : undefined,
-          isOpen: isSaveConditions ? isOpen : undefined,
-          connection: isSaveConnections ? connectionValue : undefined,
-          randomRange: isSaveRange ? rangeInputRandom : undefined,
-        },
+        data: {},
       },
     ]);
   }
@@ -526,7 +629,7 @@ function Flow() {
                     <>
                     <DelayRange>
                       Tipos de arquivos aceitos: jpg, jpeg, png, webp
-                    <input type="file" value={input.value} onChange={(e) => handleChangeImage(index, e)} />
+                    <input type="file"  accept=".jpg,.jpeg,.png,.webp" size="2000000" aria-label="Só aceitamos" value={input.value} onChange={(e) => handleChangeImage(index, e)} />
                     </DelayRange>
                     <ButtonDelete onClick={() => handleRemoveImage(index)}>Deletar</ButtonDelete>
                     </>
@@ -539,7 +642,13 @@ function Flow() {
                       Formatos aceitos .mp4
                       Tamanho máx.: 5MB
                     </p>
-                    <input type="file" value={input.value} onChange={(e) => handleChangeVideo(index, e)} />
+                    <input type="file" 
+                      accept=".mp3" 
+                      size="5000000" 
+                      aria-label="Só aceitamos" 
+                      value={input.value} 
+                      onChange={(e) => handleChangeVideo(index, e)} 
+                    />
                     <ButtonDelete onClick={() => handleRemoveVideo(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
@@ -548,8 +657,11 @@ function Flow() {
                   return (
                     <DelayRange>
                     <p>Formatos</p>
-                    <input style={{height: '200'}} type="file" value={input.value} onChange={(e) => handleChangeFile(index, e)} />
-                    <p>pdf,.doc,.docx,.htm,.html, .json,.xml,.txt,.csv,.zip, <br />.7z,.xls,.xlsx,.ppt,.pptx</p>                    
+                    <input type="file" 
+                      accept=".pdf,.doc,.docx,.htm,.html,.json,.xml,.txt,.csv,.zip,.7z,.xls,.xlsx,.ppt,.pptx" 
+                      value={input.value} 
+                      onChange={(e) => handleChangeFile(index, e)} 
+                    />
                     <ButtonDelete onClick={() => handleRemoveFile(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
@@ -563,7 +675,7 @@ function Flow() {
                       Tamanho máx.: 5MB
                     </p>
                     
-                    <input type="file" value={input.value} onChange={(e) => handleChangeAudio(index, e)} />
+                    <input type="file"  accept=".mp3" size="5000000" aria-label="Só aceitamos" value={input.value} onChange={(e) => handleChangeAudio(index, e)} />
                     <ButtonDelete onClick={() => handleRemoveAudio(index)}>Deletar</ButtonDelete>
                     </DelayRange>
                   )
@@ -590,7 +702,7 @@ function Flow() {
                   <CardIconButton><MdOutlineKeyboardVoice/></CardIconButton>  
                   <CardTextButton>Audio</CardTextButton>
                 </CardButtons>  
-                <CardButtons onClick={handleSave}>
+                <CardButtons>
                   <CardIconButton><AiFillSave/></CardIconButton>  
                   <CardTextButton>Salvar</CardTextButton>
                 </CardButtons>  
@@ -625,7 +737,6 @@ function Flow() {
                 )
               })}
               <CreateNewButton onClick={rangeInputRandom.length === 5 ? null : handleAddRangeInput}>+ Criar novo Botão</CreateNewButton>
-              <button onClick={handleSaveRandomRange}>Salvar</button>
             </>
           )}
           {node.node.type === "action" && (
@@ -651,7 +762,6 @@ function Flow() {
                   <option value="esquentaChip">Esquenta Chip</option>
                   <option value="8hours">8 Horas do dia seguinte</option>
                 </select>
-                <ButtonDelete onClick={handleSaveAction}>Salvar</ButtonDelete>
               </ActionBody>
             </>
           )}
@@ -688,7 +798,6 @@ function Flow() {
                         </MenuText>
                         <TextArea value={answers}
                           onChange={(e) => setAnswers(e.target.value)} />
-                      <ButtonDelete onClick={handleSaveText}>Salvar</ButtonDelete>
                   </ContainerTextArea>
                   <hr />
               {textAreaButton.map((input, index) => {
@@ -723,7 +832,6 @@ function Flow() {
                         <TextArea value={input.value}
                           onChange={(e) => handleChangeTextAreaButton(index, e)} />
                       <ButtonDelete onClick={() => handleRemoveTextAreaButton(index)}>Deletar</ButtonDelete>
-                      <ButtonDelete onClick={handleSaveText}>Salvar</ButtonDelete>
                   </ContainerTextArea>
                 )
               })}
@@ -758,7 +866,6 @@ function Flow() {
                     );
                   })}
                 </SelectCondition>
-                <ButtonDelete onClick={handleSaveConditions}>Salvar</ButtonDelete>
               </ConditionBody>
             </>
           )}
@@ -781,7 +888,6 @@ function Flow() {
                   })}
                 </SelectCondition>
               </ConnectionBody>
-              <ButtonDelete onClick={handleSaveConnection}>Salvar</ButtonDelete>
             </>
           )}
           {node.node.type === "delay" && (
@@ -804,7 +910,6 @@ function Flow() {
                     ]}
                   />
                 </Options>
-                <button onClick={handleSaveDelay}>Salvar</button>
               </DelayBody>
             </>
           )}
@@ -888,52 +993,6 @@ function Flow() {
           <Background gap={1} size={10} color="#f2f5f7" />
           <Controls />
         </ReactFlow>
-
-        {/* <NodesSelector
-        >
-          <NodesBtn
-            onClick={() => addSquareNode("square")}
-          >
-            Conteúdo
-            <BiBookContent className="ml-8" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("button")}
-          >
-            Botões
-            <AiFillAlert className="ml-7" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("action")}
-          >
-            Ação
-            <BsLightningChargeFill className="ml-7" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("condition")}
-          >
-            <p>Condição</p>
-            <BsArrowLeftRight className="ml-7" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("connection")}
-          >
-            Conexão
-            <BsArrowsAngleContract className="ml-7" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("random")}
-          >
-            Randomização
-            <AiOutlineArrowsAlt className="ml-11" />
-          </NodesBtn>
-          <NodesBtn
-            onClick={() => addSquareNode("delay")}
-          >
-            Delay
-            <AiOutlineClockCircle className="ml-8" />
-          </NodesBtn>
-        </NodesSelector> */}
       </Container>
     </>
   );

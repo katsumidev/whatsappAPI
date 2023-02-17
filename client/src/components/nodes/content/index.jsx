@@ -1,25 +1,29 @@
 import { NodeResizer } from '@reactflow/node-resizer';
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import { Handle, Position } from 'reactflow';
 import '@reactflow/node-resizer/dist/style.css';
-import {BiBookContent} from 'react-icons/bi';
 import {BsWhatsapp} from "../../../styles/Icons"
-import { Container, H1, Header, WhatsappLogo, Text, MiniChat, Message, ContentDiv } from './styles';
+import { 
+  Container, 
+  Header, 
+  WhatsappLogo, 
+  Text, 
+  MiniChat, 
+  Message, 
+  ContentDiv 
+} from './styles';
 import { useDispatch } from 'react-redux';
 import { changeNode, undoChange } from '../../../redux/nodeSlice';
 import {CiImageOn} from 'react-icons/ci'
+import {RxVideo} from 'react-icons/rx'
+import {FiFile} from 'react-icons/fi'
+import {MdOutlineKeyboardVoice} from 'react-icons/md'
 
 /*
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
 const ContetntSquare = ({selected, data, id}) => {
-  const [typingDelay, setTypingDelay] = useState(data.range);
-  const [images, setImages] = useState(data.image);
-  const [videos, setVideos] = useState(data.video);
-  const [files, setFiles] = useState(data.file);
-  const [audios, setAudios] = useState(data.audio);
-  const [text, setText] = useState(data.text);
   const dispatch = useDispatch();
 
   if(selected) {
@@ -42,62 +46,71 @@ const ContetntSquare = ({selected, data, id}) => {
       </Header>
       <MiniChat className="text-center mt-6">
         <Message>
-             {data.range === undefined ? (
-        <></>
-      ): (
-        <div>
-          {typingDelay.map((con) => {
+      {data.range ? (
+        <>
+          {data.range.map((con) => {
            return (
             <ContentDiv>
-              <p>Digintando em {con.value}</p>
+              <p>Digintando em {con.value} seg...</p>
             </ContentDiv>
            )
           })}
+        </>
+        ): (
+        <div>
         </div>
       )}
-      {data.image === undefined ? (
-        <></>
-      ) : (
+      {data.image ? (
         <>
-        {images.map(img => {
-          return <ContentDiv>Imagem</ContentDiv>
+          {data.image.map(img => {
+          return (
+            <ContentDiv>
+              <p style={{textAlign: 'center'}}>Imagem<CiImageOn/></p> 
+            </ContentDiv>)
         })}
         </>
-      )}
-      {data.video === undefined ? (
-        <></>
-      ): (
+      ) : (
         <>
-          {videos.map(conn => {
-            return <ContentDiv><p>Video Salvo</p></ContentDiv>
-          })}
         </>
       )}
-      {data.file === undefined ? (
-        <></>
-      ): (
+      {data.video ? (
         <>
-          {files.map(conn => {
-            return <ContentDiv><p>Arquivo Salvo</p></ContentDiv>
+          {data.video.map(conn => {
+            return <ContentDiv><p>Video Salvo<RxVideo/></p></ContentDiv>
           })}
         </>
-      )}
-      {data.audio === undefined ? (
-        <></>
       ): (
         <>
-          {audios.map(conn => {
-            return <ContentDiv><p>Auidio Salvo</p></ContentDiv>
-          })}
         </>
       )}
-      {data.text === undefined ? (
-        <></>
+      {data.file ? (
+        <>
+          {data.file.map(conn => {
+            return <ContentDiv><p>Arquivo Salvo<FiFile/></p></ContentDiv>
+          })}
+        </>
       ): (
         <>
-          {text.map(conn => {
+        </>
+      )}
+      {data.audio ? (
+        <>
+          {data.audio.map(conn => {
+            return <ContentDiv><p>Auidio Salvo<MdOutlineKeyboardVoice/></p></ContentDiv>
+          })}
+        </>
+      ): (
+        <>
+        </>
+      )}
+      {data.text ? (
+        <>
+          {data.text.map(conn => {
             return <ContentDiv><p>{conn.value}</p></ContentDiv>
           })}
+        </>
+      ): (
+        <>
         </>
       )}
           <sub>
