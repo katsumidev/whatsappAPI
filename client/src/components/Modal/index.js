@@ -18,7 +18,7 @@ function Modal() {
   const socket = io("http://127.0.0.1:3005"); // ip do back-end
 
   const initIns = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // cria uma nova instância de usuário
     let data = await InitiateInstance({
@@ -57,6 +57,15 @@ function Modal() {
     <Container>
       <Background onClick={() => closeModal()} />
       <ModalBox>
+        <h5>Conecte-se ao Whatsapp</h5>
+        {qrGenerated ? (
+          <p>
+            Escaneie o QR code utlizando a função dispostivos do seu Whatsapp
+            para conectar sua empresa, o Atendezap está aguardando sua conexão
+          </p>
+        ) : (
+          <p>Insira o nome da sua empresa para gerar QR code de acesso.</p>
+        )}
         <form onSubmit={(e) => initIns(e)}>
           <input
             type="text"
@@ -64,17 +73,14 @@ function Modal() {
             placeholder="Seu nome.."
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input
-            type="submit"
-            className="submitButton"
-          />
+          {qrGenerated && (
+            <>
+              <img src={html} />
+              {/** renderiza o qr code, a partir do momento em que o qrcode for escaneado, os dados do usuário serão salvos no banco de dados */}
+            </>
+          )}
+          <input type="submit" className="submitButton" />
         </form>
-        {qrGenerated && (
-          <>
-            <img src={html} />
-            {/** renderiza o qr code, a partir do momento em que o qrcode for escaneado, os dados do usuário serão salvos no banco de dados */}
-          </>
-        )}
       </ModalBox>
     </Container>
   );

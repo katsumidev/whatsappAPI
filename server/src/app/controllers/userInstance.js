@@ -31,8 +31,12 @@ const initUser = async (req, res) => {
       if (data.qrcode.url != "") {
         // gera o qr code do usuário
         setTimeout(() => {
-          axiosReq.get(data.qrcode.url).then(async (qrres) => {
-            let qr = await qrres.text();
+          axios.get(data.qrcode.url, {
+            headers: {
+              "Content-Type": "text/plain",
+            }
+          }).then(async (qrres) => {
+            let qr = await qrres.data;
 
             return res.send({ key: data.key, qrdata: qr });
           });

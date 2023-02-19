@@ -14,25 +14,31 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: row;
+    flex-direction: column;
     gap: 5px;
     transition: all 0.2s;
-
+    width: 90%;
+    
     input {
       width: 100%;
       padding: 10px;
       margin: 5px 0;
       border-radius: 6px;
-      border: 3px solid var(--accent-color);
       transition: all 0.2s;
+      border: none;
+      outline: none;
+      background-color: var(--tertiary-background);
+      box-shadow: var(--boxShadow);
+      font-size: 14px;
     }
 
     .submitButton {
-      width: 100px;
+      width: 100%;
       align-self: center;
       border: none;
       cursor: pointer;
       transition: all 0.2s;
+      background-color: var(--sendImage-background);
 
       :hover {
         background-color: var(--accent-color);
@@ -60,7 +66,19 @@ export const ModalBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 5px solid var(--accent-color);
+  max-width: 400px;
+  text-align: center;
+  gap: 10px;
+
+
+  h5 {
+    font-weight: 600;    
+  }
+
+  p {
+    font-size: 13px;
+    color: var(--grey);
+  }
 `;
 
 export const FinishButton = styled.div`
