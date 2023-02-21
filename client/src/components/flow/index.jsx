@@ -7,6 +7,8 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
   MarkerType,
+  useReactFlow,
+  ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
@@ -545,6 +547,17 @@ function Flow() {
     ]);
   }
 
+  // Save flow in database
+  const [rfInstance, setRfInstance] = useState(null);
+
+  const onSave = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem('ex', JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+
+
   const edgeTypes = {
     custom: CustomEdge,
   };
@@ -729,7 +742,7 @@ function Flow() {
                   <CardTextButton>Audio</CardTextButton>
 
                 </CardButtons>  
-                <CardButtons>
+                <CardButtons onClick={onSave}>
                   <CardIconButton><AiFillSave/></CardIconButton>  
                   <CardTextButton>Salvar</CardTextButton>
                 </CardButtons>
@@ -1028,7 +1041,7 @@ function Flow() {
             <AiOutlineClockCircle />
           </CircleMenuItem>
         </CircleMenu>
-
+        <ReactFlowProvider>
         <ReactFlow
           nodeTypes={NODE_TYPES}
           edgeTypes={edgeTypes}
@@ -1041,11 +1054,13 @@ function Flow() {
           connectionLineStyle={ConnectionLine}
           connectionMode={ConnectionMode.Loose}
           defaultEdgeOptions={edgeOptions}
+          onInit={setRfInstance}
           style={{ backgroundColor: "#E8E8E8" }}
         >
           <Background gap={1} size={10} color="#f2f5f7" />
           <Controls />
         </ReactFlow>
+        </ReactFlowProvider>
       </Container>
     </>
   );
