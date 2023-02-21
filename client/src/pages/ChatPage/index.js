@@ -17,22 +17,13 @@ import {
   QuotedMessageContainer,
   NormalMessage,
   Quoted,
-  SendImageContainer,
-  ImageOptions,
-  CloseBtn,
-  Image,
-  SendOptions,
-  Caption,
   ContactsList,
   Menu,
   VideoContainer,
-  DocumentViewer,
   ImageMessage,
   ImagePreview,
   PreviewBackground,
   AudioMessage,
-  AudioPreviewContainer,
-  DownloadOverlay,
   SearchBox,
   SearchInput,
   ContactHeader,
@@ -41,9 +32,10 @@ import {
   Contacts,
   NewMessages,
   EndColumn,
+  EmptyChat,
 } from "./styles";
 import InputEmoji from "react-input-emoji";
-import { Document, Page, pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import {
   FloatingMenu,
   MainButton,
@@ -52,9 +44,12 @@ import {
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
 import defaultPic from "../../assets/defaultPic.jpg";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { convertToDate } from "../../utils/conversions";
+import {
+  convertToDate,
+  convertToHour,
+  convertToMessageFormat,
+  convertoToFullStringDate,
+} from "../../utils/conversions";
 import {
   getContacts,
   getCurrentChat,
@@ -73,15 +68,12 @@ import {
   BsImage,
   IoDocument,
   BsCameraVideoFill,
-  HiDownload,
+  MdDownloadForOffline,
   BsFillPlayFill,
   BsFillPauseFill,
-  BsFillFileEarmarkMusicFill,
-  AiFillFileZip,
   BsCheckAll,
   BiSearchAlt,
   AiFillCamera,
-  IoClose,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -102,6 +94,7 @@ function ChatPage() {
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [userPictureUrl, setUserPicture] = useState("");
+  const [interactions, setInteractions] = useState(0);
   const [contactsMessages, setContactsMessages] = useState([
     { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
   ]);
@@ -113,6 +106,8 @@ function ChatPage() {
     contactId: "",
     contactPfp: "",
     contactName: "",
+    subscriptionTime: "",
+    contactEmail: "",
   }); // estado que guarda as informações do contato selecionado
   const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
   const navigate = useNavigate();
@@ -122,12 +117,13 @@ function ChatPage() {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
-      if (data.length > 20) {
-        setChatMsgs(data.slice(1).slice(currentPage));
+      setInteractions(data.length);
+
+      if (data.length > 15) {
+        setChatMsgs(data.slice(currentPage));
       } else {
         setChatMsgs(data);
       }
-      setChatMsgs(data);
     };
     getMessageDetails();
   }, [
@@ -212,7 +208,7 @@ function ChatPage() {
     setNewMessageFlag((prev) => !prev);
   };
 
-  const handleGetChat = async (number, pfp, name) => {
+  const handleGetChat = async (number, pfp, name, time, email) => {
     // essa função serve para buscar as informações do chat selecionado
     if (userIns != null && number != "") {
       let data = await getCurrentChat({ from: userIns, to: number });
@@ -223,6 +219,8 @@ function ChatPage() {
         contactId: number,
         contactPfp: pfp,
         contactName: name,
+        subscriptionTime: time,
+        contactEmail: email,
       });
       setCurrentPage(-15);
       setFile();
@@ -256,7 +254,7 @@ function ChatPage() {
     const getImage = async () => {
       if (file) {
         const data = new FormData();
-        data.append("name", file.name);
+        data.append("filename", file.name);
         data.append("file", file);
 
         let response = await uploadFile(data);
@@ -288,7 +286,14 @@ function ChatPage() {
         break;
     }
 
-    handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file", caption);
+    handleSendMsg(
+      chatId,
+      userIns,
+      selectedContact.contactId,
+      message,
+      "file",
+      caption
+    );
 
     setIsOpen(false);
     setNewMessageFlag((prev) => !prev);
@@ -451,7 +456,13 @@ function ChatPage() {
                 <ContactRow
                   key={index}
                   onClick={() =>
-                    handleGetChat(contact.number, contact.pfp, contact.contact)
+                    handleGetChat(
+                      contact.number,
+                      contact.pfp,
+                      contact.contact,
+                      convertoToFullStringDate(contact.date),
+                      contact.email
+                    )
                   }
                   selected={
                     selectedContact.contactId == contact.number
@@ -523,12 +534,17 @@ function ChatPage() {
                 picture={selectedContact.contactPfp}
                 name={selectedContact.contactName}
                 number={selectedContact.contactId}
+                subscriptionTime={selectedContact.subscriptionTime}
+                email={selectedContact.contactEmail}
+                interactions={interactions}
                 closeView={closeView}
               />
             )}
-
             <Chat ref={scrollRef}>
-              <Sentinel className="sentinel"></Sentinel>
+              <Sentinel className="sentinel" />
+              {chatMsgs.length <= 0 && (
+                <EmptyChat>Sem histórico de conversas!</EmptyChat>
+              )}
               {chatMsgs.slice(currentPage).map((msg, index) => {
                 return (
                   <section key={index}>
@@ -542,7 +558,7 @@ function ChatPage() {
                             </Quoted>
                             <p>{msg.text}</p>
                             <sub>
-                              {convertToDate(msg.date)}
+                              {convertToMessageFormat(msg.date)}
                               <BsCheckAll size={15} />
                             </sub>
                           </QuotedMessageContainer>
@@ -558,7 +574,7 @@ function ChatPage() {
                                 />
                                 <p>{msg.caption}</p>
                                 <sub>
-                                  {convertToDate(msg.date)}
+                                  {convertToMessageFormat(msg.date)}
                                   <BsCheckAll size={15} />
                                 </sub>
                               </>
@@ -566,7 +582,7 @@ function ChatPage() {
                               <NormalMessage>
                                 <p>{msg.text}</p>
                                 <sub>
-                                  {convertToDate(msg.date)}
+                                  {convertToMessageFormat(msg.date)}
                                   <BsCheckAll size={15} />
                                 </sub>
                               </NormalMessage>
@@ -583,7 +599,7 @@ function ChatPage() {
                               <p>{msg.quotedMessage}</p>
                             </Quoted>
                             <p>{msg.text}</p>
-                            <sub>{convertToDate(msg.date)}</sub>
+                            <sub>{convertToMessageFormat(msg.date)}</sub>
                           </QuotedMessageContainer>
                         ) : (
                           <>
@@ -601,7 +617,7 @@ function ChatPage() {
                             ) : (
                               <NormalMessage receiver>
                                 <p>{msg.text}</p>
-                                <sub>{convertToDate(msg.date)} </sub>
+                                <sub>{convertToMessageFormat(msg.date)} </sub>
                               </NormalMessage>
                             )}
                           </>
@@ -711,7 +727,6 @@ const FileMessage = ({ receiver, message }) => {
 
   return (
     <>
-      <DownloadOverlay onClick={() => download(message.msg.text, "jooj")} />
       {fullImageView && (
         <ImagePreview>
           <img src={previewUrl} />
@@ -723,8 +738,11 @@ const FileMessage = ({ receiver, message }) => {
       ) && (
         <DocumentContainer onClick={() => handleDownloadFile(message.msg.text)}>
           <IoDocument size={30} fill="#F34646" />
-          <p>{message.msg.text.split("file-")[1]}</p>
-          <HiDownload size={30} fill="#92AD9E" />
+          <div>
+            <p>{message.msg.text.split("file-")[2]}</p>
+            <p>{message.msg.text.split(".").pop().toUpperCase()}</p>
+          </div>
+          <MdDownloadForOffline size={30} fill="#A2ABB2" />
         </DocumentContainer>
       )}
       {[".mp4", ".mov"].some((el) => message.msg?.text?.includes(el)) && (

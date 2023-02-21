@@ -126,9 +126,7 @@ const ContetntSquare = ({ selected, data, id }) => {
             <>
               {data.text.map((conn) => {
                 return (
-                  <ContentDiv>
                     <p>{conn.value}</p>
-                  </ContentDiv>
                 );
               })}
             </>

@@ -93,6 +93,7 @@ function UserPanel() {
           console.log(
             `numero: ${files.telefone}, sobrenome: ${files.sobrenome}`
           );
+
           await addNewContact({
             phone_number: files.telefone,
             contact_name: files.sobrenome,
@@ -100,8 +101,11 @@ function UserPanel() {
             user_id: userIns,
           });
         });
+
         window.location.reload(false);
-      } catch (error) {}
+      } catch (error) {
+        console.log("erro de importação")
+      }
     };
 
     reader.readAsArrayBuffer(file);
@@ -112,6 +116,7 @@ function UserPanel() {
       {visible ? <NewUserModal /> : <></>}
       <input
         type="file"
+        accept=".xlsx"
         ref={fileinput}
         style={{ display: "none" }}
         onChange={handleFileChange}

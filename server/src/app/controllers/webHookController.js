@@ -1,11 +1,9 @@
 const express = require("express");
-const router = express.Router();
 const socket = require("../../../index");
 const fs = require("fs");
 const crypto = require("crypto");
 const livechat = require("../controllers/livechatController");
 const path = require("path");
-const url = process.env.SERVER_URL;
 
 const userHandler = async (req, res) => {
   switch (req.body.type) {

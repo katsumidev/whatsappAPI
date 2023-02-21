@@ -6,6 +6,7 @@ import {
   ModalBox,
   ContactNameInput,
   SaveContactBtn,
+  ContactEmailInput
 } from "./styles";
 import InputMask from "react-input-mask";
 import { convertToPhone } from "../../utils/conversions";
@@ -24,6 +25,7 @@ function NewUserModal() {
   const [contacts, setContacts] = useState([]);
   const [contactNumber, setContactNumber] = useState(0);
   const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
   const [numbers, setNumbers] = useState([]);
   const [username, setUsername] = useState("");
   const [msg, setMsg] = useState("");
@@ -73,6 +75,7 @@ function NewUserModal() {
         contact_name: contactName,
         user_token: localStorage.getItem("userToken"),
         user_id: userIns,
+        email: contactEmail
       });
       window.location.reload(false);
     } else {
@@ -138,6 +141,7 @@ function NewUserModal() {
               setContactNumber(e.target.value.replace(/[\W_]/g, ""))
             }
           />
+          <ContactEmailInput type="email" placeholder="Email.." onChange={(e) => setContactEmail(e.target.value)} />
           <SaveContactBtn type="submit" value="Enviar" />
         </form>
       </ModalBox>

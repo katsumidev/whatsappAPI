@@ -65,15 +65,13 @@ import {
   CreateNewButton,
   SelectCondition,
   InputRangeRandomContainer,
+  ButtonBody,
 } from "./styles";
 import { useParams } from "react-router";
 import ConnectionLine from "./ConnectionLine";
 import CustomEdge from "./CustomEdge";
 import { useSelector } from "react-redux";
-import {
-  CircleMenu,
-  CircleMenuItem,
-} from "react-circular-menu";
+import { CircleMenu, CircleMenuItem } from "react-circular-menu";
 import { AiOutlineFileAdd, AiFillSave } from "react-icons/ai";
 import { CiImageOn } from "react-icons/ci";
 import { RxVideo } from "react-icons/rx";
@@ -166,8 +164,6 @@ function Flow() {
   const [delayFormat, setDelayFormat] = useState();
 
   /*Update nodes feature*/
-
-  
 
   //Content Square State
   const [inputsContent, setInputsContent] = useState([
@@ -342,188 +338,217 @@ function Flow() {
 
   const node = useSelector((state) => state.node);
 
-  console.log(`Id passado no redux: ${node.node.id}`)
+  console.log(`Id passado no redux: ${node.node.id}`);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          delayTime: delayTime
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            delayTime: delayTime,
+          };
         }
-      }
-      return nodesMap
-    }))
+        return nodesMap;
+      })
+    );
   }, [delayTime, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          delayFormat: delayFormat
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            delayFormat: delayFormat,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [delayFormat, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [delayFormat, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          actionSelect: actionSelect
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            actionSelect: actionSelect,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [actionSelect, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [actionSelect, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          connection: connectionValue
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            connection: connectionValue,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [connectionValue, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [connectionValue, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          answers: answers
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            answers: answers,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [answers, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [answers, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          textAreaB: textAreaButton
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            textAreaB: textAreaButton,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [textAreaButton, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [textAreaButton, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          isOpen: isOpen
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            isOpen: isOpen,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [isOpen, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [isOpen, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          condition: conditionValue
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            condition: conditionValue,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [conditionValue, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [conditionValue, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          randomRange: rangeInputRandom
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            randomRange: rangeInputRandom,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [rangeInputRandom, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [rangeInputRandom, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          range: inputsContent
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            range: inputsContent,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [inputsContent, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [inputsContent, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          image: imageContent
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            image: imageContent,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [imageContent, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [imageContent, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          video: videoContent
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            video: videoContent,
+          };
         }
-      }
-      return nodesMap
-    }))
+        return nodesMap;
+      })
+    );
   }, [videoContent, setNodes]);
- 
-  useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          file: fileContent
-        }
-      }
-      return nodesMap
-    }))
-  }, [fileContent, setNodes]); 
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          audio: audioContent
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            file: fileContent,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [audioContent, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [fileContent, setNodes]);
 
   useEffect(() => {
-    setNodes((nds) => nds.map((nodesMap) => {
-      if(nodesMap.id === node.node.id) {
-        nodesMap.data = {
-          ...nodesMap.data,
-          text: textAreaContent
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            audio: audioContent,
+          };
         }
-      }
-      return nodesMap
-    }))
-  }, [textAreaContent, setNodes]); 
+        return nodesMap;
+      })
+    );
+  }, [audioContent, setNodes]);
 
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((nodesMap) => {
+        if (nodesMap.id === node.node.id) {
+          nodesMap.data = {
+            ...nodesMap.data,
+            text: textAreaContent,
+          };
+        }
+        return nodesMap;
+      })
+    );
+  }, [textAreaContent, setNodes]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -638,61 +663,73 @@ function Flow() {
                 {imageContent.map((input, index) => {
                   return (
                     <>
-
-                    <DelayRange>
-                      Tipos de arquivos aceitos: jpg, jpeg, png, webp
-                    <input type="file"  accept=".jpg,.jpeg,.png,.webp" size="2000000" aria-label="Só aceitamos" value={input.value} onChange={(e) => handleChangeImage(index, e)} />
-                    </DelayRange>
-                    <ButtonDelete onClick={() => handleRemoveImage(index)}>Deletar</ButtonDelete>
-
+                      <DelayRange>
+                        Tipos de arquivos aceitos: jpg, jpeg, png, webp
+                        <input
+                          type="file"
+                          accept=".jpg,.jpeg,.png,.webp"
+                          size="2000000"
+                          aria-label="Só aceitamos"
+                          value={input.value}
+                          onChange={(e) => handleChangeImage(index, e)}
+                        />
+                      </DelayRange>
+                      <ButtonDelete onClick={() => handleRemoveImage(index)}>
+                        Deletar
+                      </ButtonDelete>
                     </>
                   );
                 })}
                 {videoContent.map((input, index) => {
                   return (
-
                     <DelayRange>
-                    <p>
-                      Formatos aceitos .mp4
-                      Tamanho máx.: 5MB
-                    </p>
-                    <input type="file" 
-                      accept=".mp3" 
-                      size="5000000" 
-                      aria-label="Só aceitamos" 
-                      value={input.value} 
-                      onChange={(e) => handleChangeVideo(index, e)} 
-                    />
-                    <ButtonDelete onClick={() => handleRemoveVideo(index)}>Deletar</ButtonDelete>
-
+                      <p>Formatos aceitos .mp4 Tamanho máx.: 5MB</p>
+                      <input
+                        type="file"
+                        accept=".mp3"
+                        size="5000000"
+                        aria-label="Só aceitamos"
+                        value={input.value}
+                        onChange={(e) => handleChangeVideo(index, e)}
+                      />
+                      <ButtonDelete onClick={() => handleRemoveVideo(index)}>
+                        Deletar
+                      </ButtonDelete>
                     </DelayRange>
                   );
                 })}
                 {fileContent.map((input, index) => {
                   return (
-
                     <DelayRange>
-                    <p>Formatos</p>
-                    <input type="file" 
-                      accept=".pdf,.doc,.docx,.htm,.html,.json,.xml,.txt,.csv,.zip,.7z,.xls,.xlsx,.ppt,.pptx" 
-                      value={input.value} 
-                      onChange={(e) => handleChangeFile(index, e)} 
-                    />
-                    <ButtonDelete onClick={() => handleRemoveFile(index)}>Deletar</ButtonDelete>
+                      <p>Formatos</p>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.htm,.html,.json,.xml,.txt,.csv,.zip,.7z,.xls,.xlsx,.ppt,.pptx"
+                        value={input.value}
+                        onChange={(e) => handleChangeFile(index, e)}
+                      />
+                      <ButtonDelete onClick={() => handleRemoveFile(index)}>
+                        Deletar
+                      </ButtonDelete>
                     </DelayRange>
                   );
                 })}
                 {audioContent.map((input, index) => {
                   return (
                     <DelayRange>
-                    <p>
-                      Subir Áudio
-                      Formatos aceitos .mp3
-                      Tamanho máx.: 5MB
-                    </p>
-                    
-                    <input type="file"  accept=".mp3" size="5000000" aria-label="Só aceitamos" value={input.value} onChange={(e) => handleChangeAudio(index, e)} />
-                    <ButtonDelete onClick={() => handleRemoveAudio(index)}>Deletar</ButtonDelete>
+                      <p>Subir Áudio Formatos aceitos .mp3 Tamanho máx.: 5MB</p>
+
+                      <input
+                        type="file"
+                        accept=".mp3"
+                        size="5000000"
+                        aria-label="Só aceitamos"
+                        value={input.value}
+                        onChange={(e) => handleChangeAudio(index, e)}
+                      />
+                      <ButtonDelete onClick={() => handleRemoveAudio(index)}>
+                        Deletar
+                      </ButtonDelete>
                     </DelayRange>
                   );
                 })}
@@ -727,10 +764,11 @@ function Flow() {
                     <MdOutlineKeyboardVoice />
                   </CardIconButton>
                   <CardTextButton>Audio</CardTextButton>
-
-                </CardButtons>  
+                </CardButtons>
                 <CardButtons>
-                  <CardIconButton><AiFillSave/></CardIconButton>  
+                  <CardIconButton>
+                    <AiFillSave />
+                  </CardIconButton>
                   <CardTextButton>Salvar</CardTextButton>
                 </CardButtons>
                 <CardButtons
@@ -756,30 +794,35 @@ function Flow() {
               <p>ATENÇÃO! O soma total deve ser 100%</p>
               {rangeInputRandom.map((input, index) => {
                 return (
-                    <InputRangeRandomContainer key={index}>
-                      <p>{index + 1}</p>
-                      <InputRange
-                        type="range"
-                        value={input.value}
-                        onChange={(e) => handleChangeRangeInput(index, e)}
-                      />
-                      <span>{input.value}%</span>
-                      <button
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          paddingBottom: "15px",
-                        }}
-                        onClick={() => handleRemoveRangeInput(index)}
-                      >
-                        X
-                      </button>
-                    </InputRangeRandomContainer>
+                  <InputRangeRandomContainer key={index}>
+                    <p>{index + 1}</p>
+                    <InputRange
+                      type="range"
+                      value={input.value}
+                      onChange={(e) => handleChangeRangeInput(index, e)}
+                    />
+                    <span>{input.value}%</span>
+                    <button
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        paddingBottom: "15px",
+                      }}
+                      onClick={() => handleRemoveRangeInput(index)}
+                    >
+                      X
+                    </button>
+                  </InputRangeRandomContainer>
                 );
               })}
 
-              <CreateNewButton onClick={rangeInputRandom.length === 5 ? null : handleAddRangeInput}>+ Criar novo Botão</CreateNewButton>
-
+              <CreateNewButton
+                onClick={
+                  rangeInputRandom.length === 5 ? null : handleAddRangeInput
+                }
+              >
+                + Criar novo Botão
+              </CreateNewButton>
             </>
           )}
           {node.node.type === "action" && (
@@ -811,78 +854,87 @@ function Flow() {
           {node.node.type === "button" && (
             <>
               <ButtonHeader>Botões</ButtonHeader>
-              <p>Texto da pergunta</p>
-              <ContainerTextArea>
-
-                        <MenuText>
-                          <MenuLeft>
-                            <MenuItem>
-                              <SpanItem>
-                                <b>B</b>
-                              </SpanItem>
-                            </MenuItem>
-                            <MenuItem>
-                              <SpanItem>
-                                <i>I</i>
-                              </SpanItem>
-                            </MenuItem>
-                            <MenuItem>
-                              <SpanItem>
-                                <del>S</del>
-                              </SpanItem>
-                            </MenuItem>
-                          </MenuLeft>
-                          <MenuGroupLeft>
-                            <MenuItemDrop>
-                              <SpanItemMenuDrop>
+              <ButtonBody>
+                <p>Texto da pergunta</p>
+                <ContainerTextArea>
+                  <MenuText>
+                    <MenuLeft>
+                      <MenuItem>
+                        <SpanItem>
+                          <b>B</b>
+                        </SpanItem>
+                      </MenuItem>
+                      <MenuItem>
+                        <SpanItem>
+                          <i>I</i>
+                        </SpanItem>
+                      </MenuItem>
+                      <MenuItem>
+                        <SpanItem>
+                          <del>S</del>
+                        </SpanItem>
+                      </MenuItem>
+                    </MenuLeft>
+                    <MenuGroupLeft>
+                      <MenuItemDrop>
+                        <SpanItemMenuDrop>
+                          numero-de-indicacoes
+                        </SpanItemMenuDrop>
+                      </MenuItemDrop>
+                    </MenuGroupLeft>
+                  </MenuText>
+                  <TextArea
+                    value={answers}
+                    onChange={(e) => setAnswers(e.target.value)}
+                  />
+                </ContainerTextArea>
+                <hr />
+                <h4>Botões</h4>
+                {textAreaButton.map((input, index) => {
+                  return (
+                    <ContainerTextArea>
+                      <MenuText>
+                        <MenuLeft>
+                          <MenuItem>
+                            <SpanItem>
+                              <b>B</b>
+                            </SpanItem>
+                          </MenuItem>
+                          <MenuItem>
+                            <SpanItem>
+                              <i>I</i>
+                            </SpanItem>
+                          </MenuItem>
+                          <MenuItem>
+                            <SpanItem>
+                              <del>S</del>
+                            </SpanItem>
+                          </MenuItem>
+                        </MenuLeft>
+                        <MenuGroupLeft>
+                          <MenuItemDrop>
+                            <SpanItemMenuDrop>
                               numero-de-indicacoes
-                              </SpanItemMenuDrop>
-                            </MenuItemDrop>
-                          </MenuGroupLeft>
-                        </MenuText>
-                        <TextArea value={answers}
-                          onChange={(e) => setAnswers(e.target.value)} />
-                  </ContainerTextArea>
-                  <hr />
-              {textAreaButton.map((input, index) => {
-                return (
-                  <ContainerTextArea>
-                        <MenuText>
-                          <MenuLeft>
-                            <MenuItem>
-                              <SpanItem>
-                                <b>B</b>
-                              </SpanItem>
-                            </MenuItem>
-                            <MenuItem>
-                              <SpanItem>
-                                <i>I</i>
-                              </SpanItem>
-                            </MenuItem>
-                            <MenuItem>
-                              <SpanItem>
-                                <del>S</del>
-                              </SpanItem>
-                            </MenuItem>
-                          </MenuLeft>
-                          <MenuGroupLeft>
-                            <MenuItemDrop>
-                              <SpanItemMenuDrop>
-                              numero-de-indicacoes
-                              </SpanItemMenuDrop>
-                            </MenuItemDrop>
-                          </MenuGroupLeft>
-                        </MenuText>
-                        <TextArea value={input.value}
-                          onChange={(e) => handleChangeTextAreaButton(index, e)} />
-                      <ButtonDelete onClick={() => handleRemoveTextAreaButton(index)}>Deletar</ButtonDelete>
-
-                  </ContainerTextArea>
-                );
-              })}
-              <CreateNewButton onClick={(e) => handleAddTextAreaButton(e)}>
-                + Novo botão
-              </CreateNewButton>
+                            </SpanItemMenuDrop>
+                          </MenuItemDrop>
+                        </MenuGroupLeft>
+                      </MenuText>
+                      <TextArea
+                        value={input.value}
+                        onChange={(e) => handleChangeTextAreaButton(index, e)}
+                      />
+                      <ButtonDelete
+                        onClick={() => handleRemoveTextAreaButton(index)}
+                      >
+                        Deletar
+                      </ButtonDelete>
+                    </ContainerTextArea>
+                  );
+                })}
+                <CreateNewButton onClick={(e) => handleAddTextAreaButton(e)}>
+                  + Novo botão
+                </CreateNewButton>
+              </ButtonBody>
             </>
           )}
           {node.node.type === "condition" && (
@@ -918,7 +970,6 @@ function Flow() {
                     );
                   })}
                 </SelectCondition>
-
               </ConditionBody>
             </>
           )}

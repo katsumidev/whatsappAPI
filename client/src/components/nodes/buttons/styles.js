@@ -76,6 +76,7 @@ export const Message = styled.div`
   text-align: initial;
   font-size: 12px;
   width: 70%;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
 
