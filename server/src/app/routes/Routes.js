@@ -6,6 +6,7 @@ const webhook = require("../controllers/webHookController");
 const instance = require("../controllers/userInstance");
 const files = require("../controllers/fileController");
 const upload = require("../utils/upload");
+const flow = require("../controllers/flowController")
 const path = require("path")
 
 const route = express.Router();
@@ -37,6 +38,12 @@ route.post("/instance/listIns", instance.listIns);
 route.post("/instance/getInfo", instance.getInfo);
 route.post("/instance/checkStatus", instance.checkStatus);
 route.post("/instance/downloadPfp", instance.downloadPfp);
+
+//User  flows
+route.post("/flow/create", flow.newFlow);
+route.get("/flow/get", flow.getFlows)
+route.get("/flow/getOne", flow.getOneFlow)
+
 
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);

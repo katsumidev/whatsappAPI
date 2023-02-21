@@ -184,3 +184,27 @@ export const getUserStatus = async (data) => {
     console.log("Error while calling newMessage API", error);
   }
 };
+
+export const createFlow = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/create`, data)
+  } catch (error) {
+    console.log("Error while calling createFlow API", error);
+  }
+}
+
+export const getFlows = async (data) => {
+  try {
+    return await axios.get(`${url}/flow/get`)
+  } catch (error) {
+    console.log("Error while calling getFlow API", error);
+  }
+}
+
+export const getOneFlow = async () => {
+  try {
+    return await axios.get(`${url}/flow/getOne`)
+  } catch (error) {
+    console.log("Error while calling getOneFlow API", error);
+  }
+}
