@@ -4,7 +4,7 @@ const newFlow = async (req, res) => {
     const {name, execution, ctr, user_token} = req.body;
 
    
-    await User.findOneAndUpdate({userId: "teste1"}, {
+    await User.findOneAndUpdate({userId: user_token}, {
         $push: {
             flowList: {
                 name,
@@ -23,7 +23,7 @@ const newFlow = async (req, res) => {
 const getFlows = async (req, res) => {
     const { user_token } = req.body;
 
-    User.find({ userId: "teste1" }, (err, arr) => {
+    User.find({ userId: user_token }, (err, arr) => {
         arr.forEach((items) => {
           flow = items.flowList;
     
@@ -41,23 +41,56 @@ const getFlows = async (req, res) => {
 }
 
 const getOneFlow = async (req, res)  => {
-    const { user_token } = req.body;
+    const { user_token, nameFlow } = req.body;
 
-   const flowFinded = await User.find({userId: "teste1"},{flowList: {$elemMatch: {name: 'get'}}});
+   const flowFinded = await User.find({userId: user_token},{flowList: {$elemMatch: {name: nameFlow}}});
 
    if(!flowFinded) res.status(404)
 
-   return res.status(200).json(flowFinded);
+   return res.status(200).json(flowFinded)
+}
+
+const updateFlow = async(req, res) => {
+    const { user_token, nameFlow, newName } = req.body;
+
+    await User.findOneAndUpdate({"flowList.name": nameFlow}, {
+        $set: {
+            'flowList.$.name': newName
+        }
+    })
+    .then(() => {
+        console.log('Flow atualizado');
+        return res.status(200)
+    })
+    .catch((err) => console.log(err));
+    
 }
 
 const deleteFlow = async(req, res) => {
-    const { user_token } = req.body;
+    const { user_token, nameFlow } = req.body;
 
-    await User.findByIdAndRemove(user_token)
+    User.find({ userId: user_token }, (err, arr) => {
+        arr.forEach((items) => {
+          User.findOneAndUpdate(
+            { name: nameFlow },
+            {
+              $pull: { flowList: { name: nameFlow } },
+            },
+            { new: true },
+            (err, arr) => {
+              if (arr) {
+                return res.status(200).send("flow deletado deletado");
+              }
+            }
+          );
+        });
+      });
 }
 
 module.exports = {
     newFlow,
     getFlows,
-    getOneFlow
+    getOneFlow,
+    deleteFlow,
+    updateFlow
 }

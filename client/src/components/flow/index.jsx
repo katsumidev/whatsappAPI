@@ -82,7 +82,7 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
-import { createFlow, getFlows, getOneFlow } from "../../services/api";
+import { createFlow, deleteFlow, getFlows, getOneFlow } from "../../services/api";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -558,10 +558,7 @@ function Flow() {
     }
   }, [rfInstance]);
 
-  useEffect(async () => {
-    const {data} = await getOneFlow('')
-    console.log(JSON.stringify(data))
-  }, [rfInstance])
+
 
 
   const edgeTypes = {

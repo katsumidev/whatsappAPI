@@ -185,6 +185,12 @@ export const getUserStatus = async (data) => {
   }
 };
 
+/*
+  name: string,
+  execution: number,
+  ctr: number,
+  user_token: string
+*/
 export const createFlow = async (data) => {
   try {
     return await axios.post(`${url}/flow/create`, data)
@@ -193,18 +199,52 @@ export const createFlow = async (data) => {
   }
 }
 
+// user_token
 export const getFlows = async (data) => {
   try {
-    return await axios.get(`${url}/flow/get`)
+    return await axios.post(`${url}/flow/get`, data)
   } catch (error) {
     console.log("Error while calling getFlow API", error);
   }
 }
 
-export const getOneFlow = async () => {
+/*
+  user_token: string,
+  nameFlow: string
+*/
+export const getOneFlow = async (data) => {
   try {
-    return await axios.get(`${url}/flow/getOne`)
+    return await axios.post(`${url}/flow/getOne`, data)
   } catch (error) {
     console.log("Error while calling getOneFlow API", error);
   }
 }
+
+/*
+  nameFlow: string,   Nome do flow pra busca
+  newName: string     Novo nome
+*/
+
+export const updateFlow = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/update`, data)
+  } catch (error) {
+    console.log("Error while calling updateFlow API", error);
+  }
+}
+
+/*
+  user_token: string,
+  nameFlow: string  Nome do flow q quer apagar
+*/
+
+export const deleteFlow = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/delete`, data)
+  } catch (error) {
+    console.log("Error while calling deletFlow API", error);
+  }
+}
+
+
+

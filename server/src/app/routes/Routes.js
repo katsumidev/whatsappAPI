@@ -41,8 +41,11 @@ route.post("/instance/downloadPfp", instance.downloadPfp);
 
 //User  flows
 route.post("/flow/create", flow.newFlow);
-route.get("/flow/get", flow.getFlows)
-route.get("/flow/getOne", flow.getOneFlow)
+route.post("/flow/get", flow.getFlows)
+route.post("/flow/getOne", flow.getOneFlow)
+route.post("/flow/update", flow.updateFlow)
+route.post("/flow/delete", flow.deleteFlow)
+
 
 
 //files
