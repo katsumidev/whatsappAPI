@@ -82,7 +82,7 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
-import { createFlow, deleteFlow, getFlows, getOneFlow } from "../../services/api";
+import { createFlow, createFlowMap, deleteFlow, getFlows, getOneFlow } from "../../services/api";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -551,10 +551,16 @@ function Flow() {
   // Save flow in database
   const [rfInstance, setRfInstance] = useState(null);
 
-  const onSave = useCallback(() => {
+  const onSave = useCallback( async () => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
       localStorage.setItem('ex', JSON.stringify(flow));
+      try {
+        const {data, status} = await createFlowMap(flow);
+        console.log(`dados: ${data} e status: ${status}`);
+      } catch (error) {
+        console.log(error)
+      }
     }
   }, [rfInstance]);
 

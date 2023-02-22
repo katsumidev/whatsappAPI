@@ -79,12 +79,30 @@ const deleteFlow = async(req, res) => {
             { new: true },
             (err, arr) => {
               if (arr) {
-                return res.status(200).send("flow deletado deletado");
+                return res.status(200).send("flow deletado");
               }
             }
           );
         });
-      });
+    });
+}
+
+const createMapFlow = async (req, res) => {
+  try {
+    const {data} = req.body
+    for(const dado in data) {
+      if(data.hasOwnProperty(dado)) {
+        await User.findOneAndUpdate({userId: "mapas", "flowList.name": "teste de"}, {
+          $set: {
+            "flowList.$.flow": data[dado]
+          }
+        })
+      }
+    }
+    
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = {
@@ -92,5 +110,6 @@ module.exports = {
     getFlows,
     getOneFlow,
     deleteFlow,
-    updateFlow
+    updateFlow,
+    createMapFlow
 }
