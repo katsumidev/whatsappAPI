@@ -95,20 +95,6 @@ const userHandler = async (req, res) => {
           socket.ioObject.emit("message", {
             type: "file",
           });
-        } else if (req.body.body.message.extendedTextMessage.text) {
-          // texto2
-          await livechat.saveReceiverMsg({
-            text: req.body.body.message.extendedTextMessage.text,
-            from: req.body.body.key.remoteJid.split("@")[0],
-            to: req.body.instanceKey,
-            chatId: chatId,
-            read: false,
-            type: "text",
-          });
-
-          socket.ioObject.emit("message", {
-            type: "text",
-          });
         } else if (
           // mensagens marcadas
           req.body.body.message.extendedTextMessage.contextInfo.quotedMessage
@@ -127,6 +113,20 @@ const userHandler = async (req, res) => {
 
           socket.ioObject.emit("message", {
             type: "quotedText",
+          });
+        } else if (req.body.body.message.extendedTextMessage.text) {
+          // texto2
+          await livechat.saveReceiverMsg({
+            text: req.body.body.message.extendedTextMessage.text,
+            from: req.body.body.key.remoteJid.split("@")[0],
+            to: req.body.instanceKey,
+            chatId: chatId,
+            read: false,
+            type: "text",
+          });
+
+          socket.ioObject.emit("message", {
+            type: "text",
           });
         } else {
           console.log("sem handle");
