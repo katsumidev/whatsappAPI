@@ -31,7 +31,7 @@ export {
   MdOutlineEmojiEmotions,
   MdArrowForwardIos,
   MdArrowBackIos,
-  MdDownloadForOffline
+  MdDownloadForOffline,
 } from "react-icons/md";
 export { IoDocument, IoClose } from "react-icons/io5";
 export { HiDownload, HiLockClosed, HiOutlineMail } from "react-icons/hi";
@@ -40,3 +40,4 @@ export { IoMdContact } from "react-icons/io";
 export { BiBookContent, BiSearchAlt } from "react-icons/bi";
 export { TbArrowFork } from "react-icons/tb";
 export { GrPrevious } from "react-icons/gr";
+export { SlOptionsVertical } from "react-icons/sl";

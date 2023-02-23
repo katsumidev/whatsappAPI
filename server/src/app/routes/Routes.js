@@ -17,13 +17,15 @@ route.post("/webHook/userHandler", webhook.userHandler);
 
 //contacts
 route.post("/contacts/addContact", contacts.newContact);
-route.post("/contacts/deleteContact",  contacts.deleteContact);
-route.get("/contacts/consultContacts",  contacts.consultContacts);
-route.get("/contacts/getContactPic",  contacts.getContactPic);
-route.get("/contacts/getStatus",  contacts.getStatus);
+route.post("/contacts/deleteContact", contacts.deleteContact);
+route.get("/contacts/consultContacts", contacts.consultContacts);
+route.get("/contacts/getContactPic", contacts.getContactPic);
+route.get("/contacts/getStatus", contacts.getStatus);
+route.get("/contacts/blockUserContact", contacts.blockUser);
 
 //livechat
 route.post("/livechat/newMessage", livechat.newMessage);
+route.post("/livechat/clearChat", livechat.clearConversation);
 route.get("/livechat/getChat", livechat.getChat);
 route.get("/livechat/getMessages", livechat.getMessages);
 route.get("/livechat/getLastMessage", livechat.getLastMessage);
@@ -42,12 +44,10 @@ route.get("/instance/downloadPfp", instance.downloadPfp);
 
 //User  flows
 route.post("/flow/create", flow.newFlow);
-route.post("/flow/get", flow.getFlows)
-route.post("/flow/getOne", flow.getOneFlow)
-route.post("/flow/update", flow.updateFlow)
-route.post("/flow/delete", flow.deleteFlow)
-
-
+route.post("/flow/get", flow.getFlows);
+route.post("/flow/getOne", flow.getOneFlow);
+route.post("/flow/update", flow.updateFlow);
+route.post("/flow/delete", flow.deleteFlow);
 
 // Flow maps
 route.post("/flow/getmap", flowMap.getFlowMap)
@@ -55,7 +55,10 @@ route.post("/flow/map", flowMap.createMapFlow)
 
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);
-route.get("/file/:filename", files.getImage)
-route.use("/files", express.static(path.resolve(__dirname, "..", "..", "..", "tmp", "uploads")))
+route.get("/file/:filename", files.getImage);
+route.use(
+  "/files",
+  express.static(path.resolve(__dirname, "..", "..", "..", "tmp", "uploads"))
+);
 
-module.exports = (app) => app.use("/", route)
+module.exports = (app) => app.use("/", route);
