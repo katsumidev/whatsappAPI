@@ -35,6 +35,8 @@ import {
   EmptyChat,
   RecordBtn,
   TrashBtn,
+  OptionsIcon,
+  OptionsDropdown,
 } from "./styles";
 import InputEmoji from "react-input-emoji";
 import { pdfjs } from "react-pdf";
@@ -65,6 +67,8 @@ import {
   getUserPicture,
   getInfo,
   getContactLastMessage,
+  blockContact,
+  clearChat,
 } from "../../services/api";
 import {
   BsImage,
@@ -81,29 +85,50 @@ import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
 import ContactInfoPage from "./ContactInfoPage";
 import FilePreviewPage from "./FilePreviewPage";
+import { useDetectOutsideClick } from "../../utils/checkOutsideClick";
 
 function ChatPage() {
-  const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
-  const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
-  const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
-  const [currentPage, setCurrentPage] = useState(-15); // usado para otimizar o carregamento do chat
-  const [isOpen, setIsOpen] = useState(false);
-  const [profileView, setProfileView] = useState(false);
+  // Referencias a elementos
+  const dropdownRef = useRef(); // referencia o menu dropdown
+  const fileinput = useRef(null); // referencia o input de upload de arquivos
+  const scrollRef = useRef(); // referencia o scroll
+
+  // Estados auxiliares
+  const recorderControls = useAudioRecorder();
+
+  // Auxiliares de rotas
+  const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
+  const navigate = useNavigate();
+
+  // Estados de controle
   const [newMessageFlag, setNewMessageFlag] = useState(false); // flag para verificar se o usuário enviou uma mensagem
   const [newContactMessageFlag, setNewContactMessageFlag] = useState(false); // flag para verificar se o usuário recebeu uma mensagem
   const [floatMenuOpen, setFloatMenuOpen] = useState(false);
+  const [profileView, setProfileView] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  useDetectOutsideClick(dropdownRef, () => setDropdownOpen(false));
+
+  // Estados de inputs
+  const [message, setMessage] = useState(""); // estado que guarda o valor do input do usuário
+  const [acceptedFiles, setAcceptedFiles] = useState("");
+  const [caption, setCaption] = useState("");
+  const [searchBox, setSearchBox] = useState("");
+
+  // Estados de informação
+  const [contacts, setContacts] = useState([]); // estado que guarda os contatos do usuário
+  const [chatMsgs, setChatMsgs] = useState([]); // estado que guarda o histórico de mensagens com o contato selecionado
+  const [currentPage, setCurrentPage] = useState(-15); // usado para otimizar o carregamento do chat
   const [fileUrl, setFileUrl] = useState("");
   const [file, setFile] = useState();
-  const [acceptedFiles, setAcceptedFiles] = useState("");
   const [userPictureUrl, setUserPicture] = useState("");
   const [interactions, setInteractions] = useState(0);
-  const [caption, setCaption] = useState("");
+
   const [contactsMessages, setContactsMessages] = useState([
     { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
   ]);
-  const [searchBox, setSearchBox] = useState("");
+
   const [insInfo, setInsInfo] = useState({ username: "", userId: "" });
-  const fileinput = useRef(null); // hook auxiliar para o scroll do chat
   const [selectedContact, setSelectedContact] = useState({
     chatId: "main",
     contactId: "",
@@ -112,10 +137,6 @@ function ChatPage() {
     subscriptionTime: "",
     contactEmail: "",
   }); // estado que guarda as informações do contato selecionado
-  const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
-  const navigate = useNavigate();
-  const recorderControls = useAudioRecorder();
-  const scrollRef = useRef();
 
   useEffect(() => {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
@@ -179,80 +200,6 @@ function ChatPage() {
     };
   }, []);
 
-  const handleSaveMsg = async (chatId, from, to, text, type, caption) => {
-    // função usada para salvar as mensagens tanto do sender quanto do receiver
-    let messageValue = {};
-
-    if (file) {
-      // se o usuário estiver enviando um arquivo
-      messageValue = {
-        chatId: chatId,
-        from: from,
-        to: to,
-        text: fileUrl,
-        caption: caption,
-        type: "file",
-      };
-    } else {
-      messageValue = {
-        chatId: chatId,
-        from: from,
-        to: to,
-        text: text,
-        type: "text",
-      };
-    }
-
-    setFile();
-    setFileUrl("");
-    setMessage("");
-
-    await sendMessage(messageValue); // salve a mensagem
-
-    setNewMessageFlag((prev) => !prev);
-  };
-
-  const handleGetChat = async (number, pfp, name, time, email) => {
-    // essa função serve para buscar as informações do chat selecionado
-    if (userIns !== null && number !== "") {
-      let data = await getCurrentChat({ from: userIns, to: number });
-
-      navigate(`/${userIns}/live-chat/${data.data._id}`);
-      setSelectedContact({
-        chatId: data.data._id,
-        contactId: number,
-        contactPfp: pfp,
-        contactName: name,
-        subscriptionTime: time,
-        contactEmail: email,
-      });
-      setCurrentPage(-15);
-      setFile();
-      setAcceptedFiles("");
-      setIsOpen(false);
-
-      let targetIndex = contactsMessages.findIndex(
-        (index) => index.contact === number
-      );
-
-      if (targetIndex !== -1) {
-        // sobrescreve os valores com a nova mensagem recebida
-        let temporaryarray = contactsMessages.slice();
-        temporaryarray[targetIndex].unreadMessages = 0;
-        setContactsMessages(temporaryarray);
-      }
-    }
-  };
-
-  async function handleGetMsgs() {
-    // função usada para buscar o histórico de mensagens do usuário com um determinado contato
-    if (chatId !== null) {
-      let data = await getMessages({ chatId: chatId });
-
-      return data.data;
-    }
-  }
-
   useEffect(() => {
     // toda vez que o estado file mudar, salva a imagem no banco de dados
     const getImage = async () => {
@@ -268,61 +215,6 @@ function ChatPage() {
     getImage();
   }, [file]);
 
-  const handleFileMessage = async (caption) => {
-    // envia mensagens de documentos/imagens, audios, documentos em geral
-    const data = new FormData();
-    data.append("file", file);
-    data.append("id", selectedContact.contactId);
-    data.append("caption", caption);
-
-    switch (file.type.split("/")[0]) {
-      case "image":
-        await sendImage({ from: userIns, data: data });
-        break;
-      case "application":
-        await sendDoc({ from: userIns, data: data });
-        break;
-      case "video":
-        await sendVid({ from: userIns, data: data });
-        break;
-      case "audio":
-        await sendAudio({ from: userIns, data: data });
-        break;
-      default:
-        console.log("[!!] Erro no envio de arquivo");
-        break;
-    }
-
-    handleSaveMsg(
-      chatId,
-      userIns,
-      selectedContact.contactId,
-      message,
-      "file",
-      caption
-    );
-
-    fileinput.current.value = ""; // reseta o valor do input
-    setFile();
-    setIsOpen(false);
-    setNewMessageFlag((prev) => !prev);
-  };
-
-  const onFileChange = (e) => {
-    // sempre que o usuário selecionar um novo arquivo, salva as caracteristicas do arquivo nos estados:
-    setFile(e.target.files[0]);
-    setFileUrl(e.target.files[0].name);
-
-    setIsOpen(true);
-  };
-
-  const closeImagePreview = () => {
-    // fecha o preview de imagens
-    fileinput.current.value = "";
-    setAcceptedFiles("");
-    setIsOpen(!isOpen);
-  };
-
   useEffect(() => {
     // abre o seletor de arquivos
     const openSelector = async () => {
@@ -333,17 +225,6 @@ function ChatPage() {
     openSelector();
     setAcceptedFiles("");
   }, [acceptedFiles]);
-
-  const handleEnter = (text) => {
-    // função que envia a mensagem digitada pelo usuário caso ele aperte ENTER
-    handleSaveMsg(chatId, userIns, selectedContact.contactId, text);
-  };
-
-  const AlwaysScrollToBottom = () => {
-    const elementRef = useRef();
-    useEffect(() => elementRef.current.scrollIntoView());
-    return <div ref={elementRef} />;
-  };
 
   useEffect(() => {
     // pega o nome e o telefone do usuário
@@ -424,6 +305,146 @@ function ChatPage() {
     getLast();
   }, [contacts, newContactMessageFlag]); // esse hook é disparado sempre que o usuário recebe uma nova mensagem ou a lista de contatos é atualizada.
 
+  const handleSaveMsg = async (chatId, from, to, text, type, caption) => {
+    // função usada para salvar as mensagens tanto do sender quanto do receiver
+    let messageValue = {};
+
+    if (file) {
+      // se o usuário estiver enviando um arquivo
+      messageValue = {
+        chatId: chatId,
+        from: from,
+        to: to,
+        text: fileUrl,
+        caption: caption,
+        type: "file",
+      };
+    } else {
+      messageValue = {
+        chatId: chatId,
+        from: from,
+        to: to,
+        text: text,
+        type: "text",
+      };
+    }
+
+    setFile();
+    setFileUrl("");
+    setMessage("");
+
+    await sendMessage(messageValue); // salve a mensagem
+
+    setNewMessageFlag((prev) => !prev);
+  };
+
+  const handleGetChat = async (number, pfp, name, time, email) => {
+    // essa função serve para buscar as informações do chat selecionado
+    if (userIns !== null && number !== "") {
+      let data = await getCurrentChat({ from: userIns, to: number });
+
+      navigate(`/${userIns}/live-chat/${data.data._id}`);
+      setSelectedContact({
+        chatId: data.data._id,
+        contactId: number,
+        contactPfp: pfp,
+        contactName: name,
+        subscriptionTime: time,
+        contactEmail: email,
+      });
+      setCurrentPage(-15);
+      setFile();
+      setAcceptedFiles("");
+      setIsOpen(false);
+
+      let targetIndex = contactsMessages.findIndex(
+        (index) => index.contact === number
+      );
+
+      if (targetIndex !== -1) {
+        // sobrescreve os valores com a nova mensagem recebida
+        let temporaryarray = contactsMessages.slice();
+        temporaryarray[targetIndex].unreadMessages = 0;
+        setContactsMessages(temporaryarray);
+      }
+    }
+  };
+
+  async function handleGetMsgs() {
+    // função usada para buscar o histórico de mensagens do usuário com um determinado contato
+    if (chatId !== null) {
+      let data = await getMessages({ chatId: chatId });
+
+      return data.data;
+    }
+  }
+
+  const handleFileMessage = async (caption) => {
+    // envia mensagens de documentos/imagens, audios, documentos em geral
+    const data = new FormData();
+    data.append("file", file);
+    data.append("id", selectedContact.contactId);
+    data.append("caption", caption);
+
+    switch (file.type.split("/")[0]) {
+      case "image":
+        await sendImage({ from: userIns, data: data });
+        break;
+      case "application":
+        await sendDoc({ from: userIns, data: data });
+        break;
+      case "video":
+        await sendVid({ from: userIns, data: data });
+        break;
+      case "audio":
+        await sendAudio({ from: userIns, data: data });
+        break;
+      default:
+        console.log("[!!] Erro no envio de arquivo");
+        break;
+    }
+
+    handleSaveMsg(
+      chatId,
+      userIns,
+      selectedContact.contactId,
+      message,
+      "file",
+      caption
+    );
+
+    fileinput.current.value = ""; // reseta o valor do input
+    setFile();
+    setIsOpen(false);
+    setNewMessageFlag((prev) => !prev);
+  };
+
+  const onFileChange = (e) => {
+    // sempre que o usuário selecionar um novo arquivo, salva as caracteristicas do arquivo nos estados:
+    setFile(e.target.files[0]);
+    setFileUrl(e.target.files[0].name);
+
+    setIsOpen(true);
+  };
+
+  const closeImagePreview = () => {
+    // fecha o preview de imagens
+    fileinput.current.value = "";
+    setAcceptedFiles("");
+    setIsOpen(!isOpen);
+  };
+
+  const handleEnter = (text) => {
+    // função que envia a mensagem digitada pelo usuário caso ele aperte ENTER
+    handleSaveMsg(chatId, userIns, selectedContact.contactId, text);
+  };
+
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView());
+    return <div ref={elementRef} />;
+  };
+
   const closeView = () => {
     setProfileView(!profileView);
   };
@@ -466,7 +487,15 @@ function ChatPage() {
     } catch (err) {
       console.log("[!!] Erro durante envio de audio - " + err);
     }
+
+    setNewMessageFlag((prev) => !prev);
   }
+
+  const clearCurrentChat = async () => {
+    await clearChat({ from: userIns, to: selectedContact.contactId });
+
+    window.location.reload();
+  };
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -559,19 +588,49 @@ function ChatPage() {
         </Contacts>
       </ContactsList>
       <ChatMain>
-        <ContactTopBar onClick={closeView}>
-          <ContactPfp
-            src={
-              selectedContact.contactPfp !== null
-                ? selectedContact.contactPfp
-                : defaultPic
-            }
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src = defaultPic;
+        <ContactTopBar>
+          <div
+            onClick={closeView}
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
             }}
-          />
-          <ContactName>{selectedContact.contactName}</ContactName>
+          >
+            <ContactPfp
+              src={
+                selectedContact.contactPfp !== null
+                  ? selectedContact.contactPfp
+                  : defaultPic
+              }
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null;
+                currentTarget.src = defaultPic;
+              }}
+            />
+            <ContactName>{selectedContact.contactName}</ContactName>
+          </div>
+          <OptionsIcon onClick={() => setDropdownOpen(!isDropdownOpen)} />
+          {isDropdownOpen && (
+            <OptionsDropdown ref={dropdownRef}>
+              <ul>
+                <li onClick={closeView}>Dados do usuário</li>
+                <li onClick={clearCurrentChat}>Apagar conversa</li>
+                <li
+                  onClick={() =>
+                    blockContact({
+                      userId: userIns,
+                      contactNumber: selectedContact.contactId,
+                    })
+                  }
+                >
+                  Bloquear
+                </li>
+                <li>Denunciar usuário</li>
+              </ul>
+            </OptionsDropdown>
+          )}
         </ContactTopBar>
         {isOpen && (
           <FilePreviewPage

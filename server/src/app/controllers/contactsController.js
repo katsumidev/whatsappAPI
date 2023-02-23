@@ -88,6 +88,21 @@ const deleteContact = async (req, res) => {
   });
 };
 
+const blockUser = async (req, res) => {
+  const userId = req.headers["authentication"];
+  const contactNumber = req.query.contactNumber;
+
+  try {
+    axios.get(`${apiUrl}/misc/blockUser?key=${userId}&id=${contactNumber}`).then(async (response) => {
+      let data = await response.data;
+
+      res.status(200).send("[!!] Contato bloqueado com sucesso! - " + data);
+    })
+  } catch (err) {
+    res.send("[!!] Erro ao bloquear contato - " + err);
+  }
+};
+
 const consultContacts = async (req, res) => {
   const userToken = req.headers["authentication"]
 
@@ -150,4 +165,5 @@ module.exports = {
   consultContacts,
   getContactPic,
   getStatus,
+  blockUser
 };

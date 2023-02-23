@@ -9,8 +9,8 @@ export const getInfo = async (data) => {
   try {
     return await axios.get(`${url}/instance/getInfo`, {
       headers: {
-        Authentication: data.userId
-      }
+        Authentication: data.userId,
+      },
     });
   } catch (error) {
     console.log("Error while calling newConversations API ", error);
@@ -21,8 +21,8 @@ export const ListInstance = async (data) => {
   try {
     return await axios.get(`${url}/instance/listIns`, {
       headers: {
-        Authentication: data.userToken
-      }
+        Authentication: data.userToken,
+      },
     });
   } catch (error) {
     console.log("Error while calling newConversations API ", error);
@@ -90,6 +90,21 @@ export const getContacts = async (data) => {
   }
 };
 
+export const blockContact = async (data) => {
+  try {
+    return await axios.get(
+      `${url}/contacts/blockUserContact?contactNumber=${data.contactNumber}`,
+      {
+        headers: {
+          Authentication: data.userId,
+        },
+      }
+    );
+  } catch (err) {
+    console.log("[!!] Erro ao bloquear contato - " + err);
+  }
+};
+
 // Automation Controllers
 
 export const sendSingleMessage = async (data) => {
@@ -107,7 +122,6 @@ export const sendMultipleMessages = async (data) => {
     console.log("Error while calling newConversations API ", error);
   }
 };
-
 
 // Live Chat Controllers
 
@@ -206,6 +220,14 @@ export const getUserStatus = async (data) => {
   }
 };
 
+export const clearChat = async (data) => {
+  try {
+    return await axios.post(`${url}/livechat/clearChat`, data);
+  } catch (err) {
+    console.log("[!!] Erro na requisição ao apagar conversa - " + err);
+  }
+};
+
 // Files Controllers
 
 export const downloadFile = async (data) => {
@@ -232,20 +254,20 @@ export const uploadFile = async (data) => {
 */
 export const createFlow = async (data) => {
   try {
-    return await axios.post(`${url}/flow/create`, data)
+    return await axios.post(`${url}/flow/create`, data);
   } catch (error) {
     console.log("Error while calling createFlow API", error);
   }
-}
+};
 
 // user_token
 export const getFlows = async (data) => {
   try {
-    return await axios.post(`${url}/flow/get`, data)
+    return await axios.post(`${url}/flow/get`, data);
   } catch (error) {
     console.log("Error while calling getFlow API", error);
   }
-}
+};
 
 /*
   user_token: string,
@@ -253,11 +275,11 @@ export const getFlows = async (data) => {
 */
 export const getOneFlow = async (data) => {
   try {
-    return await axios.post(`${url}/flow/getOne`, data)
+    return await axios.post(`${url}/flow/getOne`, data);
   } catch (error) {
     console.log("Error while calling getOneFlow API", error);
   }
-}
+};
 
 /*
   nameFlow: string,   Nome do flow pra busca
@@ -266,11 +288,11 @@ export const getOneFlow = async (data) => {
 
 export const updateFlow = async (data) => {
   try {
-    return await axios.post(`${url}/flow/update`, data)
+    return await axios.post(`${url}/flow/update`, data);
   } catch (error) {
     console.log("Error while calling updateFlow API", error);
   }
-}
+};
 
 /*
   user_token: string,
@@ -279,11 +301,8 @@ export const updateFlow = async (data) => {
 
 export const deleteFlow = async (data) => {
   try {
-    return await axios.post(`${url}/flow/delete`, data)
+    return await axios.post(`${url}/flow/delete`, data);
   } catch (error) {
     console.log("Error while calling deletFlow API", error);
   }
-}
-
-
-
+};

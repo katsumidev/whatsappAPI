@@ -5,7 +5,8 @@ import {
   HiDownload,
   MdOutlineEmojiEmotions,
   FaMicrophone,
-  FaTrash
+  FaTrash,
+  SlOptionsVertical,
 } from "../../styles/Icons";
 
 export const Container = styled.div`
@@ -181,7 +182,6 @@ export const ChatInputContainer = styled.div`
   gap: 20px;
   bottom: 0;
 
-    
   .audio-recorder {
     background-color: transparent;
     box-shadow: none;
@@ -197,19 +197,18 @@ export const ChatInputContainer = styled.div`
     height: 26px;
     width: auto;
     display: none;
-
   }
 `;
 
 export const RecordBtn = styled(FaMicrophone)`
   color: var(--grey);
   cursor: pointer;
-`
+`;
 
 export const TrashBtn = styled(FaTrash)`
-    color: var(--grey);
+  color: var(--grey);
   cursor: pointer;
-`
+`;
 
 export const ChatInput = styled.input`
   padding: 16px;
@@ -588,4 +587,51 @@ export const EmptyChat = styled.div`
   justify-content: center;
   font-size: 14px;
   color: var(--grey);
+`;
+
+export const OptionsIcon = styled(SlOptionsVertical)`
+  color: var(--grey);
+  align-self: center;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-right: 30px;
+
+  :hover {
+    background-color: var(--secundary-background);
+  }
+`;
+
+export const OptionsDropdown = styled.div`
+  position: absolute;
+  top: 60px;
+  right: 50px;
+  max-width: 300px;
+  z-index: 2;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: var(--boxShadow);
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 3px;
+
+    :nth-child(1) {
+      border-top: none;
+    }
+  }
+
+  li {
+    padding: 12px;
+    transition: all .2s;
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-right: 60px;
+  }
+
+  li:hover {
+    background-color: var(--secundary-background);
+    cursor: pointer;
+  }
 `;
