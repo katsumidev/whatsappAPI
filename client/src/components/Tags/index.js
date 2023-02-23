@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Menu from "../menu";
+import Menu from "../Menu";
 import { AddField, ContentTable } from "./styles";
 import { useParams } from "react-router";
 

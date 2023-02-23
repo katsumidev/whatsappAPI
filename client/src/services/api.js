@@ -257,6 +257,16 @@ export const uploadFile = async (data) => {
   user_token: string,
   nameFlow: string
 */
+
+
+export const getFlows = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/get`, data)
+  } catch (error) {
+    console.log("Error while calling getFlow API", error);
+  }
+}
+
 export const getOneFlow = async (data) => {
   try {
     return await axios.post(`${url}/flow/getOne`, data);

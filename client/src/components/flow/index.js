@@ -12,13 +12,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
-import ContetntSquare from "../nodes/content";
-import ButtonSquare from "../nodes/buttons";
-import ConditionSquare from "../nodes/conditions";
-import ConnectionSquare from "../nodes/connection";
-import RandomSquare from "../nodes/random";
-import DelaySquare from "../nodes/delay";
-import IntegrationSquare from "../nodes/integration";
+import ContetntSquare from "../nodes/Content";
+import ButtonSquare from "../nodes/Buttons";
+import ConditionSquare from "../nodes/Conditions";
+import ConnectionSquare from "../nodes/Connection";
+import RandomSquare from "../nodes/Random";
+import DelaySquare from "../nodes/Delay";
+import IntegrationSquare from "../nodes/Integration";
 import {
   AiOutlineClockCircle,
   BsLightningCharge,
@@ -28,7 +28,7 @@ import {
   BiBookContent,
   BsListUl,
 } from "../../styles/Icons";
-import ActionSquare from "../nodes/action";
+import ActionSquare from "../nodes/Action";
 import {
   ActionBody,
   ActionHeader,

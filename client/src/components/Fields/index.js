@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Menu from "../menu";
+import Menu from "../Menu";
 import {
   AddField,
   ContentTable,

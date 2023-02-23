@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import Menu from "../menu";
+import Menu from "../Menu";
 import {
   ButtonSave,
   Container,
