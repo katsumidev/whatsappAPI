@@ -85,7 +85,6 @@ export const ModalBox = styled.div`
     flex-direction: row;
     gap: 5px;
     align-items: center;
-    
   }
 
   hr {
@@ -123,3 +122,5 @@ export const SaveContactBtn = styled.input`
 `;
 
 export const ContactNameInput = styled.input``;
+
+export const ContactEmailInput = styled.input``;

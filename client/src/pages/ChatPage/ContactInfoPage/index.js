@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { convertToPhone } from "../../../utils/conversions";
 import {
   Container,
@@ -10,12 +10,13 @@ import {
   Time,
   Description,
   Options,
-  CloseHeader
+  CloseHeader,
+  Info
 } from "./styles";
 import defaultPic from "../../../assets/defaultPic.jpg";
 import { getUserStatus } from "../../../services/api";
 import { useParams } from "react-router";
-import {IoClose} from "../../../styles/Icons"
+import { IoClose, AiOutlineClockCircle, HiOutlineMail, MdAdsClick } from "../../../styles/Icons";
 
 function ContactInfoPage(props) {
   const [status, setStatus] = useState("");
@@ -23,11 +24,13 @@ function ContactInfoPage(props) {
 
   useEffect(() => {
     const getStatus = async () => {
-      let data = await getUserStatus({ user_id: userIns, contact_number: props.number });
-      console.log(data)
-      setStatus(data.data.status)
-    }
-    getStatus()
+      let data = await getUserStatus({
+        userId: userIns,
+        contactNumber: props.number,
+      });
+      setStatus(data.data.status);
+    };
+    getStatus();
   }, [props.number]);
 
   return (
@@ -44,10 +47,20 @@ function ContactInfoPage(props) {
         <Time></Time>
         <small>Recado</small>
         <Description>{status}</Description>
+        <Info>
+          <AiOutlineClockCircle size={20} fill="var(--grey)" />
+          <label> Inscrito em:</label> {props.subscriptionTime}
+        </Info>
+        <Info>
+          <HiOutlineMail size={20} />
+          <label> Email:</label> {props.email ? props.email : <b>Não informado!</b>}
+        </Info>
+        <Info>
+          <MdAdsClick size={20} />
+          <label> Interações:</label> {props.interactions ? props.interactions : <b>Você nunca interagiu com esse contato!</b>}
+        </Info>
       </ContactInfo>
-      <Options>
-
-      </Options>
+      <Options></Options>
     </Container>
   );
 }

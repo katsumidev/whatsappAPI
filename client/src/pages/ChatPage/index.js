@@ -17,22 +17,13 @@ import {
   QuotedMessageContainer,
   NormalMessage,
   Quoted,
-  SendImageContainer,
-  ImageOptions,
-  CloseBtn,
-  Image,
-  SendOptions,
-  Caption,
   ContactsList,
   Menu,
   VideoContainer,
-  DocumentViewer,
   ImageMessage,
   ImagePreview,
   PreviewBackground,
   AudioMessage,
-  AudioPreviewContainer,
-  DownloadOverlay,
   SearchBox,
   SearchInput,
   ContactHeader,
@@ -41,9 +32,12 @@ import {
   Contacts,
   NewMessages,
   EndColumn,
+  EmptyChat,
+  RecordBtn,
+  TrashBtn,
 } from "./styles";
 import InputEmoji from "react-input-emoji";
-import { Document, Page, pdfjs } from "react-pdf";
+import { pdfjs } from "react-pdf";
 import {
   FloatingMenu,
   MainButton,
@@ -51,10 +45,13 @@ import {
 } from "react-floating-button-menu";
 import { useParams, useNavigate } from "react-router";
 import { io } from "socket.io-client";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 import defaultPic from "../../assets/defaultPic.jpg";
-import { FixedSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { convertToDate } from "../../utils/conversions";
+import {
+  convertToDate,
+  convertToMessageFormat,
+  convertoToFullStringDate,
+} from "../../utils/conversions";
 import {
   getContacts,
   getCurrentChat,
@@ -73,15 +70,12 @@ import {
   BsImage,
   IoDocument,
   BsCameraVideoFill,
-  HiDownload,
+  MdDownloadForOffline,
   BsFillPlayFill,
   BsFillPauseFill,
-  BsFillFileEarmarkMusicFill,
-  AiFillFileZip,
   BsCheckAll,
   BiSearchAlt,
   AiFillCamera,
-  IoClose,
 } from "../../styles/Icons";
 import AudioPlayer from "react-h5-audio-player";
 import "./styles.css";
@@ -102,6 +96,8 @@ function ChatPage() {
   const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [userPictureUrl, setUserPicture] = useState("");
+  const [interactions, setInteractions] = useState(0);
+  const [caption, setCaption] = useState("");
   const [contactsMessages, setContactsMessages] = useState([
     { contact: "", message: "", date: "", type: "", unreadMessages: 0 },
   ]);
@@ -113,21 +109,25 @@ function ChatPage() {
     contactId: "",
     contactPfp: "",
     contactName: "",
+    subscriptionTime: "",
+    contactEmail: "",
   }); // estado que guarda as informações do contato selecionado
   const { userIns, chatId } = useParams(); // usa o hook useParams do react-router para pegar os parametros passados através da URL (instância do usuário e o ID do chat selecionado)
   const navigate = useNavigate();
+  const recorderControls = useAudioRecorder();
   const scrollRef = useRef();
 
   useEffect(() => {
     // hook chamado para pegar as mensagens do contato selecionado e grava-las no state chatMsgs
     const getMessageDetails = async () => {
       let data = await handleGetMsgs();
-      if (data.length > 20) {
-        setChatMsgs(data.slice(1).slice(currentPage));
+      setInteractions(data.length);
+
+      if (data.length > 15) {
+        setChatMsgs(data.slice(currentPage));
       } else {
         setChatMsgs(data);
       }
-      setChatMsgs(data);
     };
     getMessageDetails();
   }, [
@@ -156,7 +156,7 @@ function ChatPage() {
     // esse hook é disparado no primeiro load da página e serve para buscar a lista de contatos do usuário
     const getAllContacts = async () => {
       let data = await getContacts({
-        user_token: localStorage.getItem("userToken"),
+        userToken: localStorage.getItem("userToken"),
       });
       setContacts(data.data);
     };
@@ -179,7 +179,7 @@ function ChatPage() {
     };
   }, []);
 
-  const handleSendMsg = async (chatId, from, to, text, type, caption) => {
+  const handleSaveMsg = async (chatId, from, to, text, type, caption) => {
     // função usada para salvar as mensagens tanto do sender quanto do receiver
     let messageValue = {};
 
@@ -212,9 +212,9 @@ function ChatPage() {
     setNewMessageFlag((prev) => !prev);
   };
 
-  const handleGetChat = async (number, pfp, name) => {
+  const handleGetChat = async (number, pfp, name, time, email) => {
     // essa função serve para buscar as informações do chat selecionado
-    if (userIns != null && number != "") {
+    if (userIns !== null && number !== "") {
       let data = await getCurrentChat({ from: userIns, to: number });
 
       navigate(`/${userIns}/live-chat/${data.data._id}`);
@@ -223,6 +223,8 @@ function ChatPage() {
         contactId: number,
         contactPfp: pfp,
         contactName: name,
+        subscriptionTime: time,
+        contactEmail: email,
       });
       setCurrentPage(-15);
       setFile();
@@ -230,10 +232,10 @@ function ChatPage() {
       setIsOpen(false);
 
       let targetIndex = contactsMessages.findIndex(
-        (index) => index.contact == number
+        (index) => index.contact === number
       );
 
-      if (targetIndex != -1) {
+      if (targetIndex !== -1) {
         // sobrescreve os valores com a nova mensagem recebida
         let temporaryarray = contactsMessages.slice();
         temporaryarray[targetIndex].unreadMessages = 0;
@@ -244,7 +246,7 @@ function ChatPage() {
 
   async function handleGetMsgs() {
     // função usada para buscar o histórico de mensagens do usuário com um determinado contato
-    if (chatId != null) {
+    if (chatId !== null) {
       let data = await getMessages({ chatId: chatId });
 
       return data.data;
@@ -256,7 +258,7 @@ function ChatPage() {
     const getImage = async () => {
       if (file) {
         const data = new FormData();
-        data.append("name", file.name);
+        data.append("filename", file.name);
         data.append("file", file);
 
         let response = await uploadFile(data);
@@ -286,10 +288,22 @@ function ChatPage() {
       case "audio":
         await sendAudio({ from: userIns, data: data });
         break;
+      default:
+        console.log("[!!] Erro no envio de arquivo");
+        break;
     }
 
-    handleSendMsg(chatId, userIns, selectedContact.contactId, message, "file", caption);
+    handleSaveMsg(
+      chatId,
+      userIns,
+      selectedContact.contactId,
+      message,
+      "file",
+      caption
+    );
 
+    fileinput.current.value = ""; // reseta o valor do input
+    setFile();
     setIsOpen(false);
     setNewMessageFlag((prev) => !prev);
   };
@@ -304,7 +318,8 @@ function ChatPage() {
 
   const closeImagePreview = () => {
     // fecha o preview de imagens
-    setFile();
+    fileinput.current.value = "";
+    setAcceptedFiles("");
     setIsOpen(!isOpen);
   };
 
@@ -321,7 +336,7 @@ function ChatPage() {
 
   const handleEnter = (text) => {
     // função que envia a mensagem digitada pelo usuário caso ele aperte ENTER
-    handleSendMsg(chatId, userIns, selectedContact.contactId, text);
+    handleSaveMsg(chatId, userIns, selectedContact.contactId, text);
   };
 
   const AlwaysScrollToBottom = () => {
@@ -333,7 +348,7 @@ function ChatPage() {
   useEffect(() => {
     // pega o nome e o telefone do usuário
     const getUserInfo = async () => {
-      let data = await getInfo({ key: userIns });
+      let data = await getInfo({ userId: userIns });
       setInsInfo({
         username: data.data.instance_data.user.name,
         userId: data.data.instance_data.user.id.split(":")[0],
@@ -345,8 +360,11 @@ function ChatPage() {
   useEffect(() => {
     // hook que busca a foto de perfil do usuário da aplicação
     const userPicture = async () => {
-      if (insInfo.userId != "") {
-        let data = await getUserPicture({ key: userIns, id: insInfo.userId });
+      if (insInfo.userId !== "") {
+        let data = await getUserPicture({
+          userId: userIns,
+          contactNumber: insInfo.userId,
+        });
         setUserPicture(data.data);
       }
     };
@@ -356,17 +374,17 @@ function ChatPage() {
   useEffect(() => {
     const getLast = () => {
       contacts?.map(async (contact) => {
-        if (contact != null) {
+        if (contact !== null) {
           let data = await getContactLastMessage({
             from: userIns,
             to: contact.number,
           }); // retorna a ultima mensagem que o contato enviou, este código é executado para todos os contatos da lista
 
-          if (data.data.lastMessage != null) {
+          if (data.data.lastMessage !== null) {
             // se os dados não forem vazios
             if (
               !contactsMessages.some(
-                (number) => number.contact == contact.number
+                (number) => number.contact === contact.number
               ) // se o numéro do contato não está no state de ultimas mensagens
             ) {
               setContactsMessages((contactsMessages) => [
@@ -383,10 +401,10 @@ function ChatPage() {
             } else {
               // caso o contato já esteja
               let targetIndex = contactsMessages.findIndex(
-                (number) => number.contact == contact.number
+                (number) => number.contact === contact.number
               );
 
-              if (targetIndex != -1) {
+              if (targetIndex !== -1) {
                 // sobrescreve os valores com a nova mensagem recebida
                 let temporaryarray = contactsMessages.slice();
                 temporaryarray[targetIndex].message =
@@ -409,6 +427,46 @@ function ChatPage() {
   const closeView = () => {
     setProfileView(!profileView);
   };
+
+  async function handleSendAudio(blob) {
+    try {
+      let audioUrl;
+
+      var blobFile = new File(
+        [blob],
+        `${URL.createObjectURL(blob).split("/").pop()}.mp3`,
+        { type: "audio/mp3" }
+      ); // converte o arquivo blob em um arquivo de tipo file
+
+      // faz o upload do arquivo de audio pro banco de dados
+      const uploadData = new FormData();
+      uploadData.append("filename", blobFile.name);
+      uploadData.append("file", blobFile);
+
+      let uploadRes = await uploadFile(uploadData);
+      audioUrl = uploadRes.data;
+
+      // envia a mensagem de audio utilizando a api do whatsapp
+      const sendAudioMessage = new FormData();
+      sendAudioMessage.append("file", blobFile);
+      sendAudioMessage.append("id", selectedContact.contactId);
+      sendAudioMessage.append("caption", caption);
+
+      await sendAudio({ from: userIns, data: sendAudioMessage });
+
+      // salva a mensagem para ser renderizada dentro do chat
+      await sendMessage({
+        chatId: chatId,
+        from: userIns,
+        to: selectedContact.contactId,
+        text: audioUrl,
+        caption: "",
+        type: "file",
+      });
+    } catch (err) {
+      console.log("[!!] Erro durante envio de audio - " + err);
+    }
+  }
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -444,23 +502,29 @@ function ChatPage() {
             )
             .map((contact, index) => {
               var result = contactsMessages.filter((obj) => {
-                return obj.contact == contact.number;
+                return obj.contact === contact.number;
               });
 
               return (
                 <ContactRow
                   key={index}
                   onClick={() =>
-                    handleGetChat(contact.number, contact.pfp, contact.contact)
+                    handleGetChat(
+                      contact.number,
+                      contact.pfp,
+                      contact.contact,
+                      convertoToFullStringDate(contact.date),
+                      contact.email
+                    )
                   }
                   selected={
-                    selectedContact.contactId == contact.number
+                    selectedContact.contactId === contact.number
                       ? "selected"
                       : "not"
                   }
                 >
                   <ContactPfp
-                    src={contact.pfp != null ? contact.pfp : defaultPic}
+                    src={contact.pfp !== null ? contact.pfp : defaultPic}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null;
                       currentTarget.src = defaultPic;
@@ -468,14 +532,14 @@ function ChatPage() {
                   />
                   <ContactName>
                     <p>{contact.contact}</p>
-                    {result != [] && (
+                    {result !== [] && (
                       <small>
-                        {(result[0]?.type == "text" && (
+                        {(result[0]?.type === "text" && (
                           <span>
                             <BsCheckAll /> {result[0]?.message}
                           </span>
                         )) ||
-                          (result[0]?.type == "file" && (
+                          (result[0]?.type === "file" && (
                             <>
                               <AiFillCamera /> Imagem
                             </>
@@ -498,7 +562,7 @@ function ChatPage() {
         <ContactTopBar onClick={closeView}>
           <ContactPfp
             src={
-              selectedContact.contactPfp != null
+              selectedContact.contactPfp !== null
                 ? selectedContact.contactPfp
                 : defaultPic
             }
@@ -509,111 +573,117 @@ function ChatPage() {
           />
           <ContactName>{selectedContact.contactName}</ContactName>
         </ContactTopBar>
-        {isOpen ? (
+        {isOpen && (
           <FilePreviewPage
             type={file.type}
             fileUrl={fileUrl}
             closePreview={closeImagePreview}
             handleSend={handleFileMessage}
           />
-        ) : (
-          <>
-            {profileView && (
-              <ContactInfoPage
-                picture={selectedContact.contactPfp}
-                name={selectedContact.contactName}
-                number={selectedContact.contactId}
-                closeView={closeView}
-              />
-            )}
-
-            <Chat ref={scrollRef}>
-              <Sentinel className="sentinel"></Sentinel>
-              {chatMsgs.slice(currentPage).map((msg, index) => {
-                return (
-                  <section key={index}>
-                    {userIns == msg.from ? (
-                      <MessageContainer key={index}>
-                        {msg.type == "quotedText" ? (
-                          <QuotedMessageContainer>
-                            <Quoted>
-                              <b>Você</b>
-                              <p>{msg.quotedMessage}</p>
-                            </Quoted>
-                            <p>{msg.text}</p>
+        )}
+        {profileView && (
+          <ContactInfoPage
+            picture={selectedContact.contactPfp}
+            name={selectedContact.contactName}
+            number={selectedContact.contactId}
+            subscriptionTime={selectedContact.subscriptionTime}
+            email={selectedContact.contactEmail}
+            interactions={interactions}
+            closeView={closeView}
+          />
+        )}
+        <Chat ref={scrollRef}>
+          <Sentinel className="sentinel" />
+          {chatMsgs.length <= 0 && (
+            <EmptyChat>Sem histórico de conversas!</EmptyChat>
+          )}
+          {chatMsgs.slice(currentPage).map((msg, index) => {
+            return (
+              <section key={index}>
+                {userIns === msg.from ? (
+                  <MessageContainer key={index}>
+                    {msg.type === "quotedText" ? (
+                      <QuotedMessageContainer>
+                        <Quoted>
+                          <b>Você</b>
+                          <p>{msg.quotedMessage}</p>
+                        </Quoted>
+                        <p>{msg.text}</p>
+                        <sub>
+                          {convertToMessageFormat(msg.date)}
+                          <BsCheckAll size={15} />
+                        </sub>
+                      </QuotedMessageContainer>
+                    ) : (
+                      <>
+                        {msg.type === "file" ? (
+                          <>
+                            <FileMessage
+                              message={{
+                                msg: msg,
+                                pfp: userPictureUrl,
+                              }}
+                            />
+                            <p>{msg.caption}</p>
                             <sub>
-                              {convertToDate(msg.date)}
+                              {convertToMessageFormat(msg.date)}
                               <BsCheckAll size={15} />
                             </sub>
-                          </QuotedMessageContainer>
-                        ) : (
-                          <>
-                            {msg.type === "file" ? (
-                              <>
-                                <FileMessage
-                                  message={{
-                                    msg: msg,
-                                    pfp: userPictureUrl,
-                                  }}
-                                />
-                                <p>{msg.caption}</p>
-                                <sub>
-                                  {convertToDate(msg.date)}
-                                  <BsCheckAll size={15} />
-                                </sub>
-                              </>
-                            ) : (
-                              <NormalMessage>
-                                <p>{msg.text}</p>
-                                <sub>
-                                  {convertToDate(msg.date)}
-                                  <BsCheckAll size={15} />
-                                </sub>
-                              </NormalMessage>
-                            )}
                           </>
-                        )}
-                      </MessageContainer>
-                    ) : (
-                      <MessageContainer receiver key={index}>
-                        {msg.type == "quotedText" ? (
-                          <QuotedMessageContainer>
-                            <Quoted>
-                              <b>Você</b>
-                              <p>{msg.quotedMessage}</p>
-                            </Quoted>
+                        ) : (
+                          <NormalMessage>
                             <p>{msg.text}</p>
-                            <sub>{convertToDate(msg.date)}</sub>
-                          </QuotedMessageContainer>
-                        ) : (
-                          <>
-                            {msg.type === "file" ? (
-                              <>
-                                <FileMessage
-                                  receiver
-                                  message={{
-                                    msg: msg,
-                                    pfp: selectedContact.contactPfp,
-                                  }}
-                                />
-                                <p>{msg.caption}</p>
-                              </>
-                            ) : (
-                              <NormalMessage receiver>
-                                <p>{msg.text}</p>
-                                <sub>{convertToDate(msg.date)} </sub>
-                              </NormalMessage>
-                            )}
-                          </>
+                            <sub>
+                              {convertToMessageFormat(msg.date)}
+                              <BsCheckAll size={15} />
+                            </sub>
+                          </NormalMessage>
                         )}
-                      </MessageContainer>
+                      </>
                     )}
-                  </section>
-                );
-              })}
-              <AlwaysScrollToBottom />
-            </Chat>
-            <ChatInputContainer>
+                  </MessageContainer>
+                ) : (
+                  <MessageContainer receiver key={index}>
+                    {msg.type === "quotedText" ? (
+                      <QuotedMessageContainer>
+                        <Quoted>
+                          <b>Você</b>
+                          <p>{msg.quotedMessage}</p>
+                        </Quoted>
+                        <p>{msg.text}</p>
+                        <sub>{convertToMessageFormat(msg.date)}</sub>
+                      </QuotedMessageContainer>
+                    ) : (
+                      <>
+                        {msg.type === "file" ? (
+                          <>
+                            <FileMessage
+                              receiver
+                              message={{
+                                msg: msg,
+                                pfp: selectedContact.contactPfp,
+                              }}
+                            />
+                            <p>{msg.caption}</p>
+                          </>
+                        ) : (
+                          <NormalMessage receiver>
+                            <p>{msg.text}</p>
+                            <sub>{convertToMessageFormat(msg.date)} </sub>
+                          </NormalMessage>
+                        )}
+                      </>
+                    )}
+                  </MessageContainer>
+                )}
+              </section>
+            );
+          })}
+          <AlwaysScrollToBottom />
+        </Chat>
+        <ChatInputContainer>
+          {!recorderControls.isRecording && (
+            <>
               <Menu>
                 <FloatingMenu
                   slideSpeed={500}
@@ -670,26 +740,46 @@ function ChatPage() {
                 theme="light"
                 placeholder="Digite uma mensagem.."
               />
-              <MessageBtn
-                size={30}
-                onClick={() =>
-                  handleSendMsg(
-                    selectedContact.chatId,
-                    userIns,
-                    selectedContact.contactId,
-                    message
-                  )
-                }
-              />
-            </ChatInputContainer>
-          </>
-        )}
+              {message && !recorderControls.isRecording ? (
+                <MessageBtn
+                  size={30}
+                  onClick={() =>
+                    handleSaveMsg(
+                      selectedContact.chatId,
+                      userIns,
+                      selectedContact.contactId,
+                      message
+                    )
+                  }
+                />
+              ) : (
+                <></>
+              )}
+            </>
+          )}
+          {recorderControls.isRecording ? (
+            <TrashBtn size={20} onClick={recorderControls.stopRecording} />
+          ) : (
+            <></>
+          )}
+          {!message && !recorderControls.isRecording && (
+            <RecordBtn
+              size={20}
+              onClick={() => recorderControls.startRecording()}
+            />
+          )}
+
+          <AudioRecorder
+            onRecordingComplete={(blob) => handleSendAudio(blob)}
+            recorderControls={recorderControls}
+          />
+        </ChatInputContainer>
       </ChatMain>
     </Container>
   );
 }
 
-const FileMessage = ({ receiver, message }) => {
+const FileMessage = ({ message }) => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [fullImageView, setFullImageView] = useState(false);
 
@@ -698,46 +788,52 @@ const FileMessage = ({ receiver, message }) => {
   };
 
   const openImageFullPreview = (e) => {
-    setPreviewUrl(e != "" ? e : "");
+    setPreviewUrl(e !== "" ? e : "");
     setFullImageView(!fullImageView);
   };
 
-  function download(dataurl, filename) {
-    const link = document.createElement("a");
-    link.href = dataurl;
-    link.download = filename;
-    link.click();
-  }
-
   return (
     <>
-      <DownloadOverlay onClick={() => download(message.msg.text, "jooj")} />
       {fullImageView && (
         <ImagePreview>
-          <img src={previewUrl} />
+          <img src={previewUrl} alt={message.msg?.text} />
           <PreviewBackground onClick={() => openImageFullPreview()} />
         </ImagePreview>
       )}
       {[".pdf", ".doc", ".rar", ".zip"].some((el) =>
         message.msg?.text?.includes(el)
       ) && (
-        <DocumentContainer onClick={() => handleDownloadFile(message.msg.text)}>
+        <DocumentContainer
+          onClick={() =>
+            handleDownloadFile(
+              `${process.env.REACT_APP_URL}${message.msg.text}`
+            )
+          }
+        >
           <IoDocument size={30} fill="#F34646" />
-          <p>{message.msg.text.split("file-")[1]}</p>
-          <HiDownload size={30} fill="#92AD9E" />
+          <div>
+            <p>{message.msg.text.split("-")[1]}</p>
+            <p>{message.msg.text.split(".").pop().toUpperCase()}</p>
+          </div>
+          <MdDownloadForOffline size={30} fill="#A2ABB2" />
         </DocumentContainer>
       )}
       {[".mp4", ".mov"].some((el) => message.msg?.text?.includes(el)) && (
         <VideoContainer controls>
-          <source src={message.msg.text} type="video/mp4" />
+          <source
+            src={`${process.env.REACT_APP_URL}${message.msg.text}`}
+            type="video/mp4"
+          />
           <sub>{convertToDate(message.msg.date)}</sub>
         </VideoContainer>
       )}
-      {[".mp3", ".wav"].some((el) => message.msg?.text?.includes(el)) && (
+      {[".mp3", ".wav", "-blob"].some((el) =>
+        message.msg?.text?.includes(el)
+      ) && (
         <AudioMessage>
           <ContactPfp src={message.pfp} />
           <AudioPlayer
-            src={message.msg.text}
+            src={`${process.env.REACT_APP_URL}${message.msg.text}`}
             style={{
               width: "300px",
               backgroundColor: "transparent",
@@ -753,6 +849,8 @@ const FileMessage = ({ receiver, message }) => {
             showSkipControls={false}
             showJumpControls={false}
             showFilledProgress={true}
+            autoPlay={false}
+            autoPlayAfterSrcChange={false}
             showFilledVolume={false}
             customIcons={{
               play: <BsFillPlayFill />,

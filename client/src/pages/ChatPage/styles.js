@@ -4,8 +4,9 @@ import {
   AiOutlinePaperClip,
   HiDownload,
   MdOutlineEmojiEmotions,
+  FaMicrophone,
+  FaTrash
 } from "../../styles/Icons";
-import background from "../../assets/background.png";
 
 export const Container = styled.div`
   width: 100%;
@@ -97,7 +98,7 @@ export const ContactRow = styled.div`
   transition: all 0.2s;
   box-shadow: var(--boxShadow);
   background-color: ${(props) =>
-    props.selected == "selected"
+    props.selected === "selected"
       ? "var(--secundary-background)"
       : "var(--main-background)"};
   gap: 10px;
@@ -105,7 +106,7 @@ export const ContactRow = styled.div`
 
   :hover {
     background-color: ${(props) =>
-      props.selected == "not" ? "var(--tertiary-background)" : ""};
+      props.selected === "not" ? "var(--tertiary-background)" : ""};
   }
 `;
 
@@ -165,11 +166,12 @@ export const Chat = styled.div`
   flex: 1;
   overflow-y: scroll;
   height: 100%;
+  position: relative;
 `;
 
 export const ChatInputContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 80px;
@@ -178,7 +180,36 @@ export const ChatInputContainer = styled.div`
   margin-top: auto;
   gap: 20px;
   bottom: 0;
+
+    
+  .audio-recorder {
+    background-color: transparent;
+    box-shadow: none;
+    width: 0px;
+    padding: 0px;
+  }
+
+  .recording {
+    width: 70%;
+  }
+
+  .audio-recorder-mic {
+    height: 26px;
+    width: auto;
+    display: none;
+
+  }
 `;
+
+export const RecordBtn = styled(FaMicrophone)`
+  color: var(--grey);
+  cursor: pointer;
+`
+
+export const TrashBtn = styled(FaTrash)`
+    color: var(--grey);
+  cursor: pointer;
+`
 
 export const ChatInput = styled.input`
   padding: 16px;
@@ -238,7 +269,7 @@ export const MessageContainer = styled.div`
     color: ${(props) => (props.receiver ? "#919191" : "#00000")};
     word-break: keep-all;
     align-self: flex-end;
-    padding: 6px 0;
+    padding: 0 0 6px 0;
 
     svg {
       margin-left: 5px;
@@ -278,7 +309,7 @@ export const SendFileInput = styled.input`
 `;
 
 export const Sentinel = styled.li`
-  background-color: transparent;
+  color: var(--chat-background);
 `;
 
 export const DocumentContainer = styled.div`
@@ -532,4 +563,29 @@ export const EndColumn = styled.div`
     font-size: 11px;
     color: var(--grey);
   }
+`;
+
+export const MessageDate = styled.div`
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin-left: 15%;
+  width: 100px;
+  background-color: var(--sendImage-background);
+  box-shadow: var(--boxShadow);
+  text-align: center;
+  padding: 6px;
+  border-radius: 20%;
+  font-size: 13px;
+  z-index: 9999;
+`;
+
+export const EmptyChat = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--grey);
 `;

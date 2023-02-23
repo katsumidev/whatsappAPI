@@ -77,7 +77,7 @@ const deleteIns = async (req, res) => {
 };
 
 const listIns = async (req, res) => {
-  const { userToken } = req.body;
+  const userToken = req.headers["authentication"]
   // Lista todos os usuários conectados na API
   axiosReq.get(`${apiUrl}/instance/list`).then(async (response) => {
     let data = await response.data;
@@ -91,12 +91,12 @@ const listIns = async (req, res) => {
 };
 
 const getInfo = async (req, res) => {
-  const { key } = req.body;
+  const userId = req.headers["authentication"]
 
   axiosReq
     .get(
       // pega as informações do usuário da API
-      `${apiUrl}/instance/info?key=${key}`
+      `${apiUrl}/instance/info?key=${userId}`
     )
     .then(async (response) => {
       let data = await response.data;
@@ -113,10 +113,11 @@ const getInfo = async (req, res) => {
 
 const downloadPfp = async (req, res) => {
   // baixa a foto de perfil do usuário da aplicação
-  const { key, id } = req.body;
+  const userId = req.headers["authentication"]
+  const contactNumber = req.query.contactNumber
 
   axiosReq
-    .get(`${apiUrl}/misc/downProfile?key=${key}&id=${id}`)
+    .get(`${apiUrl}/misc/downProfile?key=${userId}&id=${contactNumber}`)
     .then(async (response) => {
       let data = await response.data;
       return res.send(data.data);
@@ -124,9 +125,10 @@ const downloadPfp = async (req, res) => {
 };
 
 const checkStatus = async (req, res) => {
-  const { key, userToken } = req.body;
+  const userId = req.headers["userId"]
+  const userToken = req.headers["authentication"]
 
-  const hashed_key = encryptKey(key, userToken);
+  const hashed_key = encryptKey(userId, userToken);
 
   axiosReq
     .get(

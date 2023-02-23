@@ -18,15 +18,15 @@ route.post("/webHook/userHandler", webhook.userHandler);
 //contacts
 route.post("/contacts/addContact", contacts.newContact);
 route.post("/contacts/deleteContact",  contacts.deleteContact);
-route.post("/contacts/consultContacts",  contacts.consultContacts);
-route.post("/contacts/getContactPic",  contacts.getContactPic);
-route.post("/contacts/getStatus",  contacts.getStatus);
+route.get("/contacts/consultContacts",  contacts.consultContacts);
+route.get("/contacts/getContactPic",  contacts.getContactPic);
+route.get("/contacts/getStatus",  contacts.getStatus);
 
 //livechat
-route.post("/livechat/getChat", livechat.getChat);
-route.post("/livechat/getMessages", livechat.getMessages);
 route.post("/livechat/newMessage", livechat.newMessage);
-route.post("/livechat/getLastMessage", livechat.getLastMessage);
+route.get("/livechat/getChat", livechat.getChat);
+route.get("/livechat/getMessages", livechat.getMessages);
+route.get("/livechat/getLastMessage", livechat.getLastMessage);
 
 //messages
 route.post("/message/sendMessage", message.sendMessage);
@@ -35,10 +35,10 @@ route.post("/message/sendMultipleMessages", message.sendMultipleMessages);
 //user
 route.post("/instance/initUser", instance.initUser);
 route.post("/instance/deleteIns", instance.deleteIns);
-route.post("/instance/listIns", instance.listIns);
-route.post("/instance/getInfo", instance.getInfo);
-route.post("/instance/checkStatus", instance.checkStatus);
-route.post("/instance/downloadPfp", instance.downloadPfp);
+route.get("/instance/listIns", instance.listIns);
+route.get("/instance/getInfo", instance.getInfo);
+route.get("/instance/checkStatus", instance.checkStatus);
+route.get("/instance/downloadPfp", instance.downloadPfp);
 
 //User  flows
 route.post("/flow/create", flow.newFlow);

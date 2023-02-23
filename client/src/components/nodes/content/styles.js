@@ -18,17 +18,23 @@ export const Container = styled.div`
 export const ContentDiv = styled.div`
   background-color: #f4f4f4;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   min-height: 36px;
   background: #f4f4f4;
+  margin-top: 5px;
   border-radius: 6px;
-  margin-bottom: 9px;
-  font-size: 15px;
-  line-height: 18px;
   color: #000;
+
   .p {
+    font-size: 13px !important;
     padding-top: 5px;
+    text-align: center;
+    margin-bottom: 0px;
+  }
+
+  svg {
+    margin-left: 5px;
   }
 `;
 

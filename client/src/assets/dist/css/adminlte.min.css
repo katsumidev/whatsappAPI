@@ -737,6 +737,10 @@ pre code {
     padding-left: 7.5px
 }
 
+h1 {
+    font-weight: 600;
+}
+
 .col {
     -webkit-flex-basis: 0;
     -ms-flex-preferred-size: 0;
@@ -3077,7 +3081,7 @@ textarea.form-control.is-invalid {
     font-size: 1rem;
     line-height: 1.5;
     border-radius: .25rem;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+    transition: color .2s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
 @media (prefers-reduced-motion:reduce) {

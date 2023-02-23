@@ -1,7 +1,5 @@
-const express = require("express");
 const grid = require("gridfs-stream");
 const mongoose = require("mongoose");
-const url = process.env.SERVER_URL;
 
 // essa classe é responsavel por fazer o upload dos arquivos do usuário pro banco de dados, salvando eles como buckets no mongo
 let gfs, gridfsBucket;

@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const Container = styled.div`
   border-radius: 12px;
@@ -9,7 +9,7 @@ export const Container = styled.div`
   min-height: 150px;
   padding: 16px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 30px;
-  
+
   :hover {
     border: 3px solid var(--accent-color);
   }

@@ -1,22 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
   Container,
-  MessageInput,
-  SendMsgBtn,
-  FirstColumn,
-  SecondColumn,
-  ContactNameInput,
-  ContactList,
-  ContactRow,
-  ContactColumn,
   ProfilePicture,
-  DeleteContactBtn,
-  ContactInfo,
-  ContactOptions,
-  Main,
-  ImportContacts,
 } from "./styles";
-import InputMask from "react-input-mask";
 import ReactPaginate from "react-paginate";
 import CheckboxGroup from "react-checkbox-group";
 import { convertToFullDate, convertToPhone } from "../../utils/conversions";
@@ -29,13 +15,12 @@ import "../../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css";
 import "../../assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css";
 import "../../assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css";
 import { useParams } from "react-router";
-import { getInfo, getContacts } from "../../services/api";
+import { getContacts } from "../../services/api";
 import {
   AiOutlineDownload,
   AiOutlineUpload,
   IoMdContact,
   BiSearchAlt,
-  MdArrowBackIos,
   MdArrowForwardIos,
 } from "../../styles/Icons";
 import NewUserModal from "../../components/NewUserModal";
@@ -49,13 +34,13 @@ function UserPanel() {
   const { userIns } = useParams();
   const fileinput = useRef(null);
 
-  const endOffset = itemOffset + 10;
+  const endOffset = itemOffset + 8;
   const currentItems = contacts.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(contacts.length / 10);
+  const pageCount = Math.ceil(contacts.length / 8);
 
   const handlePageClick = (event) => {
     // paginação da data-table
-    const newOffset = (event.selected * 10) % contacts.length;
+    const newOffset = (event.selected * 8) % contacts.length;
     setItemOffset(newOffset);
   };
 
@@ -68,7 +53,7 @@ function UserPanel() {
     // pega os contatos do usuário
     const loadContacts = async () => {
       let data = await getContacts({
-        user_token: localStorage.getItem("userToken"),
+        userToken: localStorage.getItem("userToken"),
       });
       setContacts(data.data);
     };
@@ -93,6 +78,7 @@ function UserPanel() {
           console.log(
             `numero: ${files.telefone}, sobrenome: ${files.sobrenome}`
           );
+
           await addNewContact({
             phone_number: files.telefone,
             contact_name: files.sobrenome,
@@ -100,8 +86,11 @@ function UserPanel() {
             user_id: userIns,
           });
         });
+
         window.location.reload(false);
-      } catch (error) {}
+      } catch (error) {
+        console.log("erro de importação");
+      }
     };
 
     reader.readAsArrayBuffer(file);
@@ -112,6 +101,7 @@ function UserPanel() {
       {visible ? <NewUserModal /> : <></>}
       <input
         type="file"
+        accept=".xlsx"
         ref={fileinput}
         style={{ display: "none" }}
         onChange={handleFileChange}
@@ -282,7 +272,7 @@ function UserPanel() {
                     >
                       {(Checkbox) => (
                         <>
-                          {searchBox != ""
+                          {searchBox !== ""
                             ? contacts
                                 .filter((contact) =>
                                   contact.contact
@@ -299,7 +289,7 @@ function UserPanel() {
                                         <span>
                                           <ProfilePicture
                                             src={
-                                              contact.pfp != null
+                                              contact.pfp !== null
                                                 ? contact.pfp
                                                 : defaultPic
                                             }
@@ -330,7 +320,7 @@ function UserPanel() {
                                       <span>
                                         <ProfilePicture
                                           src={
-                                            contact.pfp != null
+                                            contact.pfp !== null
                                               ? contact.pfp
                                               : defaultPic
                                           }
@@ -363,7 +353,7 @@ function UserPanel() {
                 nextLabel={<MdArrowForwardIos />}
                 className="react-paginate"
                 onPageChange={handlePageClick}
-                pageRangeDisplayed={10}
+                pageRangeDisplayed={8}
                 pageCount={pageCount}
                 activeClassName="active-page"
                 previousLabel={<MdArrowForwardIos className="back" />}

@@ -11,7 +11,7 @@ export {
   AiOutlineClockCircle,
   AiFillCamera,
 } from "react-icons/ai";
-export { FaTrash } from "react-icons/fa";
+export { FaTrash, FaMicrophone } from "react-icons/fa";
 export {
   BsFillChatFill,
   BsImage,
@@ -31,10 +31,11 @@ export {
   MdOutlineEmojiEmotions,
   MdArrowForwardIos,
   MdArrowBackIos,
+  MdDownloadForOffline
 } from "react-icons/md";
 export { IoDocument, IoClose } from "react-icons/io5";
-export { HiDownload, HiLockClosed } from "react-icons/hi";
-export { MdEmail } from "react-icons/md";
+export { HiDownload, HiLockClosed, HiOutlineMail } from "react-icons/hi";
+export { MdEmail, MdAdsClick } from "react-icons/md";
 export { IoMdContact } from "react-icons/io";
 export { BiBookContent, BiSearchAlt } from "react-icons/bi";
 export { TbArrowFork } from "react-icons/tb";

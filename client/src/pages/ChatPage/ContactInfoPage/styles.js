@@ -13,6 +13,21 @@ export const Container = styled.div`
   gap: 5px;
 `;
 
+export const Info = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 5px;
+  color: var(--grey);
+  font-size: 14px;
+  margin-top: 10px;
+
+  label {
+    margin-bottom: 0;
+    margin-right: 15px;
+  }
+`;
+
 export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -51,7 +66,9 @@ export const ContactNumber = styled.small`
   color: var(--grey);
 `;
 export const Time = styled.div``;
-export const Description = styled.div``;
+export const Description = styled.div`
+  margin-bottom: 2.5rem;
+`;
 
 export const Options = styled.div`
   height: 100%;

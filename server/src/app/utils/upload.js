@@ -1,5 +1,6 @@
 const multer = require("multer");
-const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
+const GridFsStorage = require("multer-gridfs-storage").GridFsStorage;
+const crypto = require("crypto");
 
 const storage = new GridFsStorage({
   url: "mongodb://127.0.0.1:27017/whatapi",
@@ -9,14 +10,18 @@ const storage = new GridFsStorage({
   },
   file: (request, file) => {
     const match = ["image/png", "image/jpg"];
+    const hash = crypto.randomBytes(20).toString("hex");
+    const hashedBuffer = `${hash.toString("hex")}-${file.originalname
+      .replaceAll(/\s/g, "")
+      .replaceAll(/[^0-9a-zA-Z.]/g, "")}`;
 
     if (match.indexOf(file.mimeType) === -1) {
-      return `${Date.now()}-file-${file.originalname}`;
+      return hashedBuffer;
     }
 
     return {
       bucketName: "photos",
-      filename: `${Date.now()}-file-${file.originalname}`,
+      filename: hashedBuffer,
     };
   },
 });

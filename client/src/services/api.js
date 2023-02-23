@@ -1,37 +1,17 @@
-// este arquivo guardar todas as funções responsaveis por fazer conexões e requisições ao banco de dados
-
+// Este arquivo guarda todas as funções responsaveis por fazer conexões e requisições ao banco de dados
 import axios from "axios";
 const url = process.env.REACT_APP_URL;
 const apiUrl = process.env.REACT_APP_API_URL;
 
-export const addNewContact = async (data) => {
-  try {
-    return await axios.post(`${url}/contacts/addContact`, data);
-  } catch (error) {
-    console.log("Error while calling newConversations API ", error);
-  }
-};
-
-export const deleteUserContact = async (data) => {
-  try {
-    return await axios.post(`${url}/contacts/deleteContact`, data);
-  } catch (error) {
-    console.log("Error while calling newConversations API ", error);
-  }
-};
-
-export const getContacts = async (data) => {
-  console.log(url);
-  try {
-    return await axios.post(`${url}/contacts/consultContacts`, data);
-  } catch (error) {
-    console.log("Error while calling newConversations API ", error);
-  }
-};
+// User Controllers
 
 export const getInfo = async (data) => {
   try {
-    return await axios.post(`${url}/instance/getInfo`, data);
+    return await axios.get(`${url}/instance/getInfo`, {
+      headers: {
+        Authentication: data.userId
+      }
+    });
   } catch (error) {
     console.log("Error while calling newConversations API ", error);
   }
@@ -39,7 +19,11 @@ export const getInfo = async (data) => {
 
 export const ListInstance = async (data) => {
   try {
-    return await axios.post(`${url}/instance/listIns`, data);
+    return await axios.get(`${url}/instance/listIns`, {
+      headers: {
+        Authentication: data.userToken
+      }
+    });
   } catch (error) {
     console.log("Error while calling newConversations API ", error);
   }
@@ -47,7 +31,14 @@ export const ListInstance = async (data) => {
 
 export const getUserPicture = async (data) => {
   try {
-    return await axios.post(`${url}/instance/downloadPfp`, data);
+    return await axios.get(
+      `${url}/instance/downloadPfp?contactNumber=${data.contactNumber}`,
+      {
+        headers: {
+          Authentication: data.userId,
+        },
+      }
+    );
   } catch (error) {
     console.log("Error while calling newConversations API ", error);
   }
@@ -69,6 +60,38 @@ export const deleteInstance = async (data) => {
   }
 };
 
+// Contacts Controllers
+
+export const addNewContact = async (data) => {
+  try {
+    return await axios.post(`${url}/contacts/addContact`, data);
+  } catch (error) {
+    console.log("Error while calling newConversations API ", error);
+  }
+};
+
+export const deleteUserContact = async (data) => {
+  try {
+    return await axios.post(`${url}/contacts/deleteContact`, data);
+  } catch (error) {
+    console.log("Error while calling newConversations API ", error);
+  }
+};
+
+export const getContacts = async (data) => {
+  try {
+    return await axios.get(`${url}/contacts/consultContacts`, {
+      headers: {
+        Authentication: data.userToken,
+      },
+    });
+  } catch (error) {
+    console.log("Error while calling newConversations API ", error);
+  }
+};
+
+// Automation Controllers
+
 export const sendSingleMessage = async (data) => {
   try {
     return await axios.post(`${url}/message/sendMessage`, data);
@@ -85,13 +108,8 @@ export const sendMultipleMessages = async (data) => {
   }
 };
 
-export const uploadFile = async (data) => {
-  try {
-    return await axios.post(`${url}/file/uploadFile`, data);
-  } catch (error) {
-    console.log("Error while calling newConversations API ", error);
-  }
-};
+
+// Live Chat Controllers
 
 export const sendMessage = async (data) => {
   try {
@@ -147,7 +165,9 @@ export const sendAudio = async (data) => {
 
 export const getCurrentChat = async (data) => {
   try {
-    return await axios.post(`${url}/livechat/getChat`, data);
+    return await axios.get(
+      `${url}/livechat/getChat?from=${data.from}&to=${data.to}`
+    );
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
@@ -155,11 +175,38 @@ export const getCurrentChat = async (data) => {
 
 export const getMessages = async (data) => {
   try {
-    return await axios.post(`${url}/livechat/getMessages`, data);
+    return await axios.get(`${url}/livechat/getMessages?chatId=${data.chatId}`);
   } catch (error) {
     console.log("Error while calling newMessage API", error);
   }
 };
+
+export const getContactLastMessage = async (data) => {
+  try {
+    return await axios.get(
+      `${url}/livechat/getLastMessage?from=${data.from}&to=${data.to}`
+    );
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};
+
+export const getUserStatus = async (data) => {
+  try {
+    return await axios.get(
+      `${url}/contacts/getStatus?contactNumber=${data.contactNumber}`,
+      {
+        headers: {
+          userId: data.userId,
+        },
+      }
+    );
+  } catch (error) {
+    console.log("Error while calling newMessage API", error);
+  }
+};
+
+// Files Controllers
 
 export const downloadFile = async (data) => {
   try {
@@ -169,19 +216,11 @@ export const downloadFile = async (data) => {
   }
 };
 
-export const getContactLastMessage = async (data) => {
+export const uploadFile = async (data) => {
   try {
-    return await axios.post(`${url}/livechat/getLastMessage`, data);
+    return await axios.post(`${url}/file/uploadFile`, data);
   } catch (error) {
-    console.log("Error while calling newMessage API", error);
-  }
-};
-
-export const getUserStatus = async (data) => {
-  try {
-    return await axios.post(`${url}/contacts/getStatus`, data);
-  } catch (error) {
-    console.log("Error while calling newMessage API", error);
+    console.log("Error while calling newConversations API ", error);
   }
 };
 

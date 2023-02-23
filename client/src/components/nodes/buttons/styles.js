@@ -76,6 +76,7 @@ export const Message = styled.div`
   text-align: initial;
   font-size: 12px;
   width: 70%;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
 
@@ -107,13 +108,13 @@ export const ButtonMessage = styled.div`
 `;
 
 export const Buttons = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
   margin-top: 10px;
-`
+`;
 
 export const HandleBtns = styled.div`
-    background-color: var(--sendImage-background);
+  background-color: var(--sendImage-background);
   border-radius: 6px;
   padding: 6px;
   font-size: 12px;
@@ -124,4 +125,4 @@ export const HandleBtns = styled.div`
   text-align: center;
   margin-top: 5px;
   color: #000;
-`
+`;

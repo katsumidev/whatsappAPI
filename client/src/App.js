@@ -5,17 +5,16 @@ import { ModalProvider } from "./modal.context";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserPanel from "./pages/UserPanel";
 import ChatPage from "./pages/ChatPage";
-import Header from "./components/Header";
-import WhatsApp from "./components/whatsapp";
-import Fields from "./components/fields";
-import Tags from "./components/tags";
-import Responses from "./components/responses";
-import Admin from "./components/admin";
-import Welcome from "./components/welcome";
-import Company from "./components/company";
-import Logs from "./components/logs";
-import FieldsModal from "./components/fieldsModal";
-import Flow from "./components/flow";
+import WhatsApp from "./components/Whatsapp";
+import Fields from "./components/Fields";
+import Tags from "./components/Tags";
+import Responses from "./components/Responses";
+import Admin from "./components/Admin";
+import Welcome from "./components/Welcome";
+import Company from "./components/Company";
+import Logs from "./components/Logs";
+import FieldsModal from "./components/FieldsModal";
+import Flow from "./components/Flow";
 import LoginPage from "./pages/LoginPage";
 
 function App() {

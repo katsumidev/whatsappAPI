@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { RiSendPlaneFill } from "../../../styles/Icons";
 
 export const Container = styled.div`
+  position: absolute;
+  z-index: 999;
   max-width: 100%;
   max-height: 100%;
   width: 100%;

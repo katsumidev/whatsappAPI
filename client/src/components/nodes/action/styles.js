@@ -53,16 +53,15 @@ export const Header = styled.div`
 
 export const Sub = styled.div`
   font-size: 13px;
-    font-weight: 600;
-    text-transform: capitalize;
-`
+  font-weight: 600;
+  text-transform: capitalize;
+`;
 
 export const Text = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-
 
   p {
     text-transform: uppercase;
