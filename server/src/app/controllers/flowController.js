@@ -21,9 +21,10 @@ const newFlow = async (req, res) => {
 } 
 
 const getFlows = async (req, res) => {
-    const { user_token } = req.body;
+    const { userToken } = req.body;
+    console.log(userToken)
 
-    User.find({ userId: user_token }, (err, arr) => {
+    User.find({ userId: userToken }, (err, arr) => {
         arr.forEach((items) => {
           flow = items.flowList;
     
@@ -35,7 +36,8 @@ const getFlows = async (req, res) => {
               createdAt: item.createdAt
             };
           });
-          return res.send(array);
+          console.log(JSON.stringify(array))
+          return res.json(array);
         });
       });
 }
@@ -79,18 +81,19 @@ const deleteFlow = async(req, res) => {
             { new: true },
             (err, arr) => {
               if (arr) {
-                return res.status(200).send("flow deletado deletado");
+                return res.status(200).send("flow deletado");
               }
             }
           );
         });
-      });
+    });
 }
+
 
 module.exports = {
     newFlow,
     getFlows,
     getOneFlow,
     deleteFlow,
-    updateFlow
+    updateFlow,
 }

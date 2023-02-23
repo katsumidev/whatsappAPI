@@ -252,22 +252,6 @@ export const uploadFile = async (data) => {
   ctr: number,
   user_token: string
 */
-export const createFlow = async (data) => {
-  try {
-    return await axios.post(`${url}/flow/create`, data);
-  } catch (error) {
-    console.log("Error while calling createFlow API", error);
-  }
-};
-
-// user_token
-export const getFlows = async (data) => {
-  try {
-    return await axios.post(`${url}/flow/get`, data);
-  } catch (error) {
-    console.log("Error while calling getFlow API", error);
-  }
-};
 
 /*
   user_token: string,
@@ -305,4 +289,22 @@ export const deleteFlow = async (data) => {
   } catch (error) {
     console.log("Error while calling deletFlow API", error);
   }
-};
+}
+
+export const createFlowMap = async (data, userToken, flowName) => {
+  try {
+    console.log(`Dados chegam aqui: ${data, userToken, flowName}`)
+    return await axios.post(`${url}/flow/map`, {data, userToken, flowName})
+  } catch (error) {
+    console.log("Error while calling createFlowMap API", error);
+  }
+}
+
+export const getFlowMap = async (userToken, flowName) => {
+  try {
+    console.log(`Dados chegam aqui: ${userToken, flowName}`)
+    return await axios.post(`${url}/flow/getmap`, {userToken, flowName})
+  } catch (error) {
+    console.log("Error while calling createFlowMap API", error);
+  }
+}

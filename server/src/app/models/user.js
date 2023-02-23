@@ -20,25 +20,9 @@ const UsersSchema = new mongoose.Schema({
       },
       flow: [
         {
-          edges: mongoose.Schema.Types.Mixed,
-          nodes: [
-            {
-              id: String,
-              type: String,
-              postition: {
-                x: Number,
-                y: Number,
-              },
-              data: mongoose.Schema.Types.Mixed,
-              height: Number,
-              width: Number,
-            }
-          ],
-          viewport: {
-            x: Number,
-            y: Number,
-            zoom: Number
-          }
+          edges: [mongoose.Schema.Types.Mixed],
+          nodes: [mongoose.Schema.Types.Mixed],
+          viewport: mongoose.Schema.Types.Mixed,
         }
       ]
     }

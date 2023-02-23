@@ -7,7 +7,8 @@ const instance = require("../controllers/userInstance");
 const files = require("../controllers/fileController");
 const upload = require("../utils/upload");
 const flow = require("../controllers/flowController");
-const path = require("path");
+const flowMap = require("../controllers/flowMapsController");
+const path = require("path")
 
 const route = express.Router();
 
@@ -47,6 +48,10 @@ route.post("/flow/get", flow.getFlows);
 route.post("/flow/getOne", flow.getOneFlow);
 route.post("/flow/update", flow.updateFlow);
 route.post("/flow/delete", flow.deleteFlow);
+
+// Flow maps
+route.post("/flow/getmap", flowMap.getFlowMap)
+route.post("/flow/map", flowMap.createMapFlow)
 
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);
