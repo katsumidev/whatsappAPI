@@ -27,6 +27,7 @@
     "react-circular-menu": "^2.3.10",
     "react-dom": "^18.2.0",
     "react-floating-button-menu": "^2.1.1",
+    "react-flow-renderer": "^10.3.17",
     "react-h5-audio-player": "^3.8.6",
     "react-howler": "^5.2.0",
     "react-icons": "^4.7.1",
