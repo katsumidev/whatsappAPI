@@ -12,13 +12,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
-import ContetntSquare from "../nodes/Content";
-import ButtonSquare from "../nodes/Buttons";
-import ConditionSquare from "../nodes/Conditions";
-import ConnectionSquare from "../nodes/Connection";
-import RandomSquare from "../nodes/Random";
-import DelaySquare from "../nodes/Delay";
-import IntegrationSquare from "../nodes/Integration";
+import ContetntSquare from "../nodes/content";
+import ButtonSquare from "../nodes/buttons";
+import ConditionSquare from "../nodes/conditions";
+import ConnectionSquare from "../nodes/connection";
+import RandomSquare from "../nodes/random";
+import DelaySquare from "../nodes/delay";
+import IntegrationSquare from "../nodes/integration";
 import {
   AiOutlineClockCircle,
   BsLightningCharge,
@@ -28,7 +28,7 @@ import {
   BiBookContent,
   BsListUl,
 } from "../../styles/Icons";
-import ActionSquare from "../nodes/Action";
+import ActionSquare from "../nodes/action";
 import {
   ActionBody,
   ActionHeader,
@@ -79,7 +79,7 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
-import { createFlow, deleteFlow, getFlows, getOneFlow } from "../../services/api";
+import { createFlow, createFlowMap, deleteFlow, getFlowMap, getFlows, getOneFlow } from "../../services/api";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -575,10 +575,24 @@ function Flow() {
   // Save flow in database
   const [rfInstance, setRfInstance] = useState(null);
 
-  const onSave = useCallback(() => {
+  const onSave = useCallback( async () => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
       localStorage.setItem('ex', JSON.stringify(flow));
+      try {
+        // await createFlow({
+        //   name: 'teste Final',
+        //   execution: 68,
+        //   ctr: 25,
+        //   user_token: 'mapas'
+        // })
+        const {data, status} = await createFlowMap(flow, 'mapas', 'teste Final');
+        console.log(`dados: ${data} e status: ${status}`);
+      //  const {data} = await getFlowMap('mapas', 'teste Final');
+      //  console.log(JSON.stringify(data))
+      } catch (error) {
+        console.log(error)
+      }
     }
   }, [rfInstance]);
 
