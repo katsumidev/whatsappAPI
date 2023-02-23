@@ -6,7 +6,7 @@ import {
   ServerStatusOff,
   ServerStatusOn,
   WhatsAppNumber,
-} from "./style";
+} from "./styles";
 import Menu from "../Menu";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
