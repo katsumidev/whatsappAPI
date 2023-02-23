@@ -93,7 +93,7 @@ function ChatPage() {
   const [newContactMessageFlag, setNewContactMessageFlag] = useState(false); // flag para verificar se o usuário recebeu uma mensagem
   const [floatMenuOpen, setFloatMenuOpen] = useState(false);
   const [fileUrl, setFileUrl] = useState("");
-  const [file, setFile] = useState({});
+  const [file, setFile] = useState();
   const [acceptedFiles, setAcceptedFiles] = useState("");
   const [userPictureUrl, setUserPicture] = useState("");
   const [interactions, setInteractions] = useState(0);
@@ -203,6 +203,7 @@ function ChatPage() {
       };
     }
 
+    setFile();
     setFileUrl("");
     setMessage("");
 
@@ -226,6 +227,7 @@ function ChatPage() {
         contactEmail: email,
       });
       setCurrentPage(-15);
+      setFile();
       setAcceptedFiles("");
       setIsOpen(false);
 
@@ -301,6 +303,7 @@ function ChatPage() {
     );
 
     fileinput.current.value = ""; // reseta o valor do input
+    setFile();
     setIsOpen(false);
     setNewMessageFlag((prev) => !prev);
   };
@@ -737,7 +740,7 @@ function ChatPage() {
                 theme="light"
                 placeholder="Digite uma mensagem.."
               />
-              {message && (
+              {message && !recorderControls.isRecording ? (
                 <MessageBtn
                   size={30}
                   onClick={() =>
@@ -749,17 +752,23 @@ function ChatPage() {
                     )
                   }
                 />
+              ) : (
+                <></>
               )}
             </>
           )}
-          {!message && recorderControls.isRecording ? (
+          {recorderControls.isRecording ? (
             <TrashBtn size={20} onClick={recorderControls.stopRecording} />
           ) : (
+            <></>
+          )}
+          {!message && !recorderControls.isRecording && (
             <RecordBtn
               size={20}
               onClick={() => recorderControls.startRecording()}
             />
           )}
+
           <AudioRecorder
             onRecordingComplete={(blob) => handleSendAudio(blob)}
             recorderControls={recorderControls}
