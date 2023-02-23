@@ -246,10 +246,21 @@ export const deleteFlow = async (data) => {
   }
 }
 
+// Map
+
 export const createFlowMap = async (data, userToken, flowName) => {
   try {
     console.log(`Dados chegam aqui: ${data, userToken, flowName}`)
     return await axios.post(`${url}/flow/map`, {data, userToken, flowName})
+  } catch (error) {
+    console.log("Error while calling createFlowMap API", error);
+  }
+}
+
+export const getFlowMap = async (userToken, flowName) => {
+  try {
+    console.log(`Dados chegam aqui: ${userToken, flowName}`)
+    return await axios.post(`${url}/flow/getmap`, {userToken, flowName})
   } catch (error) {
     console.log("Error while calling createFlowMap API", error);
   }

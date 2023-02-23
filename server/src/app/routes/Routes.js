@@ -46,10 +46,12 @@ route.post("/flow/get", flow.getFlows)
 route.post("/flow/getOne", flow.getOneFlow)
 route.post("/flow/update", flow.updateFlow)
 route.post("/flow/delete", flow.deleteFlow)
-route.post("/flow/map", flow.createMapFlow)
+
 
 
 // Flow maps
+route.post("/flow/getmap", flowMap.getFlowMap)
+route.post("/flow/map", flowMap.createMapFlow)
 
 //files
 route.post("/file/uploadFile", upload.upload.single("file"), files.uploadFile);

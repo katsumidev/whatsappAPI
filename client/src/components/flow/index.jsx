@@ -82,7 +82,7 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
-import { createFlow, createFlowMap, deleteFlow, getFlows, getOneFlow } from "../../services/api";
+import { createFlow, createFlowMap, deleteFlow, getFlowMap, getFlows, getOneFlow } from "../../services/api";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -564,6 +564,8 @@ function Flow() {
         // })
         const {data, status} = await createFlowMap(flow, 'mapas', 'teste Final');
         console.log(`dados: ${data} e status: ${status}`);
+      //  const {data} = await getFlowMap('mapas', 'teste Final');
+      //  console.log(JSON.stringify(data))
       } catch (error) {
         console.log(error)
       }
