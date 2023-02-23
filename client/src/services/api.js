@@ -238,7 +238,7 @@ export const createFlow = async (data) => {
   }
 }
 
-// user_token
+// userToken
 export const getFlows = async (data) => {
   try {
     return await axios.post(`${url}/flow/get`, data)

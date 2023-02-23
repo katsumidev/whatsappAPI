@@ -16,6 +16,7 @@ import Logs from "./components/logs/index";
 import FieldsModal from "./components/fieldsModal/index";
 import Flow from "./components/flow/index";
 import LoginPage from "./pages/LoginPage";
+import FlowsDashBoard from "./components/FlowsDashboard";
 
 function App() {
   localStorage.setItem("userToken", "teste")
@@ -37,6 +38,7 @@ function App() {
           <Route path="/:userIns/settings/company" element={<Company/>}/>
           <Route path="/:userIns/settings/logs" element={<Logs/>}/>
           <Route path="/:userIns/constructor/:flowId" element={<Flow/>}/>
+          <Route path="/:userIns/flows" element={<FlowsDashBoard/>}/>
           <Route path="/teste" element={<FieldsModal/>}/>
         </Routes>
         <GlobalStyle />
