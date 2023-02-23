@@ -15,9 +15,10 @@ app.use(
   })
 );
 
-require("./src/app/routes/Routes")(app); // rotas do servidor
+require("./src/app/routes/Routes")(app); // "Baixa" as rotas do servidor
 
 const server = app.listen(process.env.PORT, function () {
+  // Inicia o servidor na porta selecionada
   console.log("[!!] Servidor aberto na porta - " + process.env.PORT + " [!!]");
 });
 

@@ -9494,6 +9494,11 @@ react-audio-player@^0.17.0:
   dependencies:
     prop-types "^15.7.2"
 
+react-audio-voice-recorder@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-audio-voice-recorder/-/react-audio-voice-recorder-1.0.4.tgz#08604becb7a1d038ddd14b5d6274dd1f5d419d27"
+  integrity sha512-NqMQqZZIau8cmzKUsf43s8rWF5lJPPebj+o6tkcX83dv2lLDdJL+jUFspynMSEZq+/T8NJYH2QUqqDAv9XF4Xw==
+
 react-checkbox-group@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/react-checkbox-group/-/react-checkbox-group-5.0.2.tgz#ccf6d5bd36d549727f8bc2c44b011224e4599450"

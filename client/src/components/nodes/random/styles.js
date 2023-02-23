@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 export const Container = styled.div`
   border-radius: 12px;
@@ -9,7 +9,7 @@ export const Container = styled.div`
   min-height: 150px;
   padding: 16px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 30px;
-  
+
   :hover {
     border: 3px solid var(--accent-color);
   }
@@ -22,14 +22,12 @@ export const H1 = styled.h1`
   gap: 5px;
 `;
 
-
 export const SquareContent = styled.div`
-border-bottom: 1px #000;
+  border-bottom: 1px #000;
   span {
     margin-left: 85%;
   }
-`
-
+`;
 
 export const RandomLogo = styled.div`
   width: 52px;
@@ -39,7 +37,11 @@ export const RandomLogo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(106.5deg, rgba(255, 215, 185, 0.91) 23%, rgba(223, 159, 247, 0.8) 93%);
+  background: linear-gradient(
+    106.5deg,
+    rgba(255, 215, 185, 0.91) 23%,
+    rgba(223, 159, 247, 0.8) 93%
+  );
 `;
 
 export const Header = styled.div`

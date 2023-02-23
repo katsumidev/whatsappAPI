@@ -25,8 +25,8 @@ function ContactInfoPage(props) {
   useEffect(() => {
     const getStatus = async () => {
       let data = await getUserStatus({
-        user_id: userIns,
-        contact_number: props.number,
+        userId: userIns,
+        contactNumber: props.number,
       });
       setStatus(data.data.status);
     };

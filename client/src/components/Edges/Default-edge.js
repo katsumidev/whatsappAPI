@@ -1,5 +1,5 @@
-import React from 'react';
-import { getBezierPath } from 'reactflow';
+import React from "react";
+import { getBezierPath } from "reactflow";
 
 export default function DefaultEdge({
   id,
@@ -23,12 +23,12 @@ export default function DefaultEdge({
   });
 
   return (
-      <path
-        id={id}
-        style={style}
-        className="react-flow__edge-path stroke-2 stroke-zinc"
-        d={edgePath}
-        markerEnd={markerEnd}
-      />
+    <path
+      id={id}
+      style={style}
+      className="react-flow__edge-path stroke-2 stroke-zinc"
+      d={edgePath}
+      markerEnd={markerEnd}
+    />
   );
 }

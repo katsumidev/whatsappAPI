@@ -111,15 +111,16 @@ export const Modal = styled.div`
   flex-direction: column;
   gap: 20px;
   overflow: hidden;
+  overflow-y: scroll;
 `;
 // Content Square
 
 export const ContentHeader = styled.div`
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: #ffd8d2;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
 `;
 
 export const ContainerTextArea = styled.div`
@@ -250,6 +251,7 @@ export const ContentBody = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 `;
 
 export const CardsButtonsContent = styled.div`
@@ -258,6 +260,7 @@ export const CardsButtonsContent = styled.div`
   justify-content: center;
   display: flex;
   margin-top: 100px;
+  padding: 16px;
 `;
 
 export const CardButtons = styled.div`
@@ -302,10 +305,13 @@ export const DelayRange = styled.div`
   min-height: 110px;
   margin-top: 5px;
   width: 90%;
-  height: 10%;
   border-radius: 10px;
   color: #5a677d;
-  border: 1px dotted gray;
+  border: 1px dashed gray;
+  font-size: 12px;
+  gap: 20px;
+  padding: 12px;
+
   select {
     max-width: 80%;
   }
@@ -331,7 +337,7 @@ export const CreateNewButton = styled.div`
   cursor: pointer;
   text-align: center;
   padding: 12px;
-  transition: .2s;
+  transition: 0.2s;
 
   :hover {
     border: 2px dashed #00c64b;
@@ -340,14 +346,14 @@ export const CreateNewButton = styled.div`
 `;
 
 export const ButtonDelete = styled.button`
-  max-width: 120px;
+  width: 80px;
   margin-left: right;
-  border-radius: 10px;
-  padding: 6px;
+  border-radius: 6px;
+  padding: 2px;
   font-size: 11px;
   background: transparent;
   border: 1px solid var(--accent-color);
-  transition: .2s;
+  transition: 0.2s;
 
   :hover {
     background-color: var(--accent-color);
@@ -438,9 +444,9 @@ export const ButtonTextArea = styled.textarea`
 
 export const ConditionHeader = styled.div`
   width: 100%;
-  height: 35px;
   background: #efe5ff;
   text-align: center;
+  padding: 16px;
 `;
 
 export const ConditionBody = styled.div`
@@ -450,25 +456,25 @@ export const ConditionBody = styled.div`
   align-items: center;
   min-height: 110px;
   margin-top: 25px;
-  width: 90%;
   height: 10%;
   border-radius: 10px;
   color: #5a677d;
-  p {
-    margin-top: 15px;
-  }
+  margin-top: 70px;
+  text-align: center;
 `;
 
 export const ConnectionHeader = styled.div`
   width: 100%;
-  height: 35px;
   background: #efe5ff;
   text-align: center;
+  padding: 16px;
+  font-weight: 600;
 `;
 export const ConnectionBody = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  max-width: 70%;
+  align-items: center;
   text-align: center;
 `;
 

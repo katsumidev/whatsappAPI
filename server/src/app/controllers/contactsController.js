@@ -89,9 +89,9 @@ const deleteContact = async (req, res) => {
 };
 
 const consultContacts = async (req, res) => {
-  const { user_token } = req.body;
+  const userToken = req.headers["authentication"]
 
-  User.find({ userId: user_token }, (err, arr) => {
+  User.find({ userId: userToken }, (err, arr) => {
     // puxa todos os contatos de determinado usuário, busca através da identificação do usuário (user_token)
     arr.forEach((items) => {
       contacts = items.contactList;
@@ -113,25 +113,28 @@ const consultContacts = async (req, res) => {
 
 const getContactPic = async (req, res) => {
   // pega a foto do contato
-  const { user_id, contact_number } = req.body;
+  // const { user_id, contact_number } = req.body;
+  const userId = req.headers["userId"]
+  const contactNumber = req.query.contactId;
 
   axiosReq
-    .get(`${apiUrl}/misc/downProfile?key=${user_id}&id=${contact_number}`)
+    .get(`${apiUrl}/misc/downProfile?key=${userId}&id=${contactNumber}`)
     .then(async (response) => {
       let data = await response.data;
 
       return res.send(data.data);
     })
     .catch((err) => {
-      return res.send("[!! No picture found [!!]");
+      return res.send("[!! No picture found [!!] " - err);
     });
 };
 
 const getStatus = async (req, res) => {
-  const { user_id, contact_number } = req.body;
+  const userId = req.headers["userid"]
+  const contactNumber = req.query.contactNumber;
 
   axiosReq
-    .get(`${apiUrl}/misc/getStatus?key=${user_id}&id=${contact_number}`)
+    .get(`${apiUrl}/misc/getStatus?key=${userId}&id=${contactNumber}`)
     .then(async (response) => {
       let data = await response.data;
       return res.send(data.data);

@@ -13,7 +13,8 @@ const axiosReq = axios.create({
 
 const getChat = async (req, res) => {
   try {
-    const { from, to } = req.body;
+    const from = req.query.from;
+    const to = req.query.to;
 
     const exist = await LiveChat.findOne({
       // procura no banco de dados o chat correspondente
@@ -44,7 +45,8 @@ const getChat = async (req, res) => {
 
 const getLastMessage = async (req, res) => {
   // puxa a ultima mensagem que o contato enviou
-  const { from, to } = req.body;
+  const from = req.query.from;
+  const to = req.query.to;
 
   let conversation = await LiveChat.findOne({
     members: { $all: [from, to] },
@@ -77,13 +79,10 @@ const newMessage = async (req, res) => {
   try {
     if (type != "file") {
       axiosReq
-        .post(
-          `${apiUrl}/message/text?key=${from}`,
-          {
-            id: to,
-            message: text,
-          },
-        )
+        .post(`${apiUrl}/message/text?key=${from}`, {
+          id: to,
+          message: text,
+        })
         .then((axiosRes) => {
           switch (axiosRes.status) {
             case 201:
@@ -147,7 +146,7 @@ const getReceiverChat = async (from, to) => {
 };
 
 const getMessages = async (req, res) => {
-  const { chatId } = req.body;
+  const chatId = req.query.chatId;
 
   try {
     const messages = await ChatMessage.find({

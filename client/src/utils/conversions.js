@@ -28,7 +28,7 @@ export const convertToDate = (date) => {
     timeZone: "America/Sao_Paulo",
   });
 
-  if (currentDate.split(" ")[0] == formatedDate.split(" ")[0]) {
+  if (currentDate.split(" ")[0] === formatedDate.split(" ")[0]) {
     resultDate = formatedDate
       .split(" ")[1]
       .replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
@@ -67,7 +67,7 @@ export const convertToMessageFormat = (date) => {
     timeZone: "America/Sao_Paulo",
   });
 
-  if (currentDate.split(" ")[0] == formatedDate.split(" ")[0]) {
+  if (currentDate.split(" ")[0] === formatedDate.split(" ")[0]) {
     resultDate = formatedDate
       .split(" ")[1]
       .replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");

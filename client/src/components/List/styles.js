@@ -30,7 +30,7 @@ export const NewUserBtn = styled.div`
   border-radius: 6px;
   border: 2px solid var(--accent-color);
   text-align: center;
-  transition: all .2s;
+  transition: all 0.2s;
 
   :hover {
     background-color: var(--accent-color);

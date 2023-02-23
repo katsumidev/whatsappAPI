@@ -18,7 +18,7 @@ export const Container = styled.div`
     gap: 5px;
     transition: all 0.2s;
     width: 90%;
-    
+
     input {
       width: 100%;
       padding: 10px;
@@ -70,9 +70,8 @@ export const ModalBox = styled.div`
   text-align: center;
   gap: 10px;
 
-
   h5 {
-    font-weight: 600;    
+    font-weight: 600;
   }
 
   p {

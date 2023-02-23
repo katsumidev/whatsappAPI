@@ -50,12 +50,12 @@ export const ViewButton = styled(AiFillEye)`
 
 export const LiveChatButton = styled(BsFillChatFill)`
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.2s;
 
   :hover {
     fill: var(--accent-color);
   }
-`
+`;
 
 export const Options = styled.div`
   display: flex;

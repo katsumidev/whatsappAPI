@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Header, NewUserBtn } from "./styles";
+import { Container, NewUserBtn } from "./styles";
 import ListItem from "../ListItem";
 import { useModalContext } from "../../modal.context";
 import Modal from "../Modal";
@@ -15,11 +15,14 @@ function List() {
     openModal,
   } = useModalContext(); // context usado para gerenciar o modal de leitura do QRCODE
 
-  useEffect(() => { // lista as instâncias do usuário dono do token requerido do localStorage
+  useEffect(() => {
+    // lista as instâncias do usuário dono do token requerido do localStorage
     const listIns = async () => {
-      let data = await ListInstance({userToken: localStorage.getItem("userToken")})
-      setIns(data.data)
-    }
+      let data = await ListInstance({
+        userToken: localStorage.getItem("userToken"),
+      });
+      setIns(data.data);
+    };
     listIns();
   }, []);
 
@@ -32,7 +35,7 @@ function List() {
           <ListItem
             key={index} // Gera uma lista para todos os usuários que resultaram da busca, renderizando o componente ListItem para cada um.
             name={instance}
-            redirect={() => navigate(`/panel/${instance}`)} 
+            redirect={() => navigate(`/panel/${instance}`)}
             openLiveChat={() => navigate(`/${instance}/live-chat/main`)}
           ></ListItem>
         );

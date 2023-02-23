@@ -10,13 +10,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
-import ContetntSquare from "../nodes/content";
-import ButtonSquare from "../nodes/buttons";
-import ConditionSquare from "../nodes/conditions";
-import ConnectionSquare from "../nodes/connection";
-import RandomSquare from "../nodes/random";
-import DelaySquare from "../nodes/delay";
-import IntegrationSquare from "../nodes/integration";
+import ContetntSquare from "../nodes/Content";
+import ButtonSquare from "../nodes/Buttons";
+import ConditionSquare from "../nodes/Conditions";
+import ConnectionSquare from "../nodes/Connection";
+import RandomSquare from "../nodes/Random";
+import DelaySquare from "../nodes/Delay";
+import IntegrationSquare from "../nodes/Integration";
 import {
   AiOutlineClockCircle,
   BsLightningCharge,
@@ -26,7 +26,7 @@ import {
   BiBookContent,
   BsListUl,
 } from "../../styles/Icons";
-import ActionSquare from "../nodes/action";
+import ActionSquare from "../nodes/Action";
 import {
   ActionBody,
   ActionHeader,
@@ -67,7 +67,6 @@ import {
   InputRangeRandomContainer,
   ButtonBody,
 } from "./styles";
-import { useParams } from "react-router";
 import ConnectionLine from "./ConnectionLine";
 import CustomEdge from "./CustomEdge";
 import { useSelector } from "react-redux";
@@ -606,7 +605,6 @@ function Flow() {
                         onChange={(e) => handleChangeInputs(index, e)}
                       />
                       <strong>{input.value}seg</strong>
-                      <br />
                       <label>
                         <input
                           type="checkbox"
@@ -673,10 +671,10 @@ function Flow() {
                           value={input.value}
                           onChange={(e) => handleChangeImage(index, e)}
                         />
+                        <ButtonDelete onClick={() => handleRemoveImage(index)}>
+                          Deletar
+                        </ButtonDelete>
                       </DelayRange>
-                      <ButtonDelete onClick={() => handleRemoveImage(index)}>
-                        Deletar
-                      </ButtonDelete>
                     </>
                   );
                 })}
@@ -940,11 +938,11 @@ function Flow() {
           {node.node.type === "condition" && (
             <>
               <ConditionHeader>Condição</ConditionHeader>
-              <p>
-                O contato deve possuir <b>Alguma</b> das condições abaixo para
-                ser verdadeiro
-              </p>
               <ConditionBody>
+                <p>
+                  O contato deve possuir <b>Alguma</b> das condições abaixo para
+                  ser verdadeiro
+                </p>
                 <DelayRange>
                   <SelectCondition
                     onChange={(e) => setIsOpen(e.target.value)}

@@ -1,13 +1,17 @@
 .button-up {
-    background-color: #34af23;
+    background-color: var(--accent-color);
+    transition: .2s;
+    padding: 6px;
+    border-radius: 6px;
     color: white;
-    border-color: white;
+    font-weight: 600;
+    border: none;
+    box-shadow: var(--boxShadow);
 }
 
 .button-up:hover {
     background-color: white;
-    color: #34af23;
-    border-color: #34af23;
+    color: var(--accent-color);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,

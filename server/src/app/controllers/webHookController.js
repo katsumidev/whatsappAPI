@@ -13,21 +13,6 @@ const userHandler = async (req, res) => {
       }
       break;
     case "message":
-      // let messageContent = req.body.body.text.messages[0].message.conversation;
-      // let extendedMessageContent = req.body.body.text.extendedTextMessage;
-      // console.log("jooj = " + extendedMessageContent)
-
-      // if (req.body.body.message.documentMessage) {
-      //   if (req.body.body.key.fromMe == false) {
-      //     socket.ioObject.emit("message", {
-      //       content: req.body.body.message.documentMessage.url,
-      //       from: req.body.body.text.messages[0].key.remoteJid.split("@")[0],
-      //       to: req.body.instanceKey,
-      //       type: "document",
-      //     });
-      //   }
-      // }
-
       if (req.body.body.key.fromMe == false) {
         // execute apenas se essa mensagem veio de outra pessoa
         let data = await livechat.getReceiverChat(

@@ -257,3 +257,13 @@
     outline: 0;
   }
   
+  .audio-recorder {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .audio-recorder-mic {
+    content: url("../../assets/defaultPic.jpg");
+    height: 26px;
+    width: auto;
+  }

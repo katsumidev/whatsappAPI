@@ -18,7 +18,7 @@ function ListItem(props) {
   useEffect(() => {
     // pega o nome e o telefone do usuário
     const getUserInfo = async () => {
-      let data = await getInfo({ key: props.name });
+      let data = await getInfo({ userId: props.name });
       setInsInfo({
         username: data.data.instance_data.user.name,
         userId: data.data.instance_data.user.id.split(":")[0],

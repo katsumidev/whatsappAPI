@@ -11,7 +11,7 @@ export {
   AiOutlineClockCircle,
   AiFillCamera,
 } from "react-icons/ai";
-export { FaTrash } from "react-icons/fa";
+export { FaTrash, FaMicrophone } from "react-icons/fa";
 export {
   BsFillChatFill,
   BsImage,

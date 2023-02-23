@@ -2,8 +2,15 @@ import { NodeResizer } from "@reactflow/node-resizer";
 import React from "react";
 import { Handle, Position } from "reactflow";
 import "@reactflow/node-resizer/dist/style.css";
-import { TbArrowFork } from "../../../styles/Icons";
-import { Container, Header, ConditionLogo, Text, Conditions, True, False } from "./styles";
+import { BsArrowsAngleContract } from "../../../styles/Icons";
+import {
+  Container,
+  Header,
+  ConnectionLogo,
+  Text,
+  Sub,
+  ButtonConnection,
+} from "./styles";
 import { useDispatch } from "react-redux";
 import { changeNode, undoChange } from "../../../redux/nodeSlice";
 
@@ -11,43 +18,32 @@ import { changeNode, undoChange } from "../../../redux/nodeSlice";
   Position é um enum, facilita em que ponto do elemento se coloca os handles(As conexões)
 */
 
-const ConditionSquare = ({ selected, data, id }) => {
+const ConnectionSquare = ({ selected, data, id }) => {
   const dispatch = useDispatch();
 
   if (selected) {
-    dispatch(changeNode({ id, type: "condition" }));
+    dispatch(changeNode({ id, type: "connection" }));
   } else {
     dispatch(undoChange());
   }
 
-  console.log(`Condição: ${data.condition}, isOpen: ${data.isOpen}`);
-
   return (
     <Container>
       <Header>
-        <ConditionLogo>
-          <TbArrowFork size={32} style={{ color: "#fff" }} />
-        </ConditionLogo>
+        <ConnectionLogo>
+          <BsArrowsAngleContract size={32} style={{ color: "#fff" }} />
+        </ConnectionLogo>
         <Text>
-          <p>Condições</p>
+          <p>Conexão</p>
+          <Sub>Se conecte com outro fluxo</Sub>
+          {data.connection && (
+            <>
+              <p>{data.connection}</p>
+              <ButtonConnection>Abrir esse fluxo</ButtonConnection>
+            </>
+          )}
         </Text>
       </Header>
-      <Conditions>
-        <True>
-          <p>Alguma condição abaixo é verdadeira</p>
-        </True>
-          {data.condition ? (
-          <>
-            <p><strong>Horário de Atendimento</strong> é <b>{data.isOpen}</b></p>
-            <hr />
-          </>
-        ): (
-          <></>
-        )}
-        <False>
-          <p>Todas as condições acima são falsas</p>
-        </False>
-      </Conditions>
       <NodeResizer
         minHeight={200}
         minWidth={200}
@@ -86,4 +82,4 @@ const ConditionSquare = ({ selected, data, id }) => {
   );
 };
 
-export default ConditionSquare;
+export default ConnectionSquare;

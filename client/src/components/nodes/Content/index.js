@@ -48,11 +48,7 @@ const ContetntSquare = ({ selected, data, id }) => {
           {data.range ? (
             <>
               {data.range.map((con) => {
-                return (
-                  <ContentDiv>
-                    <p>Digintando em {con.value} seg...</p>
-                  </ContentDiv>
-                );
+                return <p>Digitando em {con.value} seg...</p>;
               })}
             </>
           ) : (
@@ -125,9 +121,7 @@ const ContetntSquare = ({ selected, data, id }) => {
           {data.text ? (
             <>
               {data.text.map((conn) => {
-                return (
-                    <p>{conn.value}</p>
-                );
+                return <p>{conn.value}</p>;
               })}
             </>
           ) : (

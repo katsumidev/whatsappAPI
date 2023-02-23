@@ -45,9 +45,11 @@ const ButtonSquare = ({ selected, data, id }) => {
         <Message>
           Texto da pergunta:
           {data.answers ? (
-             <p><b>{data.answers}</b></p>
+            <p>
+              <b>{data.answers}</b>
+            </p>
           ) : (
-           <></>
+            <></>
           )}
           <sub>
             {new Date().toLocaleTimeString("pt-BR", {
@@ -59,12 +61,10 @@ const ButtonSquare = ({ selected, data, id }) => {
         {data.textAreaB ? (
           <>
             {data.textAreaB.map((con) => {
-              return (
-                <ButtonMessage>{con.value}</ButtonMessage>
-              )
+              return <ButtonMessage>{con.value}</ButtonMessage>;
             })}
           </>
-        ): (
+        ) : (
           <ButtonMessage>Número de pedido</ButtonMessage>
         )}
         {data.textArea}
@@ -72,19 +72,11 @@ const ButtonSquare = ({ selected, data, id }) => {
       <Buttons>
         <HandleBtns>
           Número do pedido
-          <Handle
-            id="right"
-            type="source"
-            position={Position.Right}
-          />
+          <Handle id="right" type="source" position={Position.Right} />
         </HandleBtns>
         <HandleBtns parent>
           Email
-          <Handle
-            id="right"
-            type="source"
-            position={Position.Right}
-          />
+          <Handle id="right" type="source" position={Position.Right} />
         </HandleBtns>
       </Buttons>
       <NodeResizer
