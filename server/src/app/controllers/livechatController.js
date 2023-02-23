@@ -146,19 +146,24 @@ const getReceiverChat = async (from, to) => {
 };
 
 const clearConversation = async (req, res) => {
-  const {from, to } = req.body;
+  const { from, to } = req.body;
 
   try {
+    await ChatMessage.deleteMany({
+      // se ele já existir, retorna ele para o requisitor
+      $all: [from, to],
+    });
+
     await LiveChat.deleteMany({
       // se ele já existir, retorna ele para o requisitor
       members: { $all: [from, to] },
     });
 
-    res.status(200).send("[!!] Conversa deletada com sucesso!!!")
+    res.status(200).send("[!!] Conversa deletada com sucesso!!!");
   } catch (err) {
     res.send("[!!] Erro ao deletar a conversa");
   }
-}
+};
 
 const getMessages = async (req, res) => {
   const chatId = req.query.chatId;
@@ -183,5 +188,5 @@ module.exports = {
   saveReceiverMsg,
   getReceiverChat,
   getLastMessage,
-  clearConversation
+  clearConversation,
 };

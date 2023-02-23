@@ -494,7 +494,7 @@ function ChatPage() {
   const clearCurrentChat = async () => {
     await clearChat({ from: userIns, to: selectedContact.contactId });
 
-    window.location.reload();
+    setNewMessageFlag((prev) => !prev);
   };
 
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
