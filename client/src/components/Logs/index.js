@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import Menu from "../Menu";
+import Menu from "../menu";
 import { Log, SelectTop } from "./styles";
 
 function Logs() {

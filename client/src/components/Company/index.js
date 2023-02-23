@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Audience, Button, Container, FormLeft, FormRIght } from "./styles";
-import Menu from "../Menu/index";
+import Menu from "../menu/index";
 import { useParams } from "react-router";
 
 function Company() {
