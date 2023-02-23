@@ -246,10 +246,10 @@ export const deleteFlow = async (data) => {
   }
 }
 
-export const createFlowMap = async (data) => {
+export const createFlowMap = async (data, userToken, flowName) => {
   try {
-    console.log(`Dados chegam aqui: ${data}`)
-    return await axios.post(`${url}/flow/map`, {data})
+    console.log(`Dados chegam aqui: ${data, userToken, flowName}`)
+    return await axios.post(`${url}/flow/map`, {data, userToken, flowName})
   } catch (error) {
     console.log("Error while calling createFlowMap API", error);
   }

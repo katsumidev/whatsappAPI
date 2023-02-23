@@ -89,19 +89,39 @@ const deleteFlow = async(req, res) => {
 
 const createMapFlow = async (req, res) => {
   try {
-    const {data} = req.body
-    for(const dado in data) {
-      if(data.hasOwnProperty(dado)) {
-        await User.findOneAndUpdate({userId: "mapas", "flowList.name": "teste de"}, {
-          $set: {
-            "flowList.$.flow": data[dado]
-          }
-        })
+    const {data, userToken, flowName} = req.body
+
+    const query = { userId: userToken };
+
+    const update = {
+      $set: {
+        'flowList.$[flow].flow': {
+          nodes: data.nodes,
+          edges: data.edges,
+          viewport: data.viewport
+        }
       }
-    }
-    
+    };
+
+    const options = {
+      arrayFilters: [{ 'flow.name': flowName }] 
+    };
+
+    await User.findOneAndUpdate(query, update, options);
+
+    return res.status(200)
   } catch (error) {
     console.log(error)
+    res.status(500).json({message: error.message})
+  }
+}
+
+const getFlowMap = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({message: error.message})
   }
 }
 

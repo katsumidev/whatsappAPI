@@ -556,7 +556,13 @@ function Flow() {
       const flow = rfInstance.toObject();
       localStorage.setItem('ex', JSON.stringify(flow));
       try {
-        const {data, status} = await createFlowMap(flow);
+        // await createFlow({
+        //   name: 'teste Final',
+        //   execution: 68,
+        //   ctr: 25,
+        //   user_token: 'mapas'
+        // })
+        const {data, status} = await createFlowMap(flow, 'mapas', 'teste Final');
         console.log(`dados: ${data} e status: ${status}`);
       } catch (error) {
         console.log(error)
