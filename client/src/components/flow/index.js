@@ -7,6 +7,8 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
   MarkerType,
+  useReactFlow,
+  ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
@@ -77,6 +79,7 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
+import { createFlow, deleteFlow, getFlows, getOneFlow } from "../../services/api";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -569,6 +572,19 @@ function Flow() {
     ]);
   }
 
+  // Save flow in database
+  const [rfInstance, setRfInstance] = useState(null);
+
+  const onSave = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem('ex', JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+
+
+
+
   const edgeTypes = {
     custom: CustomEdge,
   };
@@ -762,11 +778,9 @@ function Flow() {
                     <MdOutlineKeyboardVoice />
                   </CardIconButton>
                   <CardTextButton>Audio</CardTextButton>
-                </CardButtons>
-                <CardButtons>
-                  <CardIconButton>
-                    <AiFillSave />
-                  </CardIconButton>
+                </CardButtons>  
+                <CardButtons onClick={onSave}>
+                  <CardIconButton><AiFillSave/></CardIconButton>  
                   <CardTextButton>Salvar</CardTextButton>
                 </CardButtons>
                 <CardButtons
@@ -1077,7 +1091,7 @@ function Flow() {
             <AiOutlineClockCircle />
           </CircleMenuItem>
         </CircleMenu>
-
+        <ReactFlowProvider>
         <ReactFlow
           nodeTypes={NODE_TYPES}
           edgeTypes={edgeTypes}
@@ -1090,11 +1104,13 @@ function Flow() {
           connectionLineStyle={ConnectionLine}
           connectionMode={ConnectionMode.Loose}
           defaultEdgeOptions={edgeOptions}
+          onInit={setRfInstance}
           style={{ backgroundColor: "#E8E8E8" }}
         >
           <Background gap={1} size={10} color="#f2f5f7" />
           <Controls />
         </ReactFlow>
+        </ReactFlowProvider>
       </Container>
     </>
   );
