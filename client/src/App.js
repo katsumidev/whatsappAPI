@@ -14,7 +14,7 @@ import Welcome from "./components/Welcome/index";
 import Company from "./components/Company/index";
 import Logs from "./components/Logs/index";
 import FieldsModal from "./components/FieldsModal/index";
-import Flow from "./components/Flow/index";
+import Flow from "./components/flow/index";
 import LoginPage from "./pages/LoginPage";
 import FlowsDashBoard from "./components/FlowsDashboard";
 

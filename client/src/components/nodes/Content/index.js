@@ -45,15 +45,17 @@ const ContetntSquare = ({ selected, data, id }) => {
       </Header>
       <MiniChat className="text-center mt-6">
         <Message>
-          {data.range ? (
-            <>
-              {data.range.map((con) => {
-                return <p>Digitando em {con.value} seg...</p>;
-              })}
-            </>
-          ) : (
-            <div></div>
-          )}
+         {data && (
+          <>
+           {data.range ? (
+              <>
+                {data.range.map((con) => {
+                  return <p>Digitando em {con.value} seg...</p>;
+                })}
+              </>
+            ) : (
+              <div></div>
+            )}
           {data.image ? (
             <>
               {data.image.map((img) => {
@@ -127,6 +129,8 @@ const ContetntSquare = ({ selected, data, id }) => {
           ) : (
             <></>
           )}
+          </>
+         )}
           <sub>
             {new Date().toLocaleTimeString("pt-BR", {
               hour: "numeric",
@@ -134,7 +138,6 @@ const ContetntSquare = ({ selected, data, id }) => {
             })}
           </sub>
         </Message>
-        {data.textArea}
       </MiniChat>
       <NodeResizer
         minHeight={200}

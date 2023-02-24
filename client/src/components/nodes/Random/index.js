@@ -38,20 +38,24 @@ const RandomSquare = ({ selected, data, id }) => {
           <Sub>Se conecte com outro fluxo</Sub>
         </Text>
       </Header>
-      {data.randomRange ? (
+      {data ? (
         <>
-          {data.randomRange.map((ran, index) => {
-            return (
-              <SquareContent>
-                <strong>{index + 1}</strong>
-                <span>{ran.value}%</span>
-              </SquareContent>
-            );
-          })}
-        </>
-      ) : (
-        <></>
+          {data.randomRange ? (
+          <>
+            {data.randomRange.map((ran, index) => {
+              return (
+                <SquareContent>
+                  <strong>{index + 1}</strong>
+                  <span>{ran.value}%</span>
+                </SquareContent>
+              );
+            })}
+          </>
+        ) : (
+          <></>
       )}
+        </>
+      ): (<></>)}
       <NodeResizer
         minHeight={200}
         minWidth={200}

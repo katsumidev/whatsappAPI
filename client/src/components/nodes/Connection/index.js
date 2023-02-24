@@ -36,12 +36,18 @@ const ConnectionSquare = ({ selected, data, id }) => {
         <Text>
           <p>Conexão</p>
           <Sub>Se conecte com outro fluxo</Sub>
-          {data.connection && (
+         {data ? (
+          <>
+             {data.connection && (
             <>
               <p>{data.connection}</p>
               <ButtonConnection>Abrir esse fluxo</ButtonConnection>
             </>
           )}
+          </>
+         ): (
+          <></>
+         )}
         </Text>
       </Header>
       <NodeResizer

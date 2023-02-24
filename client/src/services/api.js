@@ -250,11 +250,19 @@ export const uploadFile = async (data) => {
   name: string,
   execution: number,
   ctr: number,
-  user_token: string
+  userToken: string
 */
 
+export const createFlow = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/create`, {data})
+  } catch (error) {
+    console.log("Error while calling getFlow API", error);
+  }
+}
+
 /*
-  user_token: string,
+  userToken: string,
   nameFlow: string
 */
 
@@ -289,7 +297,7 @@ export const updateFlow = async (data) => {
 };
 
 /*
-  user_token: string,
+  userToken: string,
   nameFlow: string  Nome do flow q quer apagar
 */
 

@@ -44,7 +44,7 @@ const ButtonSquare = ({ selected, data, id }) => {
       <MiniChat className="text-center mt-6">
         <Message>
           Texto da pergunta:
-          {data.answers ? (
+          {data ? (
             <p>
               <b>{data.answers}</b>
             </p>
@@ -58,16 +58,16 @@ const ButtonSquare = ({ selected, data, id }) => {
             })}
           </sub>
         </Message>
-        {data.textAreaB ? (
+        {data ? (
           <>
-            {data.textAreaB.map((con) => {
-              return <ButtonMessage>{con.value}</ButtonMessage>;
+            {data.textAreaB.map((con, index) => {
+              return <ButtonMessage key={index}>{con.value}</ButtonMessage>;
             })}
           </>
         ) : (
           <ButtonMessage>Número de pedido</ButtonMessage>
         )}
-        {data.textArea}
+
       </MiniChat>
       <Buttons>
         <HandleBtns>
