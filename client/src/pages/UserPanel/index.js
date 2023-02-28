@@ -25,12 +25,14 @@ import {
 } from "../../styles/Icons";
 import NewUserModal from "../../components/NewUserModal";
 import { addNewContact } from "../../services/api";
+import OpenContactModal from "../../components/OpenContactModal";
 
 function UserPanel() {
   const [contacts, setContacts] = useState([]);
   const [numbers, setNumbers] = useState([]);
   const [searchBox, setSearchBox] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
+  const [modalType, setModalType] = useState("");
   const { userIns } = useParams();
   const fileinput = useRef(null);
 
@@ -112,8 +114,6 @@ function UserPanel() {
     // Cria um objeto Blob a partir do ArrayBuffer
     const blob = new Blob([sheet], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-    console.log(`planilha: ${JSON.stringify(blob)} spre ${JSON.stringify(spreadsheet)} sheet ${JSON.stringify(sheet)}`);
-
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -126,7 +126,17 @@ function UserPanel() {
 
   return (
     <Container>
-      {visible ? <NewUserModal /> : <></>}
+      {visible ? (
+       <>
+        { modalType === 'createNewContact' && (
+          <NewUserModal />
+        )}
+        { modalType === 'ContatcInfo' && (
+          <OpenContactModal />
+        )}
+       </>
+      ) 
+      : <></>}
       <input
         type="file"
         accept=".xlsx"
@@ -165,7 +175,10 @@ function UserPanel() {
                 <div className="col-sm-2">
                   <a
                     className="button-up btn btn-primary btn-sm btn-block"
-                    onClick={() => openModal()}
+                    onClick={() => {
+                      openModal()
+                      setModalType('createNewContact')
+                    }}
                   >
                     <IoMdContact size={20} />
                     &nbsp;Novo contato
@@ -312,7 +325,9 @@ function UserPanel() {
                                 )
                                 .map((contact, index) => {
                                   return (
-                                    <tr key={index}>
+                                    <tr style={{cursor: 'pointer'}}
+                                      key={index}
+                                      >
                                       <td className="text-center">
                                         <Checkbox value={contact.number} />
                                       </td>
@@ -343,7 +358,14 @@ function UserPanel() {
                                 })
                             : currentItems.map((contact, index) => {
                                 return (
-                                  <tr key={index}>
+                                  <tr 
+                                    key={index} 
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => {
+                                      openModal()
+                                      setModalType('ContatcInfo')
+                                    }}
+                                    >
                                     <td className="text-center">
                                       <Checkbox value={contact.number} />
                                     </td>
