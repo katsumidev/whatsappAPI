@@ -96,6 +96,34 @@ function UserPanel() {
     reader.readAsArrayBuffer(file);
   };
 
+  console.log(contacts);
+
+  const handleReport = async () => {
+    // Cria uma planilha usando a biblioteca XLSX
+    const spreadsheet = XLSX.utils.json_to_sheet(contacts);
+
+    // Cria um livro de trabalho e adiciona a planilha a ele
+    const contact = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(contact, spreadsheet, 'Relatorio');
+
+    // Converte o livro de trabalho em um ArrayBuffer (array de bytes)
+    const sheet = XLSX.write(contact, { type: 'array', bookType: 'xlsx' });
+
+    // Cria um objeto Blob a partir do ArrayBuffer
+    const blob = new Blob([sheet], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    console.log(`planilha: ${JSON.stringify(blob)} spre ${JSON.stringify(spreadsheet)} sheet ${JSON.stringify(sheet)}`);
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'relatorio.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  }
+
   return (
     <Container>
       {visible ? <NewUserModal /> : <></>}
@@ -126,7 +154,10 @@ function UserPanel() {
                   </a>
                 </div>
                 <div className="col-sm-2">
-                  <a className="button-up btn btn-primary btn-sm btn-block">
+                  <a 
+                    className="button-up btn btn-primary btn-sm btn-block"
+                    onClick={handleReport}
+                    >
                     <AiOutlineDownload size={20} />
                     &nbsp;Relatório
                   </a>
