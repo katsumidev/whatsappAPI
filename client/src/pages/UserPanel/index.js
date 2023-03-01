@@ -33,6 +33,9 @@ function UserPanel() {
   const [searchBox, setSearchBox] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
   const [modalType, setModalType] = useState("");
+  const [numberForModal, setNumberForModal] = useState('')
+  const [contactNameModal, setContactNameModal] = useState('')
+  const [contactInfo, setContactInfo] = useState('');
   const { userIns } = useParams();
   const fileinput = useRef(null);
 
@@ -98,8 +101,6 @@ function UserPanel() {
     reader.readAsArrayBuffer(file);
   };
 
-  console.log(contacts);
-
   const handleReport = async () => {
     // Cria uma planilha usando a biblioteca XLSX
     const spreadsheet = XLSX.utils.json_to_sheet(contacts);
@@ -132,7 +133,7 @@ function UserPanel() {
           <NewUserModal />
         )}
         { modalType === 'ContatcInfo' && (
-          <OpenContactModal />
+          <OpenContactModal  number={numberForModal} name={contactNameModal} contact={contacts}/>
         )}
        </>
       ) 
@@ -362,8 +363,10 @@ function UserPanel() {
                                     key={index} 
                                     style={{cursor: 'pointer'}}
                                     onClick={() => {
-                                      openModal()
-                                      setModalType('ContatcInfo')
+                                      openModal();
+                                      setModalType('ContatcInfo');
+                                      setNumberForModal(contact.number)
+                                      setContactNameModal(contact.contact)
                                     }}
                                     >
                                     <td className="text-center">

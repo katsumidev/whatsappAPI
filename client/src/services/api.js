@@ -105,6 +105,16 @@ export const blockContact = async (data) => {
   }
 };
 
+// Contacts Tags
+
+export const createTagForContact = async (userToken, contactNumber, tags) => {
+  try {
+    return await axios.post(`${url}/contacts/tags/new`, {userToken, contactNumber, tags});
+  } catch (error) {
+    console.log("Error while calling createtags API", error);
+  }
+}
+
 // Automation Controllers
 
 export const sendSingleMessage = async (data) => {
