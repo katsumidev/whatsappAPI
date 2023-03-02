@@ -9,7 +9,7 @@ const UsersSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  Tags: {
+  tags: {
     type: Array,
     default: []
   },

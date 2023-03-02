@@ -115,6 +115,18 @@ export const createTagForContact = async (userToken, contactNumber, tags) => {
   }
 }
 
+// Tags
+
+export const createTagForUser = async (userToken, tags) => {
+  try {
+    const {data} = await axios.post(`${url}/tags/new`, {userToken, tags});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+
 // Automation Controllers
 
 export const sendSingleMessage = async (data) => {

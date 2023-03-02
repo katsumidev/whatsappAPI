@@ -26,7 +26,11 @@ route.get("/contacts/blockUserContact", contacts.blockUser);
 
 //contacts Tags
 
-route.post("/contacts/tags/new", tagsContacts.createTagsForContact)
+route.post("/contacts/tags/new", tagsContacts.createTagsForContact);
+
+// Tags
+  
+route.post("/tags/new", tagsContacts.createTagsForUser)
 
 //livechat
 route.post("/livechat/newMessage", livechat.newMessage);

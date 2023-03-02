@@ -28,7 +28,7 @@ import { AiOutlineInfoCircle } from "../../styles/Icons";
 import {MdOutlinePhoneInTalk} from 'react-icons/md';
 import {AiOutlineClockCircle} from 'react-icons/ai'
 import {BsPeopleFill} from 'react-icons/bs'
-import { createTagForContact } from "../../services/api";
+import { createTagForContact, createTagForUser } from "../../services/api";
 
 function OpenContactModal({number, name, contact}) {
     const [isSelectSequence, setIsSelectSequence] = useState('');
@@ -81,6 +81,12 @@ function OpenContactModal({number, name, contact}) {
         //    console.log(JSON.stringify(data))
         // }
         // createTag()
+        const createTag = async () => {
+            const tags1 = {name: 'tag1', description: 'tag1'}
+            await createTagForUser('teste', tags1).catch((err) => console.log(err))
+           
+        }
+        createTag()
     }, [])
 
     return(
