@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useModalContext } from "../../modal.context";
 import {
   Container,
@@ -28,32 +28,44 @@ import { AiOutlineInfoCircle } from "../../styles/Icons";
 import {MdOutlinePhoneInTalk} from 'react-icons/md';
 import {AiOutlineClockCircle} from 'react-icons/ai'
 import {BsPeopleFill} from 'react-icons/bs'
-import { createTagForContact, createTagForUser } from "../../services/api";
+import { createTagForContact, createTagForUser, deleteTagForContact, getAllTags } from "../../services/api";
 
 function OpenContactModal({number, name, contact}) {
     const [isSelectSequence, setIsSelectSequence] = useState('');
-    const [contactsTest, setContactTest] = useState([])
     const [selectedTags, setSelectedTags] = useState([]);
-    const selectRef = useRef(null)
+    const [tagsSelect, setTagsSelect] = useState([]);
+    const [tag, setTag] = useState();
+    const [tagForDelete, setTagForDelete] = useState()
+    const selectRef = useRef(null);
     const { userIns } = useParams();
 
-    const handleTagClick = (tagName) => {
+
+    const userToken = localStorage.getItem('userToken')
+
+    const handleTagClick = (tagName, tag) => {
         if (!selectedTags.includes(tagName)) {
         setSelectedTags([...selectedTags, tagName]);
+        setTag(tag)
         }
     };
+
+    const handleAddTag = useCallback(async() => {
+        await createTagForContact(userToken, number, tag).then(() => console.log('foi'))
+    }, [tag, selectedTags])
 
     const handleRemove = (tagName) => {
         setSelectedTags(tags => tags.filter(tag => tag !== tagName))
     }
+    
+    const handleRemoveTags = async (tagName) => {
+        tagsSelect.map((tag) => {
+            tag.tags.map((item) => {
+                if(item.name === tagName) setTagForDelete(item);
+            })
+        });
 
-    contact.map((cont) => {
-       if(cont.contact === name) {
-        cont.tags.map((tag) => {
-            console.log(tag.name)
-        })
-       }
-    })
+        await deleteTagForContact(userToken, number, tagForDelete).then(() => console.log('apagado'))
+    }
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -73,20 +85,18 @@ function OpenContactModal({number, name, contact}) {
         closeModal,
     } = useModalContext();
 
-    const tags = {name: 'retornar', description: 'retornar mais tarde'}
 
     useEffect(() => {
-        // const createTag = async () => {
-        //    const {data} = await createTagForContact('teste', '81987751662', tags)
-        //    console.log(JSON.stringify(data))
-        // }
-        // createTag()
-        const createTag = async () => {
-            const tags1 = {name: 'tag1', description: 'tag1'}
-            await createTagForUser('teste', tags1).catch((err) => console.log(err))
-           
+        const getAlltagsforUser = async () => {
+            const tags = await getAllTags(userToken);
+            setTagsSelect(tags)
+            tags.map((tag) => {
+                tag.tags.map((item) => {
+                    console.log(JSON.stringify(item))
+                })
+            })
         }
-        createTag()
+        getAlltagsforUser()
     }, [])
 
     return(
@@ -146,18 +156,15 @@ function OpenContactModal({number, name, contact}) {
                             {isSelectSequence === 'tags' ? (
                                 <div ref={selectRef}>
                                     <select multiple>
-                                        {contact.map((cont) => {
-                                           if(cont.contact === name) {
-                                            return cont.tags.map((tag, index) => (
-                                                <option 
-                                                key={index} 
-                                                value={tag.name}
-                                                onClick={() => handleTagClick(tag.name)}
-                                                >
+                                        {tagsSelect.map((items) => {
+                                            return items.tags.map((tag, index) => (
+                                                <option key={index} value={tag.name} onClick={() => {
+                                                    handleTagClick(tag.name, tag)
+                                                    handleAddTag()
+                                                    }}>
                                                     {tag.name}
                                                 </option>
                                             ))
-                                           }
                                         })}
                                     </select>
                                 </div>
@@ -184,7 +191,10 @@ function OpenContactModal({number, name, contact}) {
                                         >
                                         <div 
                                             style={{cursor: 'pointer', marginLeft: '5px'}} 
-                                            onClick={() => handleRemove(tagName)}
+                                            onClick={() => {
+                                                handleRemove(tagName)
+                                                handleRemoveTags(tagName)
+                                            }}
                                         >
                                             X
                                         </div>

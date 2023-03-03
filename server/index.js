@@ -25,7 +25,7 @@ const server = app.listen(process.env.PORT, function () {
 var io = require("socket.io")(server, {
   cors: {
     origin: process.env.CLIENT_URL, // ip do front-end
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
 

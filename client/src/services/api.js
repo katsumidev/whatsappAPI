@@ -115,11 +115,46 @@ export const createTagForContact = async (userToken, contactNumber, tags) => {
   }
 }
 
+export const deleteTagForContact = async (userToken, contactNumber, tags) => {
+  try {
+    return await axios.delete(`${url}/contacts/tags/delete`, {data: {userToken, contactNumber, tags}});
+  } catch (error) {
+    console.log("Error while calling createtags API", error);
+  }
+}
+
 // Tags
 
 export const createTagForUser = async (userToken, tags) => {
   try {
     const {data} = await axios.post(`${url}/tags/new`, {userToken, tags});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const getAllTags = async (userToken) => {
+  try {
+    const {data} = await axios.post(`${url}/tags/get`, {userToken});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const updateTagsForUser = async (userToken, tag) => {
+  try {
+    const {data} = await axios.put(`${url}/tags/update`, {userToken, tag});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const deleteTagForUser = async (userToken, tag) => {
+  try {
+    const {data} = await axios.delete(`${url}/tags/delete`, {data: {userToken, tag}});
     return data
   } catch (error) {
     console.log("Erro aqui", error.response.data.message);
