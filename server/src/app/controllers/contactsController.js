@@ -59,7 +59,10 @@ const newContact = async (req, res) => {
                 res.status(200).json(arr.contactList);
               }
             );
-          }).catch((err) => console.log("[!!] The contact doesn't have a whatsapp account!"));
+          })
+          .catch((err) =>
+            console.log("[!!] The contact doesn't have a whatsapp account!")
+          );
       }
     });
   } catch (err) {
@@ -93,18 +96,20 @@ const blockUser = async (req, res) => {
   const contactNumber = req.query.contactNumber;
 
   try {
-    axios.get(`${apiUrl}/misc/blockUser?key=${userId}&id=${contactNumber}`).then(async (response) => {
-      let data = await response.data;
+    axios
+      .get(`${apiUrl}/misc/blockUser?key=${userId}&id=${contactNumber}`)
+      .then(async (response) => {
+        let data = await response.data;
 
-      res.status(200).send("[!!] Contato bloqueado com sucesso! - " + data);
-    })
+        res.status(200).send("[!!] Contato bloqueado com sucesso! - " + data);
+      });
   } catch (err) {
     res.send("[!!] Erro ao bloquear contato - " + err);
   }
 };
 
 const consultContacts = async (req, res) => {
-  const userToken = req.headers["authentication"]
+  const userToken = req.headers["authentication"];
 
   User.find({ userId: userToken }, (err, arr) => {
     // puxa todos os contatos de determinado usuário, busca através da identificação do usuário (user_token)
@@ -126,10 +131,29 @@ const consultContacts = async (req, res) => {
   });
 };
 
+const getGroups = async (req, res) => {
+  const userId = req.headers["authentication"];
+
+  axiosReq
+    .get(`${apiUrl}/group/getallgroups?key=${userId}`)
+    .then(async (response) => {
+      let data = await response.data;
+
+      let array = Object.keys(data.instance_data).map((key) => {
+        return data.instance_data[key];
+      });
+
+      return res.send(array);
+    })
+    .catch((err) => {
+      console.log("[!!] Erro buscando grupos - " + err);
+    });
+};
+
 const getContactPic = async (req, res) => {
   // pega a foto do contato
   // const { user_id, contact_number } = req.body;
-  const userId = req.headers["userId"]
+  const userId = req.headers["userid"];
   const contactNumber = req.query.contactId;
 
   axiosReq
@@ -140,12 +164,28 @@ const getContactPic = async (req, res) => {
       return res.send(data.data);
     })
     .catch((err) => {
-      return res.send("[!! No picture found [!!] " - err);
+      return res.send("[!! No picture found [!!] ");
+    });
+};
+
+const getPicture = async (userId, contactNumber) => {
+  // pega a foto do contato
+  // const { user_id, contact_number } = req.body;
+
+  axiosReq
+    .get(`${apiUrl}/misc/downProfile?key=${userId}&id=${contactNumber}`)
+    .then(async (response) => {
+      let data = await response.data;
+
+      return data.data;
+    })
+    .catch((err) => {
+      return res.send("[!! No picture found [!!] ");
     });
 };
 
 const getStatus = async (req, res) => {
-  const userId = req.headers["userid"]
+  const userId = req.headers["userid"];
   const contactNumber = req.query.contactNumber;
 
   axiosReq
@@ -165,5 +205,6 @@ module.exports = {
   consultContacts,
   getContactPic,
   getStatus,
-  blockUser
+  blockUser,
+  getGroups,
 };

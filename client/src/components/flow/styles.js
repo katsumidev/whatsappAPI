@@ -4,9 +4,8 @@ import Select from "react-select";
 export const Container = styled.div`
   display: flex;
   flex-direction: row;
-  width: 70vw;
+  width: 100vw;
   height: 100vh;
-  float: right;
 
   .radial-menu {
     height: fit-content;
@@ -103,15 +102,58 @@ export const SelectElement = styled(Select)`
 
 export const Modal = styled.div`
   width: 30vw;
-  height: 100vh;
-  background-color: #fff;
+  max-width: 350px;
+  height: 80vh;
+  background: rgb(255, 255, 255);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(247, 247, 247, 1) 51%
+  );
   color: #000;
   float: left;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin: 25px auto 0 25px;
+  border-radius: 16px;
+  position: absolute;
+  z-index: 999;
+  box-shadow: var(--boxShadow);
   overflow: hidden;
-  overflow-y: scroll;
+
+  hr {
+    width: 90%;
+    margin-bottom: 3rem;
+  }
+
+  small {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.5);
+    width: 90%;
+  }
+
+  .buttonText {
+    color: #fa6481;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .buttonsDelete {
+    border-color: #fa6481;
+
+    :hover {
+      background-color: #fa6481;
+    }
+  }
+
+  .buttonsCreateNewButton {
+    :hover {
+      border-color: #fa6481;
+    }
+  }
 `;
 // Content Square
 
@@ -123,7 +165,7 @@ export const ContentHeader = styled.div`
   font-weight: 600;
 `;
 
-export const ContainerTextArea = styled.div`
+export const ContainerTextArea = styled.li`
   width: 90%;
   resize: none;
   outline: none;
@@ -133,6 +175,29 @@ export const ContainerTextArea = styled.div`
   box-sizing: border-box;
   border-radius: 10px;
   margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 12px;
+    margin-bottom: 5px;
+  }
+
+  small {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  p {
+    font-size: 12px;
+    margin-bottom: 2px;
+    align-self: flex-start;
+  }
 `;
 
 export const SelectCondition = styled.select`
@@ -326,7 +391,6 @@ export const CreateNewButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 35px;
   height: 50px;
   border: 2px dashed #e1e5ea;
   border-radius: 6px;
@@ -338,6 +402,7 @@ export const CreateNewButton = styled.div`
   text-align: center;
   padding: 12px;
   transition: 0.2s;
+  margin-bottom: 30px;
 
   :hover {
     border: 2px dashed #00c64b;
@@ -417,10 +482,20 @@ export const ActionBody = styled.div`
 
 export const ButtonHeader = styled.div`
   width: 100%;
-  padding: 16px;
-  background: #ffeef8;
+  padding: 16px 0 0 0;
   text-align: center;
-  box-shadow: var(--boxShadow);
+  font-weight: 600;
+  color: var(--grey);
+  font-size: 16px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  svg {
+    color: #fa6481;
+  }
 `;
 
 export const ButtonBody = styled.div`
@@ -436,6 +511,13 @@ export const ButtonBody = styled.div`
   overflow-x: hidden;
   height: 100%;
   color: #5a677d;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 export const ButtonTextArea = styled.textarea`

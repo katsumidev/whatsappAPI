@@ -73,28 +73,7 @@ const userHandler = async (req, res) => {
           });
         } else if (req.body.body.message.stickerMessage) {
           // figurinhas
-          await livechat.saveReceiverMsg({
-            text: req.body.body.message.stickerMessage.url,
-            from: req.body.body.key.remoteJid.split("@")[0],
-            to: req.body.instanceKey,
-            chatId: chatId,
-            read: false,
-            type: "file",
-          });
-        } else if (req.body.body.message.audioMessage) {
-          // audios
-          await livechat.saveReceiverMsg({
-            text: req.body.body.message.audioMessage.url,
-            from: req.body.body.key.remoteJid.split("@")[0],
-            to: req.body.instanceKey,
-            chatId: chatId,
-            read: false,
-            type: "file",
-          });
-
-          socket.ioObject.emit("message", {
-            type: "file",
-          });
+          console.log("figurinhas não são suportadas!")
         } else if (
           // mensagens marcadas
           req.body.body.message.extendedTextMessage.contextInfo.quotedMessage

@@ -19,6 +19,7 @@ route.post("/webHook/userHandler", webhook.userHandler);
 route.post("/contacts/addContact", contacts.newContact);
 route.post("/contacts/deleteContact", contacts.deleteContact);
 route.get("/contacts/consultContacts", contacts.consultContacts);
+route.get("/contacts/getGroups", contacts.getGroups);
 route.get("/contacts/getContactPic", contacts.getContactPic);
 route.get("/contacts/getStatus", contacts.getStatus);
 route.get("/contacts/blockUserContact", contacts.blockUser);

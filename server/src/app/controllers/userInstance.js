@@ -13,7 +13,8 @@ function encryptKey(key, userToken) {
   return `${userToken}:${crypto
     .createHash("sha256")
     .update(`${key}${userToken}`)
-    .digest("hex")}`;
+    .digest("hex")
+    .substring(0, 7)}`;
 }
 
 const initUser = async (req, res) => {
@@ -31,15 +32,17 @@ const initUser = async (req, res) => {
       if (data.qrcode.url != "") {
         // gera o qr code do usuário
         setTimeout(() => {
-          axios.get(data.qrcode.url, {
-            headers: {
-              "Content-Type": "text/plain",
-            }
-          }).then(async (qrres) => {
-            let qr = await qrres.data;
+          axios
+            .get(data.qrcode.url, {
+              headers: {
+                "Content-Type": "text/plain",
+              },
+            })
+            .then(async (qrres) => {
+              let qr = await qrres.data;
 
-            return res.send({ key: data.key, qrdata: qr });
-          });
+              return res.send({ key: data.key, qrdata: qr });
+            });
         }, [2000]);
       } else {
         return res.send("Error generating the instance.");
@@ -77,7 +80,7 @@ const deleteIns = async (req, res) => {
 };
 
 const listIns = async (req, res) => {
-  const userToken = req.headers["authentication"]
+  const userToken = req.headers["authentication"];
   // Lista todos os usuários conectados na API
   axiosReq.get(`${apiUrl}/instance/list`).then(async (response) => {
     let data = await response.data;
@@ -91,7 +94,7 @@ const listIns = async (req, res) => {
 };
 
 const getInfo = async (req, res) => {
-  const userId = req.headers["authentication"]
+  const userId = req.headers["authentication"];
 
   axiosReq
     .get(
@@ -113,8 +116,8 @@ const getInfo = async (req, res) => {
 
 const downloadPfp = async (req, res) => {
   // baixa a foto de perfil do usuário da aplicação
-  const userId = req.headers["authentication"]
-  const contactNumber = req.query.contactNumber
+  const userId = req.headers["authentication"];
+  const contactNumber = req.query.contactNumber;
 
   axiosReq
     .get(`${apiUrl}/misc/downProfile?key=${userId}&id=${contactNumber}`)
@@ -125,8 +128,8 @@ const downloadPfp = async (req, res) => {
 };
 
 const checkStatus = async (req, res) => {
-  const userId = req.headers["userId"]
-  const userToken = req.headers["authentication"]
+  const userId = req.headers["userId"];
+  const userToken = req.headers["authentication"];
 
   const hashed_key = encryptKey(userId, userToken);
 

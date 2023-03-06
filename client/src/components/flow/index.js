@@ -27,6 +27,7 @@ import {
   TbArrowFork,
   BiBookContent,
   BsListUl,
+  MdAdsClick,
 } from "../../styles/Icons";
 import ActionSquare from "../nodes/Action";
 import {
@@ -79,7 +80,16 @@ import { RxVideo } from "react-icons/rx";
 import { FiFile } from "react-icons/fi";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
 import { TbAlertTriangle } from "react-icons/tb";
-import { createFlow, createFlowMap, deleteFlow, getFlowMap, getFlows, getOneFlow } from "../../services/api";
+import {
+  createFlow,
+  createFlowMap,
+  deleteFlow,
+  getFlowMap,
+  getFlows,
+  getOneFlow,
+} from "../../services/api";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { StrictModeDroppable } from "../../utils/strictModeDroppable";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -295,19 +305,32 @@ function Flow() {
 
   // Button Square
   const [textAreaButton, setTextAreaButton] = useState([{ value: "" }]);
+  
+  const [buttonAreaValue, setButtonAreaValue] = useState(textAreaButton);
+
+  function handleOnDragEnd(result) {
+    if (!result.destination) return;
+
+    const items = Array.from(buttonAreaValue);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setButtonAreaValue(items);
+  }
+
 
   const handleRemoveTextAreaButton = (index) => {
-    setTextAreaButton(textAreaButton.filter((_, i) => i !== index));
+    setButtonAreaValue(buttonAreaValue.filter((_, i) => i !== index));
   };
 
   const handleChangeTextAreaButton = (index, event) => {
-    const values = [...textAreaButton];
+    const values = [...buttonAreaValue];
     values[index].value = event.target.value;
-    setTextAreaButton(values);
+    setButtonAreaValue(values);
   };
 
   const handleAddTextAreaButton = (e) => {
-    setTextAreaButton((content) => [
+    setButtonAreaValue((content) => [
       ...content,
       {
         value: "",
@@ -418,13 +441,13 @@ function Flow() {
         if (nodesMap.id === node.node.id) {
           nodesMap.data = {
             ...nodesMap.data,
-            textAreaB: textAreaButton,
+            textAreaB: buttonAreaValue,
           };
         }
         return nodesMap;
       })
     );
-  }, [textAreaButton, setNodes]);
+  }, [buttonAreaValue, setNodes]);
 
   useEffect(() => {
     setNodes((nds) =>
@@ -575,10 +598,10 @@ function Flow() {
   // Save flow in database
   const [rfInstance, setRfInstance] = useState(null);
 
-  const onSave = useCallback( async () => {
+  const onSave = useCallback(async () => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
-      localStorage.setItem('ex', JSON.stringify(flow));
+      localStorage.setItem("ex", JSON.stringify(flow));
       try {
         // await createFlow({
         //   name: 'teste Final',
@@ -586,18 +609,19 @@ function Flow() {
         //   ctr: 25,
         //   user_token: 'mapas'
         // })
-        const {data, status} = await createFlowMap(flow, 'mapas', 'teste Final');
+        const { data, status } = await createFlowMap(
+          flow,
+          "mapas",
+          "teste Final"
+        );
         console.log(`dados: ${data} e status: ${status}`);
-      //  const {data} = await getFlowMap('mapas', 'teste Final');
-      //  console.log(JSON.stringify(data))
+        //  const {data} = await getFlowMap('mapas', 'teste Final');
+        //  console.log(JSON.stringify(data))
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   }, [rfInstance]);
-
-
-
 
   const edgeTypes = {
     custom: CustomEdge,
@@ -792,9 +816,11 @@ function Flow() {
                     <MdOutlineKeyboardVoice />
                   </CardIconButton>
                   <CardTextButton>Audio</CardTextButton>
-                </CardButtons>  
+                </CardButtons>
                 <CardButtons onClick={onSave}>
-                  <CardIconButton><AiFillSave/></CardIconButton>  
+                  <CardIconButton>
+                    <AiFillSave />
+                  </CardIconButton>
                   <CardTextButton>Salvar</CardTextButton>
                 </CardButtons>
                 <CardButtons
@@ -879,85 +905,74 @@ function Flow() {
           )}
           {node.node.type === "button" && (
             <>
-              <ButtonHeader>Botões</ButtonHeader>
+              <ButtonHeader>
+                <MdAdsClick size={25} />
+                Botões
+              </ButtonHeader>
               <ButtonBody>
-                <p>Texto da pergunta</p>
                 <ContainerTextArea>
-                  <MenuText>
-                    <MenuLeft>
-                      <MenuItem>
-                        <SpanItem>
-                          <b>B</b>
-                        </SpanItem>
-                      </MenuItem>
-                      <MenuItem>
-                        <SpanItem>
-                          <i>I</i>
-                        </SpanItem>
-                      </MenuItem>
-                      <MenuItem>
-                        <SpanItem>
-                          <del>S</del>
-                        </SpanItem>
-                      </MenuItem>
-                    </MenuLeft>
-                    <MenuGroupLeft>
-                      <MenuItemDrop>
-                        <SpanItemMenuDrop>
-                          numero-de-indicacoes
-                        </SpanItemMenuDrop>
-                      </MenuItemDrop>
-                    </MenuGroupLeft>
-                  </MenuText>
+                  <small>
+                    Digite um texto inicial para enviar os botões para o
+                    usuário!
+                  </small>
+                  <p>Texto da pergunta</p>
                   <TextArea
                     value={answers}
                     onChange={(e) => setAnswers(e.target.value)}
                   />
                 </ContainerTextArea>
                 <hr />
-                <h4>Botões</h4>
-                {textAreaButton.map((input, index) => {
-                  return (
-                    <ContainerTextArea>
-                      <MenuText>
-                        <MenuLeft>
-                          <MenuItem>
-                            <SpanItem>
-                              <b>B</b>
-                            </SpanItem>
-                          </MenuItem>
-                          <MenuItem>
-                            <SpanItem>
-                              <i>I</i>
-                            </SpanItem>
-                          </MenuItem>
-                          <MenuItem>
-                            <SpanItem>
-                              <del>S</del>
-                            </SpanItem>
-                          </MenuItem>
-                        </MenuLeft>
-                        <MenuGroupLeft>
-                          <MenuItemDrop>
-                            <SpanItemMenuDrop>
-                              numero-de-indicacoes
-                            </SpanItemMenuDrop>
-                          </MenuItemDrop>
-                        </MenuGroupLeft>
-                      </MenuText>
-                      <TextArea
-                        value={input.value}
-                        onChange={(e) => handleChangeTextAreaButton(index, e)}
-                      />
-                      <ButtonDelete
-                        onClick={() => handleRemoveTextAreaButton(index)}
+                <h4 className="buttonText">Seus Botões</h4>
+                <small>
+                  Os botões que você criar podem ser gerenciados aqui!
+                </small>
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                  <StrictModeDroppable droppableId="buttonAreaValue">
+                    {(provided) => (
+                      <ul
+                        className="buttonAreaValue"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        style={{width: "90%"}}
                       >
-                        Deletar
-                      </ButtonDelete>
-                    </ContainerTextArea>
-                  );
-                })}
-                <CreateNewButton onClick={(e) => handleAddTextAreaButton(e)}>
+                        {buttonAreaValue.map((input, index) => {
+                          return (
+                            <Draggable
+                              key={index.toString()}
+                              draggableId={index.toString()}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <ContainerTextArea
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  ref={provided.innerRef}
+                                >
+                                  <TextArea
+                                    value={input.value}
+                                    onChange={(e) =>
+                                      handleChangeTextAreaButton(index, e)
+                                    }
+                                  />
+                                  <ButtonDelete
+                                  className="buttonsDelete"
+                                    onClick={() =>
+                                      handleRemoveTextAreaButton(index)
+                                    }
+                                  >
+                                    Deletar
+                                  </ButtonDelete>
+                                </ContainerTextArea>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        {provided.placeHolder}
+                      </ul>
+                    )}
+                  </StrictModeDroppable>
+                </DragDropContext>
+                <CreateNewButton className="buttonsCreateNewButton" onClick={(e) => handleAddTextAreaButton(e)}>
                   + Novo botão
                 </CreateNewButton>
               </ButtonBody>
@@ -1106,24 +1121,24 @@ function Flow() {
           </CircleMenuItem>
         </CircleMenu>
         <ReactFlowProvider>
-        <ReactFlow
-          nodeTypes={NODE_TYPES}
-          edgeTypes={edgeTypes}
-          nodes={nodes}
-          edges={edges}
-          onEdgesChange={onEdgesChanges}
-          onConnect={onConnect}
-          onNodesChange={onNodesChanges}
-          connectionLineComponent={ConnectionLine}
-          connectionLineStyle={ConnectionLine}
-          connectionMode={ConnectionMode.Loose}
-          defaultEdgeOptions={edgeOptions}
-          onInit={setRfInstance}
-          style={{ backgroundColor: "#E8E8E8" }}
-        >
-          <Background gap={1} size={10} color="#f2f5f7" />
-          <Controls />
-        </ReactFlow>
+          <ReactFlow
+            nodeTypes={NODE_TYPES}
+            edgeTypes={edgeTypes}
+            nodes={nodes}
+            edges={edges}
+            onEdgesChange={onEdgesChanges}
+            onConnect={onConnect}
+            onNodesChange={onNodesChanges}
+            connectionLineComponent={ConnectionLine}
+            connectionLineStyle={ConnectionLine}
+            connectionMode={ConnectionMode.Loose}
+            defaultEdgeOptions={edgeOptions}
+            onInit={setRfInstance}
+            style={{ backgroundColor: "#E8E8E8" }}
+          >
+            <Background gap={1} size={10} color="#f2f5f7" />
+            <Controls />
+          </ReactFlow>
         </ReactFlowProvider>
       </Container>
     </>
