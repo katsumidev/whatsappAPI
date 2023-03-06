@@ -8,6 +8,7 @@ const files = require("../controllers/fileController");
 const upload = require("../utils/upload");
 const flow = require("../controllers/flowController");
 const flowMap = require("../controllers/flowMapsController");
+const tagsContacts = require("../controllers/tagsController");
 const path = require("path")
 
 const route = express.Router();
@@ -22,6 +23,17 @@ route.get("/contacts/consultContacts", contacts.consultContacts);
 route.get("/contacts/getContactPic", contacts.getContactPic);
 route.get("/contacts/getStatus", contacts.getStatus);
 route.get("/contacts/blockUserContact", contacts.blockUser);
+
+//contacts Tags
+
+route.post("/contacts/tags/new", tagsContacts.createTagsForContact);
+route.delete("/contacts/tags/delete", tagsContacts.deleteTagForContact)
+
+// Tags
+route.post("/tags/new", tagsContacts.createTagsForUser)
+route.post("/tags/get", tagsContacts.getAllTags)
+route.put("/tags/update", tagsContacts.updateTagsForUser)
+route.delete("/tags/delete", tagsContacts.deleteTagForUser)
 
 //livechat
 route.post("/livechat/newMessage", livechat.newMessage);

@@ -1,15 +1,15 @@
 const User = require("../models/user");
 
 const newFlow = async (req, res) => {
-    const {name, execution, ctr, user_token} = req.body;
+    const {data} = req.body;
 
-   
-    await User.findOneAndUpdate({userId: user_token}, {
+    console.log(data)
+    await User.findOneAndUpdate({userId: data.userToken}, {
         $push: {
             flowList: {
-                name,
-                execution,
-                ctr
+                name: data.name,
+                execution: data.execution,
+                ctr: data.ctr
             }
         }
     })
@@ -30,6 +30,7 @@ const getFlows = async (req, res) => {
     
           let array = flow.map((item) => {
             return {
+              _id: item._id,
               name: item.name,
               execution: item.execution,
               ctr: item.ctr,
@@ -43,9 +44,9 @@ const getFlows = async (req, res) => {
 }
 
 const getOneFlow = async (req, res)  => {
-    const { user_token, nameFlow } = req.body;
+    const { userToken, nameFlow } = req.body;
 
-   const flowFinded = await User.find({userId: user_token},{flowList: {$elemMatch: {name: nameFlow}}});
+   const flowFinded = await User.find({userId: userToken},{flowList: {$elemMatch: {name: nameFlow}}});
 
    if(!flowFinded) res.status(404)
 
@@ -69,25 +70,18 @@ const updateFlow = async(req, res) => {
 }
 
 const deleteFlow = async(req, res) => {
-    const { user_token, nameFlow } = req.body;
-
-    User.find({ userId: user_token }, (err, arr) => {
-        arr.forEach((items) => {
-          User.findOneAndUpdate(
-            { name: nameFlow },
-            {
-              $pull: { flowList: { name: nameFlow } },
-            },
-            { new: true },
-            (err, arr) => {
-              if (arr) {
-                return res.status(200).send("flow deletado");
-              }
-            }
-          );
-        });
-    });
-}
+    const { userToken, flowId } = req.body;
+    try {
+      await User.findOneAndUpdate(
+        {userId: userToken},
+        { $pull: { flowList: { _id: { $in: [flowId] } } } },
+        { new: true }
+      );
+      console.log('foi')
+    } catch (error) {
+      console.error(error);
+    }
+};
 
 
 module.exports = {
