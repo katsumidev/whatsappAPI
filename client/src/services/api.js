@@ -105,6 +105,63 @@ export const blockContact = async (data) => {
   }
 };
 
+// Contacts Tags
+
+export const createTagForContact = async (userToken, contactNumber, tags) => {
+  try {
+    return await axios.post(`${url}/contacts/tags/new`, {userToken, contactNumber, tags});
+  } catch (error) {
+    console.log("Error while calling createtags API", error);
+  }
+}
+
+export const deleteTagForContact = async (userToken, contactNumber, tags) => {
+  try {
+    return await axios.delete(`${url}/contacts/tags/delete`, {data: {userToken, contactNumber, tags}});
+  } catch (error) {
+    console.log("Error while calling createtags API", error);
+  }
+}
+
+// Tags
+
+export const createTagForUser = async (userToken, tags) => {
+  try {
+    const {data} = await axios.post(`${url}/tags/new`, {userToken, tags});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const getAllTags = async (userToken) => {
+  try {
+    const {data} = await axios.post(`${url}/tags/get`, {userToken});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const updateTagsForUser = async (userToken, tag) => {
+  try {
+    const {data} = await axios.put(`${url}/tags/update`, {userToken, tag});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+export const deleteTagForUser = async (userToken, tag) => {
+  try {
+    const {data} = await axios.delete(`${url}/tags/delete`, {data: {userToken, tag}});
+    return data
+  } catch (error) {
+    console.log("Erro aqui", error.response.data.message);
+  }
+}
+
+
 // Automation Controllers
 
 export const sendSingleMessage = async (data) => {
@@ -250,11 +307,19 @@ export const uploadFile = async (data) => {
   name: string,
   execution: number,
   ctr: number,
-  user_token: string
+  userToken: string
 */
 
+export const createFlow = async (data) => {
+  try {
+    return await axios.post(`${url}/flow/create`, {data})
+  } catch (error) {
+    console.log("Error while calling getFlow API", error);
+  }
+}
+
 /*
-  user_token: string,
+  userToken: string,
   nameFlow: string
 */
 
@@ -289,7 +354,7 @@ export const updateFlow = async (data) => {
 };
 
 /*
-  user_token: string,
+  userToken: string,
   nameFlow: string  Nome do flow q quer apagar
 */
 

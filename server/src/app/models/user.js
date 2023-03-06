@@ -9,6 +9,12 @@ const UsersSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  tags: [
+    {
+      name: String,
+      description: String
+    }
+  ],
   flowList: [
     {
       name: String,

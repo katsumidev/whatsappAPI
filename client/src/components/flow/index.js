@@ -12,13 +12,13 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "reactflow/dist/base.css";
-import ContetntSquare from "../nodes/Content";
-import ButtonSquare from "../nodes/Buttons";
-import ConditionSquare from "../nodes/Conditions";
-import ConnectionSquare from "../nodes/Connection";
-import RandomSquare from "../nodes/Random";
-import DelaySquare from "../nodes/Delay";
-import IntegrationSquare from "../nodes/Integration";
+import ContetntSquare from "../nodes/content";
+import ButtonSquare from "../nodes/buttons";
+import ConditionSquare from "../nodes/conditions";
+import ConnectionSquare from "../nodes/connection";
+import RandomSquare from "../nodes/random";
+import DelaySquare from "../nodes/delay";
+import IntegrationSquare from "../nodes/integration";
 import {
   AiOutlineClockCircle,
   BsLightningCharge,
@@ -29,7 +29,7 @@ import {
   BsListUl,
   MdAdsClick,
 } from "../../styles/Icons";
-import ActionSquare from "../nodes/Action";
+import ActionSquare from "../nodes/action";
 import {
   ActionBody,
   ActionHeader,
@@ -90,6 +90,8 @@ import {
 } from "../../services/api";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { StrictModeDroppable } from "../../utils/strictModeDroppable";
+import { createFlow, createFlowMap, deleteFlow, getFlowMap, getFlows, getOneFlow } from "../../services/api";
+import { useParams } from "react-router";
 /*
   Notes: 
   Nodes = Tudo que vai aparecer em tela(Pode ter seu próprio estilo e configuração),
@@ -114,7 +116,7 @@ const getId = () => `nodeid_${idNode++}`;
 const INITIAL_NODES = [
   {
     id: getId(),
-    type: "button",
+    type: "delay",
     position: {
       x: 200,
       y: 400,
@@ -174,6 +176,7 @@ function Flow() {
   const [connectionValue, setConnectionValue] = useState("");
   const [delayTime, setDelayTime] = useState(5);
   const [delayFormat, setDelayFormat] = useState();
+  const {userIns, flowId} = useParams()
 
   /*Update nodes feature*/
 
@@ -617,11 +620,36 @@ function Flow() {
         console.log(`dados: ${data} e status: ${status}`);
         //  const {data} = await getFlowMap('mapas', 'teste Final');
         //  console.log(JSON.stringify(data))
+        const {data, status} = await createFlowMap(flow, 'mapas', 'teste Final');
+        console.log(`dados: ${data} e status: ${status}`);
       } catch (error) {
         console.log(error);
       }
     }
   }, [rfInstance]);
+
+
+  useEffect(() => {
+    const getFlowForUser = async () => {
+      const userToken = userIns;
+      const flowName = flowId;
+      const {data} = await getFlowMap(userToken, flowName)
+      const InJason = JSON.stringify(data)
+      const flow = JSON.parse(InJason)
+      console.log('aqui estão',flow)
+
+
+      
+      if(flow) {
+        
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+      }
+    }
+    getFlowForUser()
+  }, [setNodes, setEdges])
+
+
 
   const edgeTypes = {
     custom: CustomEdge,

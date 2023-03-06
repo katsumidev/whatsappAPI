@@ -25,12 +25,17 @@ import {
 } from "../../styles/Icons";
 import NewUserModal from "../../components/NewUserModal";
 import { addNewContact } from "../../services/api";
+import OpenContactModal from "../../components/OpenContactModal";
 
 function UserPanel() {
   const [contacts, setContacts] = useState([]);
   const [numbers, setNumbers] = useState([]);
   const [searchBox, setSearchBox] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
+  const [modalType, setModalType] = useState("");
+  const [numberForModal, setNumberForModal] = useState('')
+  const [contactNameModal, setContactNameModal] = useState('')
+  const [contactInfo, setContactInfo] = useState('');
   const { userIns } = useParams();
   const fileinput = useRef(null);
 
@@ -96,9 +101,43 @@ function UserPanel() {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleReport = async () => {
+    // Cria uma planilha usando a biblioteca XLSX
+    const spreadsheet = XLSX.utils.json_to_sheet(contacts);
+
+    // Cria um livro de trabalho e adiciona a planilha a ele
+    const contact = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(contact, spreadsheet, 'Relatorio');
+
+    // Converte o livro de trabalho em um ArrayBuffer (array de bytes)
+    const sheet = XLSX.write(contact, { type: 'array', bookType: 'xlsx' });
+
+    // Cria um objeto Blob a partir do ArrayBuffer
+    const blob = new Blob([sheet], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'relatorio.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  }
+
   return (
     <Container>
-      {visible ? <NewUserModal /> : <></>}
+      {visible ? (
+       <>
+        { modalType === 'createNewContact' && (
+          <NewUserModal />
+        )}
+        { modalType === 'ContatcInfo' && (
+          <OpenContactModal  number={numberForModal} name={contactNameModal} contact={contacts}/>
+        )}
+       </>
+      ) 
+      : <></>}
       <input
         type="file"
         accept=".xlsx"
@@ -126,7 +165,10 @@ function UserPanel() {
                   </a>
                 </div>
                 <div className="col-sm-2">
-                  <a className="button-up btn btn-primary btn-sm btn-block">
+                  <a 
+                    className="button-up btn btn-primary btn-sm btn-block"
+                    onClick={handleReport}
+                    >
                     <AiOutlineDownload size={20} />
                     &nbsp;Relatório
                   </a>
@@ -134,7 +176,10 @@ function UserPanel() {
                 <div className="col-sm-2">
                   <a
                     className="button-up btn btn-primary btn-sm btn-block"
-                    onClick={() => openModal()}
+                    onClick={() => {
+                      openModal()
+                      setModalType('createNewContact')
+                    }}
                   >
                     <IoMdContact size={20} />
                     &nbsp;Novo contato
@@ -281,7 +326,9 @@ function UserPanel() {
                                 )
                                 .map((contact, index) => {
                                   return (
-                                    <tr key={index}>
+                                    <tr style={{cursor: 'pointer'}}
+                                      key={index}
+                                      >
                                       <td className="text-center">
                                         <Checkbox value={contact.number} />
                                       </td>
@@ -312,7 +359,16 @@ function UserPanel() {
                                 })
                             : currentItems.map((contact, index) => {
                                 return (
-                                  <tr key={index}>
+                                  <tr 
+                                    key={index} 
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => {
+                                      openModal();
+                                      setModalType('ContatcInfo');
+                                      setNumberForModal(contact.number)
+                                      setContactNameModal(contact.contact)
+                                    }}
+                                    >
                                     <td className="text-center">
                                       <Checkbox value={contact.number} />
                                     </td>

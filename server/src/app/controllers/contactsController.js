@@ -48,6 +48,7 @@ const newContact = async (req, res) => {
                     picture: data.data,
                     createdAt: new Date(),
                     email: email,
+                    tags: []
                   },
                 },
               },
@@ -123,6 +124,7 @@ const consultContacts = async (req, res) => {
           pfp: item.picture,
           date: item.createdAt,
           email: item.email,
+          tags: item.tags
         };
       });
 

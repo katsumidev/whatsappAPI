@@ -28,7 +28,6 @@ const ConditionSquare = ({ selected, data, id }) => {
     dispatch(undoChange());
   }
 
-  console.log(`Condição: ${data.condition}, isOpen: ${data.isOpen}`);
 
   return (
     <Container>
@@ -44,14 +43,20 @@ const ConditionSquare = ({ selected, data, id }) => {
         <True>
           <p>Alguma condição abaixo é verdadeira</p>
         </True>
-        {data.condition ? (
+        {data ? (
           <>
-            <p>
-              <strong>Horário de Atendimento</strong> é <b>{data.isOpen}</b>
-            </p>
-            <hr />
+            {data.condition ? (
+              <>
+                <p>
+                  <strong>Horário de Atendimento</strong> é <b>{data.isOpen}</b>
+                </p>
+                <hr />
+              </>
+            ) : (
+              <></>
+            )}
           </>
-        ) : (
+        ): (
           <></>
         )}
         <False>

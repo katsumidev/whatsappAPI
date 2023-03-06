@@ -40,10 +40,16 @@ const ActionSquare = ({ selected, data, id }) => {
       </Header>
       <SquareContent>
         <strong>Inscrição em Sequência</strong>
-        {data.actionSelect === "esquentaChip" ? (
-          <p>Esquenta chip</p>
-        ) : (
-          <p>8 horas do dia seguinte</p>
+        {data ? (
+          <>
+            {data.actionSelect === "esquentaChip" ? (
+              <p>Esquenta chip</p>
+            ) : (
+              <p>8 horas do dia seguinte</p>
+            )}
+          </>
+        ): (
+          <></>
         )}
       </SquareContent>
       <NodeResizer
